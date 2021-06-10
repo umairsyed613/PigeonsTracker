@@ -1,0 +1,61 @@
+@page "/LanguageChange"
+@using System.Globalization
+@inject IStringLocalizer<Language> localizer
+@inject ILocalStorageService _service
+@inject NavigationManager Manager
+
+<div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
+    <h3>@localizer["ChangeLanguage"]</h3>
+
+    <div class="d-flex flex-row align-items-center border-bottom cursor-btn p-2" @onclick='() => ChangeCulture("en-US")'>
+        <div>
+            <img src="/images/usa.png" height="16" width="16" alt="USA"/>
+        </div>
+        <div class="ml-2 flex-grow-1">
+            <span>English</span>
+        </div>
+        <div class="text-muted">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="d-flex flex-row align-items-center border-bottom cursor-btn p-2 mt-2" @onclick='() => ChangeCulture("ur-PK")'>
+        <div>
+            <img src="/images/pakistan.png" height="16" width="16" alt="Urdu"/>
+        </div>
+        <div class="ml-2 flex-grow-1">
+            <span>Urdu</span>
+        </div>
+        <div class="text-muted">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    private string _returnUrl = null;
+
+    private readonly string _currentCultureName = CultureInfo.CurrentCulture.Name;
+
+    protected override void OnInitialized()
+    {
+        Manager.TryGetQueryString<string>("returnUrl", out _returnUrl);
+    }
+
+    private void ChangeCulture(string name)
+    {
+        if (_currentCultureName != name)
+        {
+            _service.SetItemAsStringAsync("BlazorCulture", name);
+            _returnUrl ??= Manager.BaseUri;
+            Manager.NavigateTo(_returnUrl, forceLoad: true);
+        }
+    }
+
+}

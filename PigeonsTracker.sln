@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PigeonsTracker", "PigeonsTracker\PigeonsTracker.csproj", "{D0BAB4A1-8D16-45BE-AC2D-40543AE1F9A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PigeonsTracker.Shared", "PigeonsTracker.Shared\PigeonsTracker.Shared.csproj", "{8BF404F4-04FA-47E9-8F41-A0CA91F6A658}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PigeonsTrackerApi", "PigeonsTrackerApi\PigeonsTrackerApi.csproj", "{293A1AC1-3020-408B-8228-DF758A2BFD87}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D0BAB4A1-8D16-45BE-AC2D-40543AE1F9A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0BAB4A1-8D16-45BE-AC2D-40543AE1F9A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0BAB4A1-8D16-45BE-AC2D-40543AE1F9A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0BAB4A1-8D16-45BE-AC2D-40543AE1F9A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BF404F4-04FA-47E9-8F41-A0CA91F6A658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BF404F4-04FA-47E9-8F41-A0CA91F6A658}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BF404F4-04FA-47E9-8F41-A0CA91F6A658}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BF404F4-04FA-47E9-8F41-A0CA91F6A658}.Release|Any CPU.Build.0 = Release|Any CPU
+		{293A1AC1-3020-408B-8228-DF758A2BFD87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{293A1AC1-3020-408B-8228-DF758A2BFD87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{293A1AC1-3020-408B-8228-DF758A2BFD87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{293A1AC1-3020-408B-8228-DF758A2BFD87}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

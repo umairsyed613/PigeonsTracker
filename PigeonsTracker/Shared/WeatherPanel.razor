@@ -1,0 +1,72 @@
+@inject WeatherService _weatherService
+
+<style>
+    .bg-weather-panel{
+    /*background-color: #2e637f !important;*/
+    background-color: #d1eaff !important;
+    }
+</style>
+@if (_weatherApiResult != null)
+{
+    <div class="d-flex flex-column align-items-center rounded bg-weather-panel text-dark p-3 user-select-stop">
+        <div class="d-flex flex-row w-100 flex-nowrap">
+            <div class="d-flex flex-column flex-grow-1">
+                <h3>@_weatherApiResult.Name</h3>
+                <h6>@DateTime.Now.ToString("dd MMMM yyy")</h6>
+                @if (_weather != null)
+                {
+                    <div class="d-flex align-items-center mt-2">
+                        <span>@GetIcon(@_weather.Main)</span>
+                        <h6 class="mx-2">@_weather.Main</h6>
+                    </div>
+                }
+            </div>
+            <div class="d-flex flex-column align-items-center justify-content-center mx-4">
+                <h1>@_weatherApiResult.Main.Temp.ToOneDecimal()°</h1>
+                <p class="fs-0-5">Feels @_weatherApiResult.Main.FeelsLike.ToOneDecimal()°</p>
+            </div>
+        </div>
+        @if (lastUpdated.HasValue)
+        {
+            <div class="d-flex flex-row-reverse align-items-center w-100 fs-0-5 text-muted">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                </svg>
+                <span class="mx-2">@lastUpdated.Value</span>
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public Location Location { get; set; }
+
+    private OpenWeatherApiResult _weatherApiResult;
+    private Weather _weather;
+    private DateTime? lastUpdated;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Location != null)
+        {
+            _weatherApiResult = await _weatherService.GetWeatherResult(Location.Latitude.ToString(), Location.Longitude.ToString());
+            _weather = _weatherApiResult?.Weather.FirstOrDefault();
+            lastUpdated = _weatherService.LastUpdatedAt;
+        }
+    }
+
+    private MarkupString GetIcon(string main)
+    {
+        return main switch
+        {
+            "Rain" => new MarkupString(@"<i class='mi mi-fw mi-lg mi-rain-heavy'></i>"),
+            "Clear" => new MarkupString(@"<i class='mi mi-fw mi-2x mi-sun'></i>"),
+            "Clouds" => new MarkupString(@"<i class='mi mi-fw mi-2x mi-cloud'></i>"),
+            _ => new MarkupString("")
+            };
+    }
+
+}

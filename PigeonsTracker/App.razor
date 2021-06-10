@@ -1,0 +1,36 @@
+﻿<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            @*<p>Sorry, there's nothing at this address.</p>*@
+
+            <div class="center">
+              <div class="error user-select-stop errorDiv">
+                <div class="number">4</div>
+                <div class="illustration">
+                  <div class="circle"></div>
+                  <div class="clip">
+                    <div class="paper">
+                      <div class="face">
+                        <div class="eyes">
+                          <div class="eye eye-left"></div>
+                          <div class="eye eye-right"></div>
+                        </div>
+                        <div class="rosyCheeks rosyCheeks-left"></div>
+                        <div class="rosyCheeks rosyCheeks-right"></div>
+                        <div class="mouth"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="number">4</div>
+              </div>
+
+              <div class="text">Oops. The page you're looking for doesn't exist.</div>
+              <a class="button btn" href="#">Back Home</a>
+            </div>
+        </LayoutView>
+    </NotFound>
+</Router>

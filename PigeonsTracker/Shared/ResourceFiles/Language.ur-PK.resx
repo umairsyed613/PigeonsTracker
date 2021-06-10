@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="MainPageTitle" xml:space="preserve">
+        <value>اپنے کبوتر کو فالو کریں</value>
+    </data>
+    <data name="MainPageContent" xml:space="preserve">
+        <value>ہماری نئی ایپ میں خوش آمدید</value>
+    </data>
+    <data name="TournamentName" xml:space="preserve">
+        <value>ٹورنامنٹ کا نام</value>
+    </data>
+    <data name="TournamentType1" xml:space="preserve">
+        <value>ٹورنامنٹ</value>
+    </data>
+    <data name="TournamentType2" xml:space="preserve">
+        <value>پریکٹس </value>
+    </data>
+    <data name="TournamentType" xml:space="preserve">
+        <value>ٹورنامنٹ کی قسم منتخب کریں</value>
+    </data>
+    <data name="CreateTournament" xml:space="preserve">
+        <value>ٹورنامنٹ بنائیں</value>
+    </data>
+    <data name="HelpTournamentName" xml:space="preserve">
+        <value>براہ کرم ٹورنامنٹ کا نام فراہم کریں</value>
+    </data>
+    <data name="TrackingTileText" xml:space="preserve">
+        <value>ٹریکنگ</value>
+    </data>
+    <data name="InfoText" xml:space="preserve">
+        <value>معلومات</value>
+    </data>
+    <data name="Contact" xml:space="preserve">
+        <value>رابطہ کریں</value>
+    </data>
+    <data name="HomePage" xml:space="preserve">
+        <value>ہوم پیج</value>
+    </data>
+    <data name="AllTournaments" xml:space="preserve">
+        <value>تمام ٹورنامنٹ یا مشقین</value>
+    </data>
+    <data name="TournamentStartDate" xml:space="preserve">
+        <value>ٹورنامنٹ شروع ہونے کی تاریخ</value>
+    </data>
+    <data name="TournamentEndDate" xml:space="preserve">
+        <value>ٹورنامنٹ اختتامی تاریخ</value>
+    </data>
+    <data name="Submit" xml:space="preserve">
+        <value>اسٹور کرائیں</value>
+    </data>
+    <data name="InfoPageContextP1" xml:space="preserve">
+        <value>کبوتر ٹریکر کی ایپلی کیشن آپ کو ٹورنامنٹ کو اسٹور کرنے یا میچ اسکور کی مشق کرنے میں مدد دیتی ہے اور آپ کو اپنے دوستوں اور گروپس میں مواد کو شیئر کرنے کی اہلیت فراہم کرتی ہے۔</value>
+    </data>
+    <data name="ContactUsTitle" xml:space="preserve">
+        <value>ہم سے رابطہ کریں</value>
+    </data>
+    <data name="InstallThisApplication" xml:space="preserve">
+        <value>یہ ایپ انسٹال کریں؟</value>
+    </data>
+    <data name="Start" xml:space="preserve">
+        <value>شروع</value>
+    </data>
+    <data name="End" xml:space="preserve">
+        <value>ختم</value>
+    </data>
+    <data name="PigeonsDiseasesAndCure" xml:space="preserve">
+        <value>بیماریوں اور علاج</value>
+    </data>
+    <data name="ChangeLanguage" xml:space="preserve">
+        <value>زبان تبدیل کریں</value>
+    </data>
+    <data name="CreateTrackingRecord" xml:space="preserve">
+        <value>ٹریکنگ ریکارڈ بنائیں</value>
+    </data>
+    <data name="TotalBirdsCount" xml:space="preserve">
+        <value>کل پرندے</value>
+    </data>
+    <data name="FlyingStartTime" xml:space="preserve">
+        <value>فلائنگ اسٹارٹ ٹائم</value>
+    </data>
+    <data name="FlyingDayRecord" xml:space="preserve">
+        <value>فلائنگ ڈے ریکارڈ</value>
+    </data>
+    <data name="Update" xml:space="preserve">
+        <value>اپ ڈیٹ</value>
+    </data>
+    <data name="UpdateTrackingRecord" xml:space="preserve">
+        <value>ٹریکنگ ریکارڈ اپ ڈیٹ</value>
+    </data>
+    <data name="BirdsName" xml:space="preserve">
+        <value>پرندے کا نام</value>
+    </data>
+    <data name="LandingTime" xml:space="preserve">
+        <value>لینڈنگ ٹائم</value>
+    </data>
+    <data name="TotalTime" xml:space="preserve">
+        <value>کل وقت</value>
+    </data>
+    <data name="Nr" xml:space="preserve">
+        <value>نمبر</value>
+    </data>
+    <data name="TotalHours" xml:space="preserve">
+        <value>کل گھنٹے</value>
+    </data>
+    <data name="RoofName" xml:space="preserve">
+        <value>چھت کا نام</value>
+    </data>
+    <data name="Copy" xml:space="preserve">
+        <value>کاپی</value>
+    </data>
+    <data name="FlyingStartDate" xml:space="preserve">
+        <value>فلائنگ ڈے</value>
+    </data>
+    <data name="BirdsInformation" xml:space="preserve">
+        <value>پرندوں کی معلومات</value>
+    </data>
+    <data name="ShareFormatText" xml:space="preserve">
+        <value>جب آپ اسے استعمال کریں گے تو نقل شدہ متن کی شکل درست ہوگی۔</value>
+    </data>
+    <data name="TotalAverage" xml:space="preserve">
+        <value>کل اورج</value>
+    </data>
+    <data name="Type" xml:space="preserve">
+        <value>قسم</value>
+    </data>
+    <data name="Landed" xml:space="preserve">
+        <value>اترا</value>
+    </data>
+    <data name="Average" xml:space="preserve">
+        <value>اورج</value>
+    </data>
+</root>

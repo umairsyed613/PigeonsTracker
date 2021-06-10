@@ -1,0 +1,375 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,300;1,700&display=swap');
+
+:root {
+    --iconscol: #8c3a89;
+}
+
+* {
+    /*border: 1px solid #f00 !important;*/
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.maindiv {
+    height: 100vh;
+}
+
+.container {
+    padding-bottom: 15px !important;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+.user-select-stop {
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.cursor-btn {
+    cursor: pointer !important;
+}
+
+.loading-screen-bg {
+    background-color: #ffffff;
+    background-image: linear-gradient(109.6deg, rgba(223, 234, 247, 1) 11.2%, rgba(244, 248, 252, 1) 91.1%);
+
+}
+
+.fs-0-5 {
+    font-size: 0.75rem !important;
+}
+
+.fs-1 {
+    font-size: 1rem !important;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
+    unicode-bidi: plaintext !important;
+    text-align: start !important;
+}
+
+.helpText {
+    font-size: 1rem !important;
+}
+
+.bg-dark {
+    background-color: #444444 !important;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+.btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 12px 13px;
+    border-radius: 25px;
+    font-size: 18px;
+    line-height: 1.33;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+
+/* Ripple effect */
+.ripple {
+    background-position: center;
+    transition: background 0.8s;
+}
+
+.ripple:hover {
+    background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) center/15000%;
+}
+
+.ripple:active {
+    background-color: #6eb9f7;
+    background-size: 100%;
+    transition: background 0s;
+}
+
+
+@media (max-width: 575.98px) {
+
+    p, label {
+        font-size: 1.25rem;
+    }
+
+    .number {
+        font-size: 5rem !important;
+    }
+
+    .errorDiv {
+        margin-top: 8rem;
+    }
+
+    .footer-pt{
+        padding-left: 1rem !important;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    p, label {
+        font-size: 1.5rem;
+    }
+
+    .number {
+        font-size: 5rem !important;
+    }
+
+    .errorDiv {
+        margin-top: 8rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    p, label {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    p, label {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    p, label {
+        font-size: 1.5rem;
+    }
+}
+
+
+/* 404*/
+
+.center {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.error {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.number {
+    font-weight: 900;
+    font-size: 15rem;
+    line-height: 1;
+}
+
+.illustration {
+    position: relative;
+    width: 12.2rem;
+    margin: 0 2.1rem;
+}
+
+.circle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 12.2rem;
+    height: 11.4rem;
+    border-radius: 50%;
+    background-color: #293b49;
+}
+
+.clip {
+    position: absolute;
+    bottom: 0.3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    width: 12.5rem;
+    height: 13rem;
+    border-radius: 0 0 50% 50%;
+}
+
+.paper {
+    position: absolute;
+    bottom: -0.3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 9.2rem;
+    height: 12.4rem;
+    border: 0.3rem solid #293b49;
+    background-color: white;
+    border-radius: 0.8rem;
+}
+
+/*.paper::before {
+    content: "";
+    position: absolute;
+    top: -0.7rem;
+    right: -0.7rem;
+    width: 1.4rem;
+    height: 1rem;
+    background-color: white;
+    border-bottom: 0.3rem solid #293b49;
+    transform: rotate(45deg);
+}*/
+
+.face {
+    position: relative;
+    margin-top: 2.3rem;
+}
+
+.eyes {
+    position: absolute;
+    top: 0;
+    left: 2.4rem;
+    width: 4.6rem;
+    height: 0.8rem;
+}
+
+.eye {
+    position: absolute;
+    bottom: 0;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: #293b49;
+    animation-name: eye;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.eye-left {
+    left: 0;
+}
+
+.eye-right {
+    right: 0;
+}
+
+@keyframes eye {
+    0% {
+        height: 0.8rem;
+    }
+    50% {
+        height: 0.8rem;
+    }
+    52% {
+        height: 0.1rem;
+    }
+    54% {
+        height: 0.8rem;
+    }
+    100% {
+        height: 0.8rem;
+    }
+}
+
+.rosyCheeks {
+    position: absolute;
+    top: 1.6rem;
+    width: 1rem;
+    height: 0.2rem;
+    border-radius: 50%;
+    background-color: #fdabaf;
+}
+
+.rosyCheeks-left {
+    left: 1.4rem;
+}
+
+.rosyCheeks-right {
+    right: 1.4rem;
+}
+
+.mouth {
+    position: absolute;
+    top: 3.1rem;
+    left: 50%;
+    width: 1.6rem;
+    height: 0.2rem;
+    border-radius: 0.1rem;
+    transform: translateX(-50%);
+    background-color: #293b49;
+}
+
+.text {
+    margin-top: 5rem;
+    font-weight: 300;
+    color: #293b49;
+}
+
+.button {
+    margin-top: 4rem;
+    padding: 1.2rem 3rem;
+    color: white;
+    background-color: #04cba0;
+}
+
+.button:hover {
+    background-color: #01ac88;
+}
+
+.by {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    text-transform: uppercase;
+    color: #293b49;
+}
+
+.byLink {
+    color: #04cba0;
+}

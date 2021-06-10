@@ -1,0 +1,36 @@
+
+.btnAdd {
+    position: fixed;
+    bottom: 50px;
+    right: 25px;
+}
+
+.flying-rec {
+    background-color: #f9f9f9;
+}
+
+.flying-rec:hover {
+    background-color: #6610f2 !important;
+    color: white !important;
+    -webkit-transition: background-color 100ms ease-in-out;
+    -ms-transition: background-color 100ms ease-in-out;
+    transition: background-color 100ms ease-in-out;
+}
+
+.pg-text-muted {
+    color: #6c757d;
+}
+
+.flying-rec:hover .pg-text-muted{
+    color: white !important;
+}
+
+.flying-rec:hover .flying-day-title{
+    font-weight: bold;
+}
+
+@media (min-width: 992px) {
+    .btnAdd {
+        top: 75px;
+    }
+}

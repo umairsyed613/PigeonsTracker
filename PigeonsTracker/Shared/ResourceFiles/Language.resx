@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="MainPageTitle" xml:space="preserve">
+        <value>Follow your pigeon!</value>
+    </data>
+    <data name="MainPageContent" xml:space="preserve">
+        <value>Welcome to our new app.</value>
+    </data>
+    <data name="TournamentName" xml:space="preserve">
+        <value>Tournament Name</value>
+    </data>
+    <data name="TournamentType1" xml:space="preserve">
+        <value>Tournament</value>
+    </data>
+    <data name="TournamentType2" xml:space="preserve">
+        <value>Practice</value>
+    </data>
+    <data name="TournamentType" xml:space="preserve">
+        <value>Tournament Type</value>
+    </data>
+    <data name="CreateTournament" xml:space="preserve">
+        <value>Create Tournament</value>
+    </data>
+    <data name="HelpTournamentName" xml:space="preserve">
+        <value>Please Provide Tournament Name</value>
+    </data>
+    <data name="TrackingTileText" xml:space="preserve">
+        <value>Tracking</value>
+    </data>
+    <data name="InfoText" xml:space="preserve">
+        <value>Information</value>
+    </data>
+    <data name="Contact" xml:space="preserve">
+        <value>Contact</value>
+    </data>
+    <data name="HomePage" xml:space="preserve">
+        <value>Home</value>
+    </data>
+    <data name="AllTournaments" xml:space="preserve">
+        <value>All Tournaments</value>
+    </data>
+    <data name="TournamentStartDate" xml:space="preserve">
+        <value>Tournament Start Date</value>
+    </data>
+    <data name="TournamentEndDate" xml:space="preserve">
+        <value>Tournament End Date</value>
+    </data>
+    <data name="Submit" xml:space="preserve">
+        <value>Submit</value>
+    </data>
+    <data name="InfoPageContextP1" xml:space="preserve">
+        <value>PigeonsTracker application helps you store the tournaments or practice match score and provide you the ability to share the content with your friends and in groups.</value>
+    </data>
+    <data name="ContactUsTitle" xml:space="preserve">
+        <value>Contactus</value>
+    </data>
+    <data name="InstallThisApplication" xml:space="preserve">
+        <value>Install this app?</value>
+    </data>
+    <data name="Start" xml:space="preserve">
+        <value>Start</value>
+    </data>
+    <data name="End" xml:space="preserve">
+        <value>End</value>
+    </data>
+    <data name="PigeonsDiseasesAndCure" xml:space="preserve">
+        <value>Diseases and Cure</value>
+    </data>
+    <data name="ChangeLanguage" xml:space="preserve">
+        <value>Change Language</value>
+    </data>
+    <data name="CreateTrackingRecord" xml:space="preserve">
+        <value>Create Tracking Record</value>
+    </data>
+    <data name="TotalBirdsCount" xml:space="preserve">
+        <value>Total Birds</value>
+    </data>
+    <data name="FlyingStartTime" xml:space="preserve">
+        <value>Flying Start Time</value>
+    </data>
+    <data name="FlyingDayRecord" xml:space="preserve">
+        <value>Flying Day Record</value>
+    </data>
+    <data name="Update" xml:space="preserve">
+        <value>Update</value>
+    </data>
+    <data name="UpdateTrackingRecord" xml:space="preserve">
+        <value>Update Tracking Record</value>
+    </data>
+    <data name="BirdsName" xml:space="preserve">
+        <value>Bird Name</value>
+    </data>
+    <data name="LandingTime" xml:space="preserve">
+        <value>Landing Time</value>
+    </data>
+    <data name="TotalTime" xml:space="preserve">
+        <value>Total Time</value>
+    </data>
+    <data name="Nr" xml:space="preserve">
+        <value>Nr.</value>
+    </data>
+    <data name="TotalHours" xml:space="preserve">
+        <value>Total Hours</value>
+    </data>
+    <data name="RoofName" xml:space="preserve">
+        <value>Loft Name</value>
+    </data>
+    <data name="Copy" xml:space="preserve">
+        <value>Copy</value>
+    </data>
+    <data name="FlyingStartDate" xml:space="preserve">
+        <value>Flying Start Day</value>
+    </data>
+    <data name="BirdsInformation" xml:space="preserve">
+        <value>Birds Information</value>
+    </data>
+    <data name="ShareFormatText" xml:space="preserve">
+        <value>The format of the copied text will be correct when you will use it.</value>
+    </data>
+    <data name="TotalAverage" xml:space="preserve">
+        <value>Total Average</value>
+    </data>
+    <data name="Type" xml:space="preserve">
+        <value>Type</value>
+    </data>
+    <data name="Landed" xml:space="preserve">
+        <value>Landed</value>
+    </data>
+    <data name="Average" xml:space="preserve">
+        <value>Average</value>
+    </data>
+</root>

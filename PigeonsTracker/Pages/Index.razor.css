@@ -1,0 +1,75 @@
+.box {
+    /*background-color: #444;*/
+    color: #fff;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 110px;
+
+    -webkit-user-select: none!important;
+    -moz-user-select: none!important;
+    -ms-user-select: none!important;
+    user-select: none!important;
+    transition: transform .5s ease-in-out;
+}
+
+.box:hover{
+    /*background-color: #7330c3 !important;*/
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    transform: scale(1.1);
+}
+.btn-grad {
+    background-image: linear-gradient(to right, #314755 0%, #26a0da  51%, #314755  100%)
+}
+
+.btn-grad {
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    box-shadow: 0 0 20px #eee;
+}
+
+.btn-grad:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+}
+
+.install-prompt {
+    width: 360px;
+    height: 60px;
+    padding: 15px 20px;
+    box-sizing: border-box;
+    bottom: 63px;
+    left: auto;
+    right: 20px;
+    border: 0;
+    border-radius: 2px;
+    font-size: 1.2rem !important;
+    color: #fff;
+    background-color: #818a91;
+    z-index: 11000
+}
+
+
+@media (max-width: 575.98px) {
+
+    .box{
+        width: 300px;
+    }
+
+    .install-prompt {
+        right: 0;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .box{
+        width: 300px;
+    }
+}

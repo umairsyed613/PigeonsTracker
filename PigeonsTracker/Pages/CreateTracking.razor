@@ -1,0 +1,164 @@
+@page "/CreateTracking/{TournId}"
+@using System.Globalization
+@inject IStringLocalizer<Language> localizer
+@inject IPigeonTrackingService _trackingService
+@inject NavigationManager NavigationManager
+
+
+<div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
+    <div class="d-flex flex-row align-items-center py-3 border-bottom">
+        <h5 class="w-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clock-fill mx-2 " viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+            </svg> @localizer["CreateTrackingRecord"]
+        </h5>
+    </div>
+    <div class="my-1">
+        <label for="roofName" class="form-label fs-1 w-100">@localizer["RoofName"]</label>
+        <input type="text" class="form-control" id="roofName" @bind="_record.RoofName">
+    </div>
+    <div class="form-row my-1">
+        <div class="col-md-4 my-2">
+            <label for="startDateTime" class="form-label fs-1 w-100">@localizer["FlyingStartDate"]</label>
+            <input type="date" class="form-control" id="startDateTime" @bind="@startDate" min="2021-01-01" max="9999-12-31">
+            <label id="startDateTimeHelp" class="form-text text-muted fs-0-5 px-2">@startDate.ToString("dd MMMM yyyy", CultureInfo.CurrentCulture)</label>
+        </div>
+        <div class="col-md-4 my-2">
+            <label for="startTime" class="form-label fs-1 w-100">@localizer["FlyingStartTime"]</label>
+            <input type="time" class="form-control" id="startTime" @bind="startTime">
+            <label id="startTimeHelp" class="form-text text-muted fs-0-5 px-2">@startTime.ToString("HH:mm:ss tt", CultureInfo.CurrentCulture)</label>
+        </div>
+        <div class="col-md-4 my-2">
+            <label for="birdsCount" class="form-label fs-1 w-100">@localizer["TotalBirdsCount"]</label>
+            <input type="number" class="form-control" id="birdsCount" @bind="numberOfBirds">
+        </div>
+    </div>
+
+    @if (_records != null)
+    {
+        <div class="d-flex flex-column w-100 my-3">
+            <div class="py-2"><label class="w-100">@localizer["BirdsInformation"]</label></div>
+            @{ var i = 1; }
+            @foreach (var rec in _records)
+            {
+                <div class="form-row mb-2">
+                    <div class="col-md-2 my-1">
+                        <label for="@i _1" class="form-label w-100 fs-1">Nr.</label>
+                        <input type="text" readonly class="form-control text-center" id="@i _1" value="@i">
+                    </div>
+                    <div class="col-md-6 my-1">
+                        <label for="@i _2" class="form-label w-100 fs-1">@localizer["BirdsName"]</label>
+                        <input type="text" class="form-control" id="@i _2" @bind="@rec.BirdName">
+                    </div>
+                    <div class="col-md-4 my-1">
+                        <label for="@i _3" class="form-label w-100 fs-1">@localizer["LandingTime"]</label>
+                        <input type="time" class="form-control" id="@i _3" @bind="@rec.EndTime">
+                    </div>
+                </div>
+                i++;
+            }
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary" @onclick="CreateTrackingRecords">@localizer["Submit"]</button>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @((MarkupString)errorMessage)
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string TournId { get; set; }
+
+    private int numberOfBirds = 7;
+    private DateTime startDate { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
+    private DateTime startTime { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
+    private PigeonsTrackingRecord _record;
+    private PigeonTrackingRecord[] _records;
+    private Tournament _tournament;
+
+    private string errorMessage = null;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _record = new PigeonsTrackingRecord()
+        {
+            Id = IdGenerator.GetNewId(),
+            CreatedAt = DateTime.Now
+        };
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        _tournament = await _trackingService.GetTournament(TournId);
+        if (_tournament == null) { NavigationManager.NavigateTo("/ViewTournament/" + TournId); }
+        else
+        {
+            if (_tournament.TrackingRecords == null)
+            {
+                _tournament.TrackingRecords = new List<PigeonsTrackingRecord>();
+                _record ??= new PigeonsTrackingRecord()
+                {
+                    Id = IdGenerator.GetNewId(),
+                    CreatedAt = DateTime.Now
+                };
+            }
+
+            if (_tournament.TournamentType == TournamentType.Practice) { _record.RoofName = _tournament.TrackingRecords.FirstOrDefault(f => !string.IsNullOrEmpty(f.RoofName))?.RoofName ?? string.Empty; }
+        }
+    }
+
+    private async Task CreateTrackingRecords()
+    {
+        if (_records == null)
+        {
+            _records = new PigeonTrackingRecord[numberOfBirds];
+            for (int i = 0; i < numberOfBirds; i++) { _records[i] = new PigeonTrackingRecord(); }
+        }
+        else
+        {
+            try
+            {
+                _record ??= new PigeonsTrackingRecord()
+                {
+                    Id = IdGenerator.GetNewId(),
+                    CreatedAt = DateTime.Now
+                };
+
+                var (year, month, day) = startDate.GetSeparatedDate();
+                var (hour, minutes, seconds) = startTime.GetSeparatedTime();
+                _record.StartTime = new DateTime(year, month, day, hour, minutes, seconds);
+                foreach (var d in _records.Where(w => w.EndTime != null))
+                {
+                    if (d.EndTime == null)
+                    {
+                        continue;
+                    }
+
+                    var endTime = d.EndTime.Value;
+                    d.EndTime = new DateTime(year, month, day, endTime.Hour, endTime.Minute, 0);
+                }
+
+                _record.Records = _records.ToList();
+
+                _tournament.TrackingRecords.Add(_record);
+                await _trackingService.UpsertTournament(_tournament);
+                NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/{TournId}/{_record.Id}");
+            }
+            catch (Exception e)
+            {
+                errorMessage = "<b>Error Saving. </b><br>";
+                errorMessage += e.Message;
+                Console.WriteLine(e);
+            }
+        }
+    }
+
+}
