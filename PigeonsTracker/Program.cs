@@ -17,7 +17,7 @@ namespace PigeonsTracker
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            Console.WriteLine(@"IsProduction : " + builder.HostEnvironment.IsProduction());
+            //Console.WriteLine(@"IsProduction : " + builder.HostEnvironment.IsProduction());
             builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddLocalization();
             builder.Services.AddBlazoredLocalStorage();

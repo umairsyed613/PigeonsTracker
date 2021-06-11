@@ -10,6 +10,7 @@
     <link href="css/app.css" rel="stylesheet"/>
     <link rel="stylesheet" href="css/animate.min.css"/>
     <link href="css/meteocons.min.css" rel="stylesheet">
+    <link href="css/loading.css" rel="stylesheet">
 
     <link href="PigeonsTracker.styles.css" rel="stylesheet"/>
     <link href="manifest.json" rel="manifest" />
@@ -21,9 +22,10 @@
 <div id="app">
     <div class="d-flex flex-column w-100 align-items-center justify-content-center my-auto user-select-none loading-screen-bg"
          style="min-height: 100vh;">
-        <img src="images/flyingpigeon.gif" class="img-fluid" height="331" width="350">
+        <!--<img src="images/flyingpigeon.gif" class="img-fluid" height="331" width="350">-->
         <h5>PigeonsTracker Application</h5>
-        <span class="mt-2">Loading...</span>
+        <!--<span class="mt-2">Loading...</span>-->
+        <div class="dot-collision"></div>
     </div>
 </div>
 
@@ -41,7 +43,7 @@
         set: (value) => window.localStorage['BlazorCulture'] = value
     };
 </script>
-<!--<script>navigator.serviceWorker.register('service-worker.js');</script>-->
+<script>navigator.serviceWorker.register('service-worker.js');</script>
 <script src="custom-install-prompt.js"></script>
 <script src="js/location.js"></script>
 <script src="js/script.js"></script>

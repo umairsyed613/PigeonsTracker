@@ -2,7 +2,7 @@
     //console.log("Calling Install Prompt!");
     // These assembly and method names must match the app name and the method in the MainLayout.razor
     const blazorAssembly = 'PigeonsTracker';
-    const blazorInstallMethod = 'InstallPwaPrompt';
+    const blazorInstallMethod = 'PWAInstallable';
 
     DotNet.invokeMethodAsync(blazorAssembly, blazorInstallMethod)
         .then(function () { }, function (er) {
@@ -68,7 +68,7 @@ window['updateAvailable']
     .then(isAvailable => {
         if (isAvailable) {
             // TODO: Consider adding your own app UI for this as well in a fashion similar to the showAddToHomeScreen() method
-            //alert('New Update available. Reload the page when convenient.');
+
             if (confirm('New version available. Do you want to update?')) {
                 // Save it!
                 window.location.reload();

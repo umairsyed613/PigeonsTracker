@@ -1,9 +1,8 @@
 ﻿@page "/"
 @inject IStringLocalizer<Language> localizer
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JsRuntime
 @inject LocationService locationService
-
+@inject AppState AppState
 
 <div id="indexPage" class="d-flex flex-column w-100 overflow-hidden">
 
@@ -48,27 +47,19 @@
     </div>
 </div>
 
-
-@if (Installable)
-{
-    <div class="bg-dark border rounded shadow fixed-bottom d-flex align-items-center justify-content-between install-prompt">
-        <span>@localizer["InstallThisApplication"]</span>
-        <span>
-            <button class="btn btn-light btn-sm mx-2" @onclick="@InstallClicked">Install</button>
-            <button class="btn btn-outline-light btn-sm" @onclick="@(() => Installable = false)">Cancel </button>
-        </span>
-    </div>
-}
-
 @code {
-    static bool Installable = false;
-
     Location location;
 
     protected async Task GetLocation()
     {
-        location = await locationService.GetLocationAsync();
-        StateHasChanged();
+        if (AppState.Location == null || DateTime.Now.Subtract(AppState.LocationSetDatetime).Minutes > 30)
+        {
+            location = await locationService.GetLocationAsync();
+            AppState.SetLocation(location, DateTime.Now);
+            StateHasChanged();
+        }
+        else
+        { location = AppState.Location; }
     }
 
     protected override async Task OnAfterRenderAsync(bool first)
@@ -79,20 +70,4 @@
             await GetLocation();
         }
     }
-
-    [JSInvokable("InstallPwaPrompt")]
-
-    //a named method so that it is easy to call from JS Interop
-    public static Task InstallPwaPrompt()
-    {
-        Installable = true;
-        return Task.CompletedTask;
-    }
-
-    async void InstallClicked(MouseEventArgs args)
-    {
-        Installable = false;
-        await JsRuntime.InvokeAsync<object>("OnPwaInstallClick");
-    }
-
 }

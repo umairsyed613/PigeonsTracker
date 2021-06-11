@@ -24,19 +24,13 @@ namespace PigeonsTracker.Services
             _client = client;
         }
 
-        /*private void InitHttpClient()
-        {
-            if (!string.IsNullOrEmpty(_apiKey)) { _client = new HttpClient() { BaseAddress = new Uri(_apiBaseAddr) }; }
-        }*/
-
-
         public async Task<OpenWeatherApiResult> GetWeatherResult(string lat, string lng)
         {
             if (_client == null) { return null; }
 
             var lastRead = await GetLastRead();
 
-            if (!lastRead.HasValue || DateTime.Now.Subtract(lastRead.Value).Minutes > 30)
+            if (!lastRead.HasValue || DateTime.Now.Subtract(lastRead.Value).Minutes > 30 || _cachedOpenWeatherApiResult == null)
             {
                 try
                 {
@@ -47,14 +41,9 @@ namespace PigeonsTracker.Services
                     /*_client.BaseAddress = new Uri("http://localhost:7071/");*/
                     _cachedOpenWeatherApiResult = await _client.GetFromJsonAsync<OpenWeatherApiResult>($"/api/WeatherFunc?lat={lat}&lng={lng}");
 
-                    /*if (resp.IsSuccessStatusCode)
-                    {
-                        _cachedOpenWeatherApiResult = await resp.Content.ReadFromJsonAsync<OpenWeatherApiResult>();
-                    }*/
-
                     await SetLastRead(lastRead.Value);
                 }
-                catch (Exception e) { Console.WriteLine(e); }
+                catch (Exception e) { Console.WriteLine(@"Error Fetching Weather : " + e.Message); }
             }
 
             return _cachedOpenWeatherApiResult;

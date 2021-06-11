@@ -47,8 +47,14 @@
   <ItemGroup>
     <ProjectReference Include="..\PigeonsTracker.Shared\PigeonsTracker.Shared.csproj" />
   </ItemGroup>
-  
+
   <PropertyGroup>
     <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+  </PropertyGroup>
+
+  <PropertyGroup Label="PWA">
+    <ServiceWorkerCacheVersion>1.5</ServiceWorkerCacheVersion>
+    <ServiceWorkerRegisterInstallableType>installable-blazor</ServiceWorkerRegisterInstallableType>
+    <ServiceWorkerForce>true</ServiceWorkerForce>
   </PropertyGroup>
 </Project>
