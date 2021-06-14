@@ -18,7 +18,7 @@ namespace PigeonsTracker
         private const string _apiBaseAddr = "https://api.openweathermap.org";
         private const string _request = "/data/2.5/weather?units=metric&lat={0}&lon={1}&appid={2}";
 
-        private static string _apiKey = Environment.GetEnvironmentVariable("weatherapikey") ?? "fd875ab3f9cf0e8c71da1f7543de6e2c";
+        private static string _apiKey = Environment.GetEnvironmentVariable("weatherapikey") ?? string.Empty;
         private static HttpClient _weatherHttpClient;
 
         [FunctionName("WeatherFunc")]
