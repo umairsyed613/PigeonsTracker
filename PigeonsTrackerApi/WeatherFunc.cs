@@ -18,16 +18,20 @@ namespace PigeonsTracker
         private const string _apiBaseAddr = "https://api.openweathermap.org";
         private const string _request = "/data/2.5/weather?units=metric&lat={0}&lon={1}&appid={2}";
 
-        private static string _apiKey = Environment.GetEnvironmentVariable("weatherapikey") ?? string.Empty;
+        private static string _apiKey = Environment.GetEnvironmentVariable("weatherapikey") ?? "fd875ab3f9cf0e8c71da1f7543de6e2c";
         private static HttpClient _weatherHttpClient;
 
         [FunctionName("WeatherFunc")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")]
             HttpRequest req, ILogger log)
         {
-            log.LogInformation($"Running Weather Func.");
+            log.LogInformation("Running Weather Function");
 
-            if (string.IsNullOrEmpty(_apiKey)) { return new OkObjectResult(null); }
+            if (string.IsNullOrEmpty(_apiKey))
+            {
+                log.LogInformation("Weather Function Api key is missing");
+                return new OkObjectResult(null);
+            }
 
             var weatherReq = new WeatherRequest() { Latitude = req.Query["lat"], Longitude = req.Query["lng"] };
                 //await JsonSerializer.DeserializeAsync<WeatherRequest>(req.Body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true, });

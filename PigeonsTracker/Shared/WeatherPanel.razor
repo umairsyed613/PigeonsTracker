@@ -5,7 +5,7 @@
 <style>
     .bg-weather-panel{
     /*background-color: #2e637f !important;*/
-    background-color: #d1eaff !important;
+    background-color: #e4eef7 !important;
     }
 </style>
 @if (_weatherApiResult != null)
@@ -54,17 +54,23 @@
     {
         if (Location != null)
         {
+            Console.WriteLine("fetching weather");
+
             var temp = await _weatherService.GetWeatherResult(Location.Latitude.ToString(CultureInfo.InvariantCulture),
-                                                              Location.Longitude.ToString(CultureInfo.InvariantCulture));
+                                                              Location.Longitude.ToString(CultureInfo.InvariantCulture), AppState.CachedOpenWeatherApiResult == null);
+
             if (temp != null)
             {
                 AppState.CachedOpenWeatherApiResult = temp;
+                /*Console.WriteLine("Weather Data written to appsate");*/
             }
 
+            /*Console.WriteLine(AppState.CachedOpenWeatherApiResult);*/
             _weatherApiResult = AppState.CachedOpenWeatherApiResult;
             _weather = _weatherApiResult?.Weather.FirstOrDefault();
             lastUpdated = _weatherService.LastUpdatedAt;
 
+            StateHasChanged();
         }
     }
 

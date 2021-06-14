@@ -22,13 +22,13 @@ namespace PigeonsTracker.Services
             _client = client;
         }
 
-        public async Task<OpenWeatherApiResult> GetWeatherResult(string lat, string lng)
+        public async Task<OpenWeatherApiResult> GetWeatherResult(string lat, string lng, bool force)
         {
             if (_client == null) { return null; }
 
             var lastRead = await GetLastRead();
 
-            if (!lastRead.HasValue || DateTime.Now.Subtract(lastRead.Value).Minutes > 30)
+            if (force || !lastRead.HasValue || DateTime.Now.Subtract(lastRead.Value).Minutes > 30)
             {
                 try
                 {
@@ -36,7 +36,7 @@ namespace PigeonsTracker.Services
                     LastUpdatedAt = lastRead.Value;
                     Console.WriteLine($@"Reading weather data. {LastUpdatedAt}");
 
-                    /*_client.BaseAddress = new Uri("http://localhost:7071/");*/
+                    _client.BaseAddress = new Uri("http://localhost:7071/");
                     try
                     {
                         var temp = await _client.GetFromJsonAsync<OpenWeatherApiResult>($"/api/WeatherFunc?lat={lat}&lng={lng}");

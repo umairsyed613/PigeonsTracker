@@ -56,10 +56,13 @@
         {
             location = await locationService.GetLocationAsync();
             AppState.SetLocation(location, DateTime.Now);
-            StateHasChanged();
         }
         else
-        { location = AppState.Location; }
+        {
+            location = AppState.Location;
+        }
+
+        StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool first)
