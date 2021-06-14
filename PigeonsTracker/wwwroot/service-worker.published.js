@@ -48,4 +48,4 @@ async function onFetch(event) {
 }
 
 // changed 08:07
-// Version = 1.4;
+// Version = 1.6;

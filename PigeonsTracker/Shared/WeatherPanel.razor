@@ -1,4 +1,6 @@
+@using System.Globalization
 @inject WeatherService _weatherService
+@inject AppState AppState
 
 <style>
     .bg-weather-panel{
@@ -52,9 +54,17 @@
     {
         if (Location != null)
         {
-            _weatherApiResult = await _weatherService.GetWeatherResult(Location.Latitude.ToString(), Location.Longitude.ToString());
+            var temp = await _weatherService.GetWeatherResult(Location.Latitude.ToString(CultureInfo.InvariantCulture),
+                                                              Location.Longitude.ToString(CultureInfo.InvariantCulture));
+            if (temp != null)
+            {
+                AppState.CachedOpenWeatherApiResult = temp;
+            }
+
+            _weatherApiResult = AppState.CachedOpenWeatherApiResult;
             _weather = _weatherApiResult?.Weather.FirstOrDefault();
             lastUpdated = _weatherService.LastUpdatedAt;
+
         }
     }
 

@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-md-6 my-1">
                         <label for="@i _2" class="form-label w-100 fs-1">@localizer["BirdsName"]</label>
-                        <input type="text" class="form-control" id="@i _2" @bind="@rec.BirdName">
+                        <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@rec.BirdName">
                     </div>
                     <div class="col-md-4 my-1">
                         <label for="@i _3" class="form-label w-100 fs-1">@localizer["LandingTime"]</label>
@@ -148,6 +148,7 @@
 
                 _record.Records = _records.ToList();
 
+                _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);
                 _tournament.TrackingRecords.Add(_record);
                 await _trackingService.UpsertTournament(_tournament);
                 NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/{TournId}/{_record.Id}");

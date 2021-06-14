@@ -1,11 +1,14 @@
 using System;
 using AspNetMonsters.Blazor.Geolocation;
+using PigeonsTracker.Shared.Models;
 
 namespace PigeonsTracker.Services
 {
     public class AppState
     {
-        public double ApplicationVersion { get; private set; } = 1.5;
+        public double ApplicationVersion { get; private set; } = 1.6;
+
+        public OpenWeatherApiResult CachedOpenWeatherApiResult { get; set; }
         public Location Location { get; private set; }
         public DateTime LocationSetDatetime { get; set; }
 

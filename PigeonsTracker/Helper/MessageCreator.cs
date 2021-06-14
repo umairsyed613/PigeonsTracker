@@ -16,10 +16,10 @@ namespace PigeonsTracker.Helper
 
             var i = 1;
 
-            result += $"Nr. {"BirdName".PadRight(15)}Landed\tAverage{Environment.NewLine}";
+            result += $"Nr. {"BirdName".PadRight(25)}Landed\tAverage{Environment.NewLine}";
             foreach (var rec in record.Records)
             {
-                result += $"{i}:\t{rec.BirdName.PadRight(15)}{rec.EndTime.ToCustomFormat()}\t{rec.TotalBirdFlyingTime?.ToCustomFormat()}{Environment.NewLine}";
+                result += $"{i}:\t{rec.BirdName.PadRight(25)}{rec.EndTime.ToCustomFormat()}\t{rec.TotalBirdFlyingTime?.ToCustomFormat()}{Environment.NewLine}";
                 i++;
             }
 
