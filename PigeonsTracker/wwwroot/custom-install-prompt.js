@@ -33,45 +33,4 @@ window.addEventListener('beforeinstallprompt', function (e) {
             clearInterval(checkExist);
         }
     }, 100);
-
 });
-
-// Prompt when the PWA has been installed but a new version is available
-// Code based on the Blazor.PWA.MSBuild package by SQL-MisterMagoo
-// Read more at https://github.com/SQL-MisterMagoo/Blazor.PWA.MSBuild/blob/master/LICENSE.txt
-window.updateAvailable = new Promise(function (resolve, reject) {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-            .then(function (registration) {
-                console.info('Registration successful, scope is:', registration.scope);
-                registration.onupdatefound = () => {
-                    const installingWorker = registration.installing;
-                    installingWorker.onstatechange = () => {
-                        switch (installingWorker.state) {
-                            case 'installed':
-                                if (navigator.serviceWorker.controller) {
-                                    resolve(true);
-                                } else {
-                                    resolve(false);
-                                }
-                                break;
-                            default:
-                        }
-                    };
-                };
-            })
-            .catch(error =>
-                console.info('Service worker registration failed, error:', error));
-    }
-});
-window['updateAvailable']
-    .then(isAvailable => {
-        if (isAvailable) {
-            // TODO: Consider adding your own app UI for this as well in a fashion similar to the showAddToHomeScreen() method
-
-            if (confirm('New version available. Do you want to update?')) {
-                // Save it!
-                window.location.reload();
-            }
-        }
-    });

@@ -50,8 +50,8 @@
             </ul>
         </div>
 
-        <span class="navbar-brand mb-0 h1 ml-3 user-select-stop">Pigeons Tracker</span>
-        <span class="text-white fs-0-5 align-text-bottom my-auto">(v@(AppState.ApplicationVersion))</span>
+        <span class="navbar-brand mb-0 h1 ml-3 user-select-stop">Pigeons Tracker <sup class="version-sup">(v@(AppState.ApplicationVersion))</sup></span>
+        @*<span class="text-white fs-0-5 align-text-bottom my-auto"></span>*@
         <div class="ml-auto">
             <button class="btn text-white" title="@localizer["ChangeLanguage"]" @onclick='() => Manager.NavigateTo($"/LanguageChange?returnUrl={Manager.Uri}")'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-translate" viewBox="0 0 16 16">

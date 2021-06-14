@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
 @inject IJSRuntime jSRuntime
+@inject IStringLocalizer<Language> localizer
 
 <div class="d-flex flex-column w-100 maindiv">
     <NavMenu/>
@@ -16,7 +17,7 @@
                 </svg>
             </i> developed by UmairSyed
         </span>
-            <div class="d-flex align-items-center px-2">
+            <div class="d-flex align-items-center px-3">
                 <a href="https://www.facebook.com/groups/pigeonstracker/" class="text-decoration-none fs-0-5" target="_blank">
                     <img class="img-fluid" width="16" height="16" src="data:image/png;base64,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">
                 Follow us
@@ -29,7 +30,7 @@
 {
     <div class="row justify-content-center">
         <div class="install-prompt col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
-            <span>Install app?</span>
+            <span>@localizer["InstallThisApplication"]</span>
             <button class="installButton btn btn-primary" @onclick="@(() => InstallClicked())">Yes</button>
             <button class="cancelButton btn btn-danger" @onclick="@(()=>Installable=false)">No</button>
         </div>

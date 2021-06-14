@@ -73,7 +73,7 @@
         <value>Contactus</value>
     </data>
     <data name="InstallThisApplication" xml:space="preserve">
-        <value>Install this app?</value>
+        <value>Install app?</value>
     </data>
     <data name="Start" xml:space="preserve">
         <value>Start</value>

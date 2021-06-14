@@ -13,8 +13,6 @@ namespace PigeonsTracker.Services
 
         public DateTime LastUpdatedAt { get; set; }
 
-        private OpenWeatherApiResult _cachedOpenWeatherApiResult;
-
         private static readonly string _storageKey = "0aab67a5b2164d939ae74d75955f1336";
         private ILocalStorageService LocalStorage { get; init; }
 
@@ -30,7 +28,7 @@ namespace PigeonsTracker.Services
 
             var lastRead = await GetLastRead();
 
-            if (!lastRead.HasValue || DateTime.Now.Subtract(lastRead.Value).Minutes > 30 || _cachedOpenWeatherApiResult == null)
+            if (!lastRead.HasValue || DateTime.Now.Subtract(lastRead.Value).Minutes > 30)
             {
                 try
                 {
@@ -39,14 +37,21 @@ namespace PigeonsTracker.Services
                     Console.WriteLine($@"Reading weather data. {LastUpdatedAt}");
 
                     /*_client.BaseAddress = new Uri("http://localhost:7071/");*/
-                    _cachedOpenWeatherApiResult = await _client.GetFromJsonAsync<OpenWeatherApiResult>($"/api/WeatherFunc?lat={lat}&lng={lng}");
+                    try
+                    {
+                        var temp = await _client.GetFromJsonAsync<OpenWeatherApiResult>($"/api/WeatherFunc?lat={lat}&lng={lng}");
+                        await SetLastRead(lastRead.Value);
 
-                    await SetLastRead(lastRead.Value);
+                        return temp;
+                    }
+                    catch
+                    {
+                    }
                 }
                 catch (Exception e) { Console.WriteLine(@"Error Fetching Weather : " + e.Message); }
             }
 
-            return _cachedOpenWeatherApiResult;
+            return null;
         }
 
         private async Task<DateTime?> GetLastRead()

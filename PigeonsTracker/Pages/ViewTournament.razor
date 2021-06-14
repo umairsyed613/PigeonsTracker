@@ -10,18 +10,18 @@
     @if (_tournament != null)
     {
         <h6>@localizer["TournamentName"] : @_tournament.Name</h6>
-        @*<div class="row text-muted w-100">
-            <span class="col-sm-12 col-md-3">@localizer["Type"] : @GetTournTypeText(_tournament.TournamentType)</span>
-            <span class="col-sm-12 col-md-3">@localizer["TotalAverage"] @_tournament.TrackingRecords?.Where(w => w.TotalFlyingTime != null).Sum(s => s.TotalFlyingTime.Value.TotalMinutes).FromMinutesToCustomFormat()</span>
-            <span class="col-sm-12 col-md-3">@localizer["Start"] : @_tournament.StartsFrom.ToString("dd MMMM yyyy")</span>
-            <span class="col-sm-12 col-md-3">@localizer["End"] : @_tournament.EndTo.ToString("dd MMMM yyyy")</span>
-        </div>*@
-        <div class="d-flex flex-md-row flex-wrap text-muted w-100">
+        <div class="row m-0 text-muted w-100">
+            <span class="col-sm-12 col-md-3 p-0">@localizer["Type"] :&emsp;@GetTournTypeText(_tournament.TournamentType)</span>
+            <span class="col-sm-12 col-md-3 p-0">@localizer["TotalAverage"] :&emsp;@_tournament.TrackingRecords?.Where(w => w.TotalFlyingTime != null).Sum(s => s.TotalFlyingTime.Value.TotalMinutes).FromMinutesToCustomFormat()</span>
+            <span class="col-sm-12 col-md-3 p-0">@localizer["Start"] :&emsp;@_tournament.StartsFrom.ToString("dd MMMM yyyy")</span>
+            <span class="col-sm-12 col-md-3 p-0">@localizer["End"] :&emsp;@_tournament.EndTo.ToString("dd MMMM yyyy")</span>
+        </div>
+        @*<div class="d-flex flex-md-row flex-wrap text-muted w-100">
             <span class="px-2">@localizer["Type"] : @GetTournTypeText(_tournament.TournamentType)</span>
             <span class="px-2">@localizer["TotalAverage"] @_tournament.TrackingRecords?.Where(w => w.TotalFlyingTime != null).Sum(s => s.TotalFlyingTime.Value.TotalMinutes).FromMinutesToCustomFormat()</span>
             <span class="px-2">@localizer["Start"] : @_tournament.StartsFrom.ToString("dd MMMM yyyy")</span>
             <span class="px-2">@localizer["End"] : @_tournament.EndTo.ToString("dd MMMM yyyy")</span>
-        </div>
+        </div>*@
 
 
         <div class="d-flex flex-column w-100 border-top mt-3">

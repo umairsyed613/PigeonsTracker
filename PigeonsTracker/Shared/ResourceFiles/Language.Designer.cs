@@ -223,7 +223,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Install this app?.
+        ///   Looks up a localized string similar to Install app?.
         /// </summary>
         internal static string InstallThisApplication {
             get {
