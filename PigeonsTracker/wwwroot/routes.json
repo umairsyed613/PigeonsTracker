@@ -1,10 +1,6 @@
 {
   "routes": [
     {
-      "route": "/appsettings.json",
-      "statusCode": 301
-    },
-    {
       "route": "/*",
       "serve": "/index.html",
       "statusCode": 200
