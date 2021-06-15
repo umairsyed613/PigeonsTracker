@@ -24,7 +24,10 @@ async function onInstall(event) {
     event.waitUntil(
         caches.open(cacheName).then(cache => {
             console.log('Opened cache');
-            cache.addAll(assetsRequests)
+            for (asse of assetsRequests) {
+                cache.add(asse).catch(reason => console.error(reason));
+            }
+            //cache.addAll(assetsRequests)
         }).catch(reason => console.error(reason))
     );
     //await caches.open(cacheName).then(cache => cache.addAll(assetsRequests).catch(reason => console.error(reason))).catch(reason => console.error(reason));
