@@ -9,7 +9,7 @@ self.addEventListener('beforeinstallprompt', event => event.respondWith(beforeIn
 
 const cacheNamePrefix = 'pt-offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
-const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpeg$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/ ];
+const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/ ];
 const offlineAssetsExclude = [ /^service-worker\.js$/ ];
 
 async function onInstall(event) {
@@ -21,23 +21,7 @@ async function onInstall(event) {
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => new Request(asset.url, { integrity: asset.hash }));
 
-    await caches.open(cacheName).then(cache => {
-        cache.add(new Request('index.html'));
-        let requestsToFetch = [];
-        Promise.all(assetsRequests.map(async (request) => {
-            const response = await caches.match(request);
-            if (response) {
-                return cache.put(request, response);
-            }
-            else {
-                requestsToFetch.push(request);
-                return Promise.resolve();
-            }
-        })).then(() => {
-            return cache.addAll(requestsToFetch);
-        });
-    });
-  //  await caches.open(cacheName).then(cache => cache.addAll(assetsRequests)).catch(reason => console.log(reason));
+    await caches.open(cacheName).then(cache => cache.addAll(assetsRequests)).catch(reason => console.log(reason));
 }
 
 async function onActivate(event) {
