@@ -7,7 +7,7 @@ self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
 self.addEventListener('beforeinstallprompt', event => event.respondWith(beforeInstallPrompt(event)));
 
-const cacheNamePrefix = 'pigeons-tracker-offline-cache-';
+const cacheNamePrefix = 'pt-offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
 const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpeg$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/ ];
 const offlineAssetsExclude = [ /^service-worker\.js$/ ];
@@ -20,8 +20,24 @@ async function onInstall(event) {
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => new Request(asset.url, { integrity: asset.hash }));
-    console.log(assetsRequests);
-    await caches.open(cacheName).then(cache => cache.addAll(assetsRequests)).catch(err => console.log('Cache Adding Error', err));
+
+    await caches.open(cacheName).then(cache => {
+        cache.add(new Request('index.html'));
+        let requestsToFetch = [];
+        Promise.all(assetsRequests.map(async (request) => {
+            const response = await caches.match(request);
+            if (response) {
+                return cache.put(request, response);
+            }
+            else {
+                requestsToFetch.push(request);
+                return Promise.resolve();
+            }
+        })).then(() => {
+            return cache.addAll(requestsToFetch);
+        });
+    });
+  //  await caches.open(cacheName).then(cache => cache.addAll(assetsRequests)).catch(reason => console.log(reason));
 }
 
 async function onActivate(event) {
@@ -86,4 +102,3 @@ function OnPwaInstallClick() {
     }
 }
 // changed 08:07
-// Version = 1.6;
