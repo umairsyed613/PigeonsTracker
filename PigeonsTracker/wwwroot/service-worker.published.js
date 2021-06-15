@@ -5,8 +5,9 @@ self.importScripts('./service-worker-assets.js');
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
+self.addEventListener('beforeinstallprompt', event => event.respondWith(beforeInstallPrompt(event)));
 
-const cacheNamePrefix = 'offline-cache-';
+const cacheNamePrefix = 'pigeons-tracker-offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
 const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpeg$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/ ];
 const offlineAssetsExclude = [ /^service-worker\.js$/ ];
@@ -19,7 +20,8 @@ async function onInstall(event) {
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => new Request(asset.url, { integrity: asset.hash }));
-    await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
+    console.log(assetsRequests);
+    await caches.open(cacheName).then(cache => cache.addAll(assetsRequests)).catch(err => console.log('Cache Adding Error', err));
 }
 
 async function onActivate(event) {
@@ -47,5 +49,41 @@ async function onFetch(event) {
     return cachedResponse || fetch(event.request);
 }
 
+async function beforeInstallPrompt(e){
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    window.PWADeferredPrompt = e;
+    // Show custom installation prompt (which will trigger the built-in one, of course, when confirmed by the user)
+    const checkExist = setInterval(function () {
+        const indexPage = document.getElementById("indexPage");
+        if (!!indexPage) {
+            showAddToHomeScreen();
+            clearInterval(checkExist);
+        }
+    }, 100);
+}
+
+function showAddToHomeScreen() {
+    //console.log("Calling Install Prompt!");
+    const blazorAssembly = 'PigeonsTracker';
+    const blazorInstallMethod = 'PWAInstallable';
+
+    DotNet.invokeMethodAsync(blazorAssembly, blazorInstallMethod)
+        .then(function () { }, function (er) {
+            //console.log(er);
+            //setTimeout(showAddToHomeScreen, 1000);
+        });
+}
+function OnPwaInstallClick() {
+    if (window.PWADeferredPrompt) {
+        // Fires the browser prompt. Invoked from the custom installation UI through JS Interop
+        window.PWADeferredPrompt.prompt();
+        window.PWADeferredPrompt.userChoice
+            .then(function (choiceResult) {
+                window.PWADeferredPrompt = null;
+            });
+    }
+}
 // changed 08:07
 // Version = 1.6;
