@@ -21,7 +21,13 @@ async function onInstall(event) {
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
         .map(asset => new Request(asset.url, { integrity: asset.hash }));
 
-    await caches.open(cacheName).then(cache => cache.addAll(assetsRequests).catch(reason => console.error(reason))).catch(reason => console.error(reason));
+    event.waitUntil(
+        caches.open(cacheName).then(cache => {
+            console.log('Opened cache');
+            cache.addAll(assetsRequests)
+        }).catch(reason => console.error(reason))
+    );
+    //await caches.open(cacheName).then(cache => cache.addAll(assetsRequests).catch(reason => console.error(reason))).catch(reason => console.error(reason));
 }
 
 async function onActivate(event) {
