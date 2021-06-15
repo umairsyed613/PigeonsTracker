@@ -22,7 +22,7 @@
 <div id="app">
     <div class="d-flex flex-column w-100 align-items-center justify-content-center my-auto user-select-none loading-screen-bg"
          style="min-height: 100vh;">
-        <h5>PigeonsTracker Application</h5>
+        <h5 class="mb-3">PigeonsTracker Application</h5>
         <!--<span class="mt-2">Loading...</span>-->
         <div class="dot-collision"></div>
     </div>
@@ -42,13 +42,13 @@
         set: (value) => window.localStorage['BlazorCulture'] = value
     };
 </script>
-<script type="module">
+<!--<script type="module">
     import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
     const el = document.createElement('pwa-update');
     document.body.appendChild(el);
-</script>
-<!--<script>navigator.serviceWorker.register('service-worker.js');</script>
-<script src="custom-install-prompt.js"></script>-->
+</script>-->
+<script>navigator.serviceWorker.register('service-worker.js');</script>
+<script src="custom-install-prompt.js"></script>
 <script src="js/location.js"></script>
 <script src="js/script.js"></script>
 
