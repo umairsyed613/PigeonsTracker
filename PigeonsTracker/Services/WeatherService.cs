@@ -36,7 +36,7 @@ namespace PigeonsTracker.Services
                     LastUpdatedAt = lastRead.Value;
                     Console.WriteLine($@"Reading weather data. {LastUpdatedAt}");
 
-                    _client.BaseAddress = new Uri("http://localhost:7071/");
+                    /*_client.BaseAddress = new Uri("http://localhost:7071/");*/
                     try
                     {
                         var temp = await _client.GetFromJsonAsync<OpenWeatherApiResult>($"/api/WeatherFunc?lat={lat}&lng={lng}");
