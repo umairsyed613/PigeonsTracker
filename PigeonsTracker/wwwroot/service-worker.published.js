@@ -10,7 +10,7 @@ self.addEventListener('beforeinstallprompt', event => event.respondWith(beforeIn
 const cacheNamePrefix = 'pt-offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
 const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/, /\.blat$/, /\.dat$/ ];
-const offlineAssetsExclude = [ /^service-worker\.js$/,/^staticwebapp.config\.js$/ ];
+const offlineAssetsExclude = [ /^service-worker\.js$/ ];
 
 async function onInstall(event) {
     console.info('Service worker: Install');
@@ -23,9 +23,12 @@ async function onInstall(event) {
 
     event.waitUntil(
         caches.open(cacheName).then(cache => {
-            console.log('Opened cache');
+            console.log('Opened cache adding items');
             for (asse of assetsRequests) {
-                cache.add(asse).catch(reason => console.error(reason));
+                cache.add(asse).catch(reason => {
+                    console.log(asse);
+                    console.log(reason);
+                });
             }
             //cache.addAll(assetsRequests)
         }).catch(reason => console.error(reason))
