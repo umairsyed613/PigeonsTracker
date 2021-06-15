@@ -11,5 +11,9 @@
       "type": "image/png",
       "sizes": "512x512"
     }
-  ]
+  ],
+  "url": "https://www.pigeonstracker.com/",
+  "manifestUrl": "manifest.json",
+  "lang": "",
+  "screenshots": []
 }
