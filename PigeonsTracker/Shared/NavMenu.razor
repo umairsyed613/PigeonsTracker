@@ -67,8 +67,9 @@
 
 @code
 {
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        Manager.LocationChanged += async (sender, args) => await JsRuntime.InvokeVoidAsync("CollapseNavBar");
+        Manager.LocationChanged += (sender, args) => JsRuntime.InvokeVoidAsync("CollapseNavBar");
+        return Task.CompletedTask;
     }
 }

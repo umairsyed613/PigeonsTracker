@@ -26,13 +26,13 @@ namespace PigeonsTracker.Helper
 
         public static string ToCustomFormat(this TimeSpan t)
         {
-            return $"{((int) t.TotalHours).ToString("D2", CultureInfo.InvariantCulture)}:{t.Minutes.ToString("D2", CultureInfo.InvariantCulture)}";
+            return $"{((int) t.TotalHours).ToString("D2", CultureInfo.InvariantCulture)}:{t.Minutes.ToString("D2", CultureInfo.InvariantCulture)}:{t.Seconds.ToString("D2", CultureInfo.InvariantCulture)}";
         }
 
         public static string FromMinutesToCustomFormat(this double minutes)
         {
             var t = TimeSpan.FromMinutes(minutes);
-            return $"{((int) t.TotalHours).ToString("D2", CultureInfo.InvariantCulture)}:{t.Minutes.ToString("D2", CultureInfo.InvariantCulture)}";
+            return $"{((int) t.TotalHours).ToString("D2", CultureInfo.InvariantCulture)}:{t.Minutes.ToString("D2", CultureInfo.InvariantCulture)}:{t.Seconds.ToString("D2", CultureInfo.InvariantCulture)}";
         }
 
         public static string ToCustomFormat(this DateTime t)
@@ -46,7 +46,7 @@ namespace PigeonsTracker.Helper
                 return string.Empty;
             }
 
-            return temp.Value.ToString("hh:mm tt");
+            return temp.Value.ToString("hh:mm:ss tt");
         }
 
         public static string KelvinToCelsius(this double temp)
