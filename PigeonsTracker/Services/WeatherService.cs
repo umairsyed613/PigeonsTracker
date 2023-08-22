@@ -24,31 +24,25 @@ namespace PigeonsTracker.Services
 
         public async Task<OpenWeatherApiResult> GetWeatherResult(string lat, string lng, bool force)
         {
-            if (_client == null) { return null; }
+            if (_client == null)
+            {
+                return null;
+            }
 
             var lastRead = await GetLastRead();
 
             if (force || !lastRead.HasValue || DateTime.Now.Subtract(lastRead.Value).Minutes > 30)
             {
-                try
-                {
-                    lastRead = DateTime.Now;
-                    LastUpdatedAt = lastRead.Value;
-                    Console.WriteLine($@"Reading weather data. {LastUpdatedAt}");
+                lastRead = DateTime.Now;
+                LastUpdatedAt = lastRead.Value;
+                Console.WriteLine($@"Reading weather data. {LastUpdatedAt}");
 
-                    /*_client.BaseAddress = new Uri("http://localhost:7071/");*/
-                    try
-                    {
-                        var temp = await _client.GetFromJsonAsync<OpenWeatherApiResult>($"/api/WeatherFunc?lat={lat}&lng={lng}");
-                        await SetLastRead(lastRead.Value);
+                /*_client.BaseAddress = new Uri("http://localhost:7071/");*/
+                var temp = await _client.GetFromJsonAsync<OpenWeatherApiResult>(
+                    $"/api/WeatherFunc?lat={lat}&lng={lng}");
+                await SetLastRead(lastRead.Value);
 
-                        return temp;
-                    }
-                    catch
-                    {
-                    }
-                }
-                catch (Exception e) { Console.WriteLine(@"Error Fetching Weather : " + e.Message); }
+                return temp;
             }
 
             return null;
@@ -56,7 +50,10 @@ namespace PigeonsTracker.Services
 
         private async Task<DateTime?> GetLastRead()
         {
-            if (!await LocalStorage.ContainKeyAsync(_storageKey)) { return null; }
+            if (!await LocalStorage.ContainKeyAsync(_storageKey))
+            {
+                return null;
+            }
 
             return await LocalStorage.GetItemAsync<DateTime>(_storageKey);
         }
