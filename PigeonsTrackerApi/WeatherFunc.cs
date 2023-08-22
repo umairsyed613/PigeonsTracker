@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using PigeonsTracker.Shared.Models;
 using PigeonsTracker.Shared.Requests;
-using Newtonsoft.Json;
 
 namespace PigeonsTracker
 {
@@ -18,7 +18,7 @@ namespace PigeonsTracker
         private const string _apiBaseAddr = "https://api.openweathermap.org";
         private const string _request = "/data/2.5/weather?units=metric&lat={0}&lon={1}&appid={2}";
 
-        private static string _apiKey = Environment.GetEnvironmentVariable("weatherapikey") ?? string.Empty;
+        private static string _apiKey = Environment.GetEnvironmentVariable("weatherapikey") ?? "fd875ab3f9cf0e8c71da1f7543de6e2c";
         private static HttpClient _weatherHttpClient;
 
         [FunctionName("WeatherFunc")]
@@ -40,16 +40,16 @@ namespace PigeonsTracker
 
             _weatherHttpClient ??= new HttpClient() { BaseAddress = new Uri(_apiBaseAddr) };
 
-            var data = await _weatherHttpClient.GetStringAsync(
+            var data = await _weatherHttpClient.GetFromJsonAsync<OpenWeatherApiResult>(
                 string.Format(_request, weatherReq.Latitude, weatherReq.Longitude, _apiKey));
 
             /*if (!data.IsSuccessStatusCode) { return new OkObjectResult(null); }
 
             var response = await data.Content.ReadAsStreamAsync();*/
 
-            var weatherResp = JsonConvert.DeserializeObject<OpenWeatherApiResult>(data);
+            //var weatherResp = JsonSerializer.DeserializeAsync<OpenWeatherApiResult>(data);
 
-            return new OkObjectResult(weatherResp);
+            return new OkObjectResult(data);
         }
     }
 }
