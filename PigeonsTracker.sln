@@ -6,6 +6,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PigeonsTracker.Shared", "Pi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PigeonsTrackerApi", "PigeonsTrackerApi\PigeonsTrackerApi.csproj", "{293A1AC1-3020-408B-8228-DF758A2BFD87}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Sources", "External Sources", "{61A3C537-15C4-43DF-A8ED-035FBA018FC6}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\azure-static-web-apps-happy-desert-0271f6700.yml = .github\workflows\azure-static-web-apps-happy-desert-0271f6700.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
