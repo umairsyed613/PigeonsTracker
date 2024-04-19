@@ -1,7 +1,12 @@
 {
-  "apiRuntime": "dotnet-isolated:8.0",
+  "platform": {
+    "apiRuntime": "dotnet-isolated:8.0"
+  },
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/_framework/*", "/css/*"]
+    "exclude": [
+      "/_framework/*",
+      "/css/*"
+    ]
   }
 }
