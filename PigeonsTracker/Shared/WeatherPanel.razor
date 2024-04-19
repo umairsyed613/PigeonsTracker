@@ -1,5 +1,5 @@
 @using System.Globalization
-@inject WeatherService _weatherService
+@inject WeatherService WeatherService
 @inject AppState AppState
 
 <style>
@@ -28,14 +28,14 @@
                 <p class="fs-0-5">Feels @_weatherApiResult.Main.FeelsLike.ToOneDecimal()°</p>
             </div>
         </div>
-        @if (lastUpdated.HasValue)
+        @if (_lastUpdated.HasValue)
         {
             <div class="d-flex flex-row-reverse align-items-center w-100 fs-0-5 text-muted">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
                     <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
                 </svg>
-                <span class="mx-2">@lastUpdated.Value</span>
+                <span class="mx-2">@_lastUpdated.Value</span>
             </div>
         }
     </div>
@@ -48,27 +48,34 @@
 
     private OpenWeatherApiResult _weatherApiResult;
     private Weather _weather;
-    private DateTime? lastUpdated;
+    private DateTime? _lastUpdated;
 
     protected override async Task OnParametersSetAsync()
     {
         if (Location != null)
         {
             Console.WriteLine("fetching weather");
-
-            var temp = await _weatherService.GetWeatherResult(Location.Latitude.ToString(CultureInfo.InvariantCulture),
-                                                              Location.Longitude.ToString(CultureInfo.InvariantCulture), AppState.CachedOpenWeatherApiResult == null);
-
-            if (temp != null)
+            try
             {
-                AppState.CachedOpenWeatherApiResult = temp;
-                /*Console.WriteLine("Weather Data written to appsate");*/
+
+                var temp = await WeatherService.GetWeatherResult(Location.Latitude.ToString(CultureInfo.InvariantCulture),
+                    Location.Longitude.ToString(CultureInfo.InvariantCulture), AppState.CachedOpenWeatherApiResult == null);
+
+                if (temp != null)
+                {
+                    AppState.CachedOpenWeatherApiResult = temp;
+                    /*Console.WriteLine("Weather Data written to appsate");*/
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
 
             /*Console.WriteLine(AppState.CachedOpenWeatherApiResult);*/
             _weatherApiResult = AppState.CachedOpenWeatherApiResult;
             _weather = _weatherApiResult?.Weather.FirstOrDefault();
-            lastUpdated = _weatherService.LastUpdatedAt;
+            _lastUpdated = WeatherService.LastUpdatedAt;
 
             StateHasChanged();
         }

@@ -9,7 +9,7 @@ namespace PigeonsTracker.Services
 {
     public class PigeonTrackingService : IPigeonTrackingService
     {
-        private static readonly string _tournamentKey = "92C792370CFF4357BB6FE81EFD9C356D";
+        private const string TournamentKey = "92C792370CFF4357BB6FE81EFD9C356D";
         private ILocalStorageService LocalStorage { get; init; }
 
         public PigeonTrackingService(ILocalStorageService service) => LocalStorage = service ?? throw new ArgumentNullException(nameof(LocalStorage));
@@ -35,7 +35,7 @@ namespace PigeonsTracker.Services
 
         public async Task<List<Tournament>> GetAllTournaments()
         {
-            if (await LocalStorage.ContainKeyAsync(_tournamentKey)) { return await LocalStorage.GetItemAsync<List<Tournament>>(_tournamentKey); }
+            if (await LocalStorage.ContainKeyAsync(TournamentKey)) { return await LocalStorage.GetItemAsync<List<Tournament>>(TournamentKey); }
 
             return null;
         }
@@ -65,9 +65,9 @@ namespace PigeonsTracker.Services
 
         private async Task UpsertAllTournamentLists(List<Tournament> data)
         {
-            if (await LocalStorage.ContainKeyAsync(_tournamentKey)) { await LocalStorage.RemoveItemAsync(_tournamentKey); }
+            if (await LocalStorage.ContainKeyAsync(TournamentKey)) { await LocalStorage.RemoveItemAsync(TournamentKey); }
 
-            await LocalStorage.SetItemAsync(_tournamentKey, data);
+            await LocalStorage.SetItemAsync(TournamentKey, data);
         }
     }
 }

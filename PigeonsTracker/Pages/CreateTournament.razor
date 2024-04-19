@@ -32,16 +32,17 @@
 
     <div class="my-3">
         <label for="start" class="form-label w-100">@localizer["TournamentStartDate"]</label>
-        <input type="date" id="start" name="trip-start" class="form-control" @bind="StartFrom" min="2021-01-01" max="9999-12-31">
+        <input type="date" id="start" name="trip-start" class="form-control" @bind="StartFrom" min="2024-01-01" max="9999-12-31">
     </div>
 
     <div class="my-3">
-        <label for="start" class="form-label w-100">@localizer["TournamentEndDate"]</label>
-        <input type="date" id="end" name="trip-end" class="form-control" @bind="EndTo" min="2021-01-01" max="9999-12-31">
+        <label for="end" class="form-label w-100">@localizer["TournamentEndDate"]</label>
+        <input type="date" id="end" name="trip-end" class="form-control" @bind="EndTo" min="2024-01-01" max="9999-12-31">
     </div>
 
     <button type="submit" class="btn btn-primary" @onclick="CreateTournamentInStorage">@localizer["Submit"]</button>
 </div>
+
 
 @code {
 

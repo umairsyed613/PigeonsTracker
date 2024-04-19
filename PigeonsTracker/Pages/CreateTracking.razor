@@ -30,7 +30,7 @@
         </div>
         <div class="col-md-4 my-2">
             <label for="birdsCount" class="form-label fs-1 w-100">@localizer["TotalBirdsCount"]</label>
-            <input type="number" class="form-control" id="birdsCount" @bind="numberOfBirds">
+            <input type="number" class="form-control" id="birdsCount" @bind="_numberOfBirds">
         </div>
     </div>
 
@@ -75,7 +75,7 @@
     [Parameter]
     public string TournId { get; set; }
 
-    private int numberOfBirds = 7;
+    private int _numberOfBirds = 7;
     private DateTime startDate { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
     private DateTime startTime { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
     private PigeonsTrackingRecord _record;
@@ -119,8 +119,8 @@
     {
         if (_records == null)
         {
-            _records = new PigeonTrackingRecord[numberOfBirds];
-            for (int i = 0; i < numberOfBirds; i++) { _records[i] = new PigeonTrackingRecord(); }
+            _records = new PigeonTrackingRecord[_numberOfBirds];
+            for (var i = 0; i < _numberOfBirds; i++) { _records[i] = new PigeonTrackingRecord(); }
         }
         else
         {
