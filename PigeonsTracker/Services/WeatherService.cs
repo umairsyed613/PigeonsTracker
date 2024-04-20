@@ -40,7 +40,7 @@ namespace PigeonsTracker.Services
 
                     Console.WriteLine($@"Reading weather data. {LastUpdatedAt}");
 
-                    _client.BaseAddress = new Uri("http://localhost:7071/");
+                    //_client.BaseAddress = new Uri("http://localhost:7071/");
 
                     var temp = await _client.GetFromJsonAsync<OpenWeatherApiResult>($"/api/WeatherFunction?lat={lat}&lng={lng}");
 
