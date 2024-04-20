@@ -147,4 +147,7 @@
     <data name="Average" xml:space="preserve">
         <value>اورج</value>
     </data>
+    <data name="ComingSoon" xml:space="preserve">
+        <value>جلد آرہا ہے۔</value>
+    </data>
 </root>

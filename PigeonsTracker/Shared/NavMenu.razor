@@ -3,7 +3,7 @@
 @inject IStringLocalizer<Language> localizer
 @inject AppState AppState
 
-<nav class="navbar navbar-dark bg-dark mb-2">
+<nav class="navbar navbar-dark bg-mynav mb-2">
     <div class="d-flex flex-row flex-nowrap w-100">
         <div id="menuToggle">
             <input id="menutogglecheck" type="checkbox"/>
@@ -50,9 +50,9 @@
             </ul>
         </div>
 
-        <span class="navbar-brand mb-0 h1 ml-3 user-select-stop">Pigeons Tracker <sup class="version-sup">(v@(AppState.ApplicationVersion))</sup></span>
+        <span class="navbar-brand mb-0 h1 ms-4 user-select-stop">PigeonsTracker <sup class="version-sup">(v@(AppState.ApplicationVersion))</sup></span>
         @*<span class="text-white fs-0-5 align-text-bottom my-auto"></span>*@
-        <div class="ml-auto">
+        <div class="ms-auto">
             <button class="btn text-white" title="@localizer["ChangeLanguage"]" @onclick='() => Manager.NavigateTo($"/LanguageChange?returnUrl={Manager.Uri}")'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-translate" viewBox="0 0 16 16">
                     <path d="M4.545 6.714 4.11 8H3l1.862-5h1.284L8 8H6.833l-.435-1.286H4.545zm1.634-.736L5.5 3.956h-.049l-.679 2.022H6.18z"/>

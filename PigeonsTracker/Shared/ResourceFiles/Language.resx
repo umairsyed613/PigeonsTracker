@@ -147,4 +147,7 @@
     <data name="Average" xml:space="preserve">
         <value>Average</value>
     </data>
+    <data name="ComingSoon" xml:space="preserve">
+        <value>Comming soon ...</value>
+    </data>
 </root>

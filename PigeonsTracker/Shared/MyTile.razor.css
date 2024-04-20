@@ -1,0 +1,23 @@
+﻿.my-tile {
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background-color: #6f42c1;
+    color: #fff;
+    min-height: 8rem;
+    user-select: none;
+
+    h5 {
+        margin-top: 1.4rem;
+        font-weight: 400;
+        font-size: 1.3rem;
+    }
+
+    i {
+        font-size: 1.5rem;
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        opacity: 0.5;
+    }
+}
