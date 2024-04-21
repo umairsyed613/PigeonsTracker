@@ -13,7 +13,7 @@
 html, body {
     font-family: 'Roboto', sans-serif;
     height: calc(var(--vh, 1vh) * 100); /* Adjust height based on the --vh custom property */
-    overflow: hidden;
+    
 }
 
 .container {
