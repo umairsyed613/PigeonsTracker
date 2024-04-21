@@ -1,35 +1,35 @@
 @page "/CreateTracking/{TournId}"
 @using System.Globalization
-@inject IStringLocalizer<Language> localizer
-@inject IPigeonTrackingService _trackingService
+@inject IStringLocalizer<Language> Localizer
+@inject IPigeonTrackingService TrackingService
 @inject NavigationManager NavigationManager
+@inject AppState AppSate
 
-
-<div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
+<div class="d-flex flex-column w-100 @(AppSate.IsLanguageUrdu() ? "rtl" : "") animate__animated animate__fadeInLeft">
     <div class="d-flex flex-row align-items-center py-3 border-bottom">
         <h5 class="w-100">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clock-fill mx-2 " viewBox="0 0 16 16">
                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-            </svg> @localizer["CreateTrackingRecord"]
+            </svg> @Localizer["CreateTrackingRecord"]
         </h5>
     </div>
-    <div class="my-1">
-        <label for="roofName" class="form-label fs-1 w-100">@localizer["RoofName"]</label>
-        <input type="text" class="form-control" id="roofName" @bind="_record.RoofName">
+    <div class="mt-3">
+        @* <label for="roofName" class="form-label fs-1 w-100">@Localizer["RoofName"]</label> *@
+        <input type="text" class="form-control" id="roofName" placeholder="@Localizer["RoofName"]" @bind="_record.RoofName">
     </div>
     <div class="form-row my-1">
         <div class="col-md-4 my-2">
-            <label for="startDateTime" class="form-label fs-1 w-100">@localizer["FlyingStartDate"]</label>
-            <input type="date" class="form-control" id="startDateTime" @bind="@startDate" min="2021-01-01" max="9999-12-31">
-            <label id="startDateTimeHelp" class="form-text text-muted fs-0-5 px-2">@startDate.ToString("dd MMMM yyyy", CultureInfo.CurrentCulture)</label>
+            <label for="startDateTime" class="form-label fs-1 w-100">@Localizer["FlyingStartDate"]</label>
+            <input type="date" class="form-control" id="startDateTime" @bind="@StartDate" min="2021-01-01" max="9999-12-31">
+            <label id="startDateTimeHelp" class="form-text text-muted fs-0-5 px-2">@StartDate.ToString("dd MMMM yyyy", CultureInfo.CurrentCulture)</label>
         </div>
         <div class="col-md-4 my-2">
-            <label for="startTime" class="form-label fs-1 w-100">@localizer["FlyingStartTime"]</label>
-            <input type="time" class="form-control" id="startTime" @bind="startTime">
-            <label id="startTimeHelp" class="form-text text-muted fs-0-5 px-2">@startTime.ToString("HH:mm:ss tt", CultureInfo.CurrentCulture)</label>
+            <label for="startTime" class="form-label fs-1 w-100">@Localizer["FlyingStartTime"]</label>
+            <input type="time" class="form-control" id="startTime" @bind="StartTime">
+            <label id="startTimeHelp" class="form-text text-muted fs-0-5 px-2">@StartTime.ToString("HH:mm:ss", CultureInfo.CurrentCulture)</label>
         </div>
         <div class="col-md-4 my-2">
-            <label for="birdsCount" class="form-label fs-1 w-100">@localizer["TotalBirdsCount"]</label>
+            <label for="birdsCount" class="form-label fs-1 w-100">@Localizer["TotalBirdsCount"]</label>
             <input type="number" class="form-control" id="birdsCount" @bind="_numberOfBirds">
         </div>
     </div>
@@ -37,36 +37,37 @@
     @if (_records != null)
     {
         <div class="d-flex flex-column w-100 my-3">
-            <div class="py-2"><label class="w-100">@localizer["BirdsInformation"]</label></div>
+            <div class="py-2"><label class="w-100">@Localizer["BirdsInformation"]</label></div>
+
             @{ var i = 1; }
             @foreach (var rec in _records)
             {
-                <div class="form-row mb-2">
-                    <div class="col-md-2 my-1">
-                        <label for="@i _1" class="form-label w-100 fs-1">Nr.</label>
-                        <input type="text" readonly class="form-control text-center" id="@i _1" value="@i">
+                <div class="row mb-2">
+                    <div class="col-2 my-1">
+                        @* <label for="@i _1" class="form-label w-100 fs-1">Nr.</label> *@
+                        <input type="text" disabled readonly class="form-control text-center" id="@i _1" value="@i">
                     </div>
-                    <div class="col-md-6 my-1">
-                        <label for="@i _2" class="form-label w-100 fs-1">@localizer["BirdsName"]</label>
+                    <div class="col-10 my-1">
+                        @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
                         <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@rec.BirdName">
                     </div>
-                    <div class="col-md-4 my-1">
-                        <label for="@i _3" class="form-label w-100 fs-1">@localizer["LandingTime"]</label>
-                        <input type="time" class="form-control" id="@i _3" @bind="@rec.EndTime">
-                    </div>
+                    @* <div class="col-md-4 my-1"> *@
+                    @*     <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
+                    @*     <input type="time" class="form-control" id="@i _3" @bind="@rec.EndTime"> *@
+                    @* </div> *@
                 </div>
                 i++;
             }
         </div>
     }
 
-    <button type="submit" class="btn btn-primary" @onclick="CreateTrackingRecords">@localizer["Submit"]</button>
+    <button type="submit" class="btn btn-primary" @onclick="CreateTrackingRecords">@Localizer["Submit"]</button>
 </div>
 
-@if (!string.IsNullOrEmpty(errorMessage))
+@if (!string.IsNullOrEmpty(_errorMessage))
 {
     <div class="alert alert-danger" role="alert">
-        @((MarkupString)errorMessage)
+        @((MarkupString)_errorMessage)
     </div>
 }
 
@@ -76,13 +77,13 @@
     public string TournId { get; set; }
 
     private int _numberOfBirds = 7;
-    private DateTime startDate { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
-    private DateTime startTime { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
+    private DateTime StartDate { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
+    private DateTime StartTime { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
     private PigeonsTrackingRecord _record;
     private PigeonTrackingRecord[] _records;
     private Tournament _tournament;
 
-    private string errorMessage = null;
+    private string _errorMessage = null;
 
     protected override void OnInitialized()
     {
@@ -97,7 +98,7 @@
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
-        _tournament = await _trackingService.GetTournament(TournId);
+        _tournament = await TrackingService.GetTournament(TournId);
         if (_tournament == null) { NavigationManager.NavigateTo("/ViewTournament/" + TournId); }
         else
         {
@@ -132,8 +133,8 @@
                     CreatedAt = DateTime.Now
                 };
 
-                var (year, month, day) = startDate.GetSeparatedDate();
-                var (hour, minutes, seconds) = startTime.GetSeparatedTime();
+                var (year, month, day) = StartDate.GetSeparatedDate();
+                var (hour, minutes, seconds) = StartTime.GetSeparatedTime();
                 _record.StartTime = new DateTime(year, month, day, hour, minutes, seconds);
                 foreach (var d in _records.Where(w => w.EndTime != null))
                 {
@@ -143,20 +144,20 @@
                     }
 
                     var endTime = d.EndTime.Value;
-                    d.EndTime = new DateTime(year, month, day, endTime.Hour, endTime.Minute, 0);
+                    d.EndTime = new DateTime(year, month, day, endTime.Hour, endTime.Minute, endTime.Second);
                 }
 
                 _record.Records = _records.ToList();
 
                 _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);
                 _tournament.TrackingRecords.Add(_record);
-                await _trackingService.UpsertTournament(_tournament);
+                await TrackingService.UpsertTournament(_tournament);
                 NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/{TournId}/{_record.Id}");
             }
             catch (Exception e)
             {
-                errorMessage = "<b>Error Saving. </b><br>";
-                errorMessage += e.Message;
+                _errorMessage = "<b>Error Saving. </b><br>";
+                _errorMessage += e.Message;
                 Console.WriteLine(e);
             }
         }

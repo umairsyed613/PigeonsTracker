@@ -12,14 +12,16 @@
 
 html, body {
     font-family: 'Roboto', sans-serif;
-}
-
-.maindiv {
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100); /* Adjust height based on the --vh custom property */
+    overflow: hidden;
 }
 
 .container {
     padding-bottom: 15px !important;
+}
+
+.primary-bg {
+    background-color: #38006d !important;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -84,7 +86,8 @@ h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
 }
 
 .helpText {
-    font-size: 1rem !important;
+    font-size: 0.8rem !important;
+    opacity: 0.7;
 }
 
 .bg-dark {
@@ -370,4 +373,8 @@ h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
 
 .byLink {
     color: #04cba0;
+}
+
+.rtl {
+    direction: rtl;
 }

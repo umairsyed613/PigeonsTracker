@@ -276,6 +276,15 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to کوئی ریکارڈ نہیں ملا، براہ کرم نیا ریکارڈ بنائیں...
+        /// </summary>
+        internal static string NoRecords {
+            get {
+                return ResourceManager.GetString("NoRecords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to نمبر.
         /// </summary>
         internal static string Nr {
@@ -366,7 +375,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ٹورنامنٹ اختتامی تاریخ.
+        ///   Looks up a localized string similar to اختتام.
         /// </summary>
         internal static string TournamentEndDate {
             get {
@@ -384,7 +393,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ٹورنامنٹ شروع ہونے کی تاریخ.
+        ///   Looks up a localized string similar to شروع.
         /// </summary>
         internal static string TournamentStartDate {
             get {
@@ -416,6 +425,15 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         internal static string TournamentType2 {
             get {
                 return ResourceManager.GetString("TournamentType2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ٹریکنگ ریکارڈ.
+        /// </summary>
+        internal static string TrackingRecord {
+            get {
+                return ResourceManager.GetString("TrackingRecord", resourceCulture);
             }
         }
         

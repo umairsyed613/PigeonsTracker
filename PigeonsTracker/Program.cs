@@ -1,18 +1,14 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using AspNetMonsters.Blazor.Geolocation;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using PigeonsTracker.Services;
 
-namespace PigeonsTracker
+namespace PigeonsTracker;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
-        {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
@@ -31,5 +27,4 @@ namespace PigeonsTracker
             await host.SetDefaultCulture();
             await host.RunAsync();
         }
-    }
 }

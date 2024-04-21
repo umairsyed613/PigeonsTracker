@@ -1,17 +1,26 @@
 @page "/ViewUpdateTrackingRecord/{TournId}/{TrackingId}"
 @using System.Globalization
-@inject IStringLocalizer<Language> localizer
-@inject IPigeonTrackingService _trackingService
+@inject IStringLocalizer<Language> Localizer
+@inject IPigeonTrackingService TrackingService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
+@inject AppState AppSate
 
 <div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
-    <div class="d-flex flex-row align-items-center py-2 my-2 border-bottom">
-        <div class="flex-grow-1 px-2">
-            <h5 class="w-100 m-0">@localizer["UpdateTrackingRecord"]</h5>
+    <div class="d-flex flex-row align-items-center py-2 my-2">
+        <div class="flex-grow-1">
+            @if (_isViewMode)
+            {
+                <h5 class="w-100 m-0">@Localizer["TrackingRecord"]</h5>
+            }
+            else
+            {
+                <h5 class="w-100 m-0">@Localizer["UpdateTrackingRecord"]</h5>
+            }
+
         </div>
-        <button class="btn btn-outline-info" title="View/Edit Data" @onclick="IsViewModeButtonClick">
-            @if (isViewMode)
+        <button class="btn btn-outline-primary" title="View/Edit Data" @onclick="IsViewModeButtonClick">
+            @if (_isViewMode)
             {
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -32,28 +41,36 @@
 
     @if (_record != null)
     {
-        <div class="text-muted fs-0-5 py-1">
-            <span class="w-100">@localizer["RoofName"] : @_record.RoofName</span>
-        </div>
-        <div class="text-muted fs-0-5 py-1">
-            <span class="w-100">@localizer["Start"] : @_record.StartTime.ToString("dd MMMM yyyy hh:mm tt", CultureInfo.CurrentCulture)</span>
+        <div class="row @(AppSate.IsLanguageUrdu() ? "rtl" : "")  px-3 my-2 text-muted w-100">
+            <div class="col-sm-12 col-md-3 p-0">
+                <div class="row">
+                    <span class="col-4">@Localizer["RoofName"] :</span>
+                    <span class="col-8">@_record.RoofName</span>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3 p-0">
+                <div class="row">
+                    <span class="col-4">@Localizer["Start"] :</span>
+                    <span class="col-8">@_record.StartTime.ToString("dd MMMM yyyy hh:mm tt", CultureInfo.CurrentCulture)</span>
+                </div>
+            </div>
         </div>
 
-        if (isViewMode)
+        if (_isViewMode)
         {
             var i = 1;
 
             <div class="d-flex flex-column w-100 mt-2">
                 <div class="d-flex flex-row align-items-center w-100 border-bottom">
-                    <div class="d-flex justify-content-center px-2 border-right">@localizer["Nr"]</div>
-                    <div class="flex-grow-1 px-2">@localizer["BirdsName"]</div>
-                    <div class="d-flex justify-content-center px-4 border-right">@localizer["Landed"]</div>
-                    <div class="d-flex justify-content-center px-2">@localizer["Average"]</div>
+                    <div class="d-flex justify-content-center px-2 border-right">@Localizer["Nr"]</div>
+                    <div class="flex-grow-1 px-2">@Localizer["BirdsName"]</div>
+                    <div class="d-flex justify-content-center px-4 border-right @(AppSate.IsLanguageUrdu() ? "me-5" : "")">@Localizer["Landed"]</div>
+                    <div class="d-flex justify-content-center px-2">@Localizer["Average"]</div>
                 </div>
                 @foreach (var rec in _record.Records)
                 {
                     <div class="d-flex flex-row align-items-center w-100 border-bottom py-2">
-                        <div class="d-flex justify-content-center px-2">@i</div>
+                        <div class="d-flex justify-content-center px-2 primary-bg text-white rounded">@i</div>
                         <div class="flex-grow-1 px-3">@rec.BirdName</div>
                         <div class="d-flex justify-content-center px-3">@rec.EndTime.ToCustomFormat()</div>
                         <div class="d-flex justify-content-center px-2">
@@ -65,7 +82,7 @@
                 <div class="d-flex flex-row align-items-center w-100 border-bottom my-2">
                     <div class="d-flex justify-content-center"></div>
                     <div class="flex-grow-1 px-3 d-flex justify-content-end">
-                        <label>@localizer["TotalAverage"]</label>
+                        <label>@Localizer["TotalAverage"]</label>
                     </div>
                     <div class="d-flex justify-content-center px-2">
                         <label>
@@ -84,38 +101,21 @@
                     </button>
                 </div>
             </div>
-            @if (isShareMode)
+            @if (_isShareMode)
             {
                 <div class="d-flex flex-column w-100 mt-2">
                     <div class="d-flex flex-row border rounded-sm shadow-sm p-2">
                         @{ var text = MessageCreator.Create(_record); }
 
                         @text
-                        @*<h6>@_record.RoofName</h6><br>
-                        <h6>
-                            @_record.StartTime.ToString("dd MMMM yyyy hh:mm:ss tt", CultureInfo.CurrentCulture)
-                        </h6><br>
-
-                        @{ var j = 1; }
-                        <div class="d-flex flex-column w-100">
-                            @foreach (var rec in _record.Records)
-                            {
-                                <div class="d-flex flex-row flex-nowrap w-100 mb-2">
-                                    <div class="px-2">@j</div>
-                                    <div class="flex-grow-1">@rec.BirdName</div>
-                                    <div class="px-2">@rec.TotalBirdFlyingTime?.ToCustomFormat()</div>
-                                </div>
-                                j++;
-                            }
-                        </div>*@
                     </div>
-                    <div class="text-muted text-wrap fs-0-5">@localizer["ShareFormatText"]</div>
+                    <div class="text-muted text-wrap fs-0-5">@Localizer["ShareFormatText"]</div>
                     <div class="d-flex flex-row-reverse mt-2">
                         <button class="btn btn-outline-secondary" title="Copy" @onclick="() => CopyToClipBoard(text)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
                                 <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
                                 <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                            </svg> @localizer["Copy"]
+                            </svg> @Localizer["Copy"]
                         </button>
                     </div>
                 </div>
@@ -125,24 +125,24 @@
         {
             <div class="d-flex flex-column w-100 my-3">
                 <div class="my-1">
-                    <label for="roofName" class="form-label fs-1 w-100">@localizer["RoofName"]</label>
+                    <label for="roofName" class="form-label fs-1 w-100">@Localizer["RoofName"]</label>
                     <input type="text" class="form-control" id="roofName" @bind="_record.RoofName">
                 </div>
-
+                <div class="d-flex flex-row mt-3"></div>
                 @{ var i = 1; }
                 @foreach (var rec in _record.Records)
                 {
-                    <div class="form-row mb-2">
-                        <div class="col-md-2 my-1">
-                            <label for="@i _1" class="form-label w-100 fs-1 text-center">@localizer["Nr"]</label>
-                            <input type="text" readonly class="form-control text-center" id="@i _1" value="@i">
+                    <div class="row mb-2">
+                        <div class="col-2 my-1">
+                            @* <label for="@i _1" class="form-label w-100 fs-1 text-center">@Localizer["Nr"]</label> *@
+                            <input type="text" disabled readonly class="form-control text-center" id="@i _1" value="@i">
                         </div>
-                        <div class="col-md-6 my-1">
-                            <label for="@i _2" class="form-label w-100 fs-1">@localizer["BirdsName"]</label>
+                        <div class="col-5 px-0 my-1">
+                            @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
                             <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@rec.BirdName">
                         </div>
-                        <div class="col-md-4 my-1">
-                            <label for="@i _3" class="form-label w-100 fs-1">@localizer["LandingTime"]</label>
+                        <div class="col-5 ps-1 my-1">
+                            @* <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
                             <input type="time" class="form-control" id="@i _3" step="1" @bind="@rec.EndTime">
                         </div>
                     </div>
@@ -152,45 +152,49 @@
         }
     }
 
-    @if (!isViewMode)
+    @if (!_isViewMode)
     {
-        <button type="submit" class="btn btn-primary" @onclick="UpdateTrackingRecords">@localizer["Update"]</button>
+        <button type="submit" class="btn btn-primary primary-bg" @onclick="UpdateTrackingRecords">@Localizer["Update"]</button>
     }
 </div>
 
-@if (!string.IsNullOrEmpty(errorMessage))
+@if (!string.IsNullOrEmpty(_errorMessage))
 {
     <div class="alert alert-danger" role="alert">
-        @((MarkupString)errorMessage)
+        @((MarkupString)_errorMessage)
     </div>
 }
 
 
 @code {
 
-    [Parameter]
-    public string TournId { get; set; }
+    [Parameter] public string TournId { get; set; }
 
-    [Parameter]
-    public string TrackingId { get; set; }
+    [Parameter] public string TrackingId { get; set; }
 
     private Tournament _tournament;
     private PigeonsTrackingRecord _record;
 
-    private bool isViewMode = true;
-    private bool isShareMode = false;
-    private string errorMessage = null;
+    private bool _isViewMode = true;
+    private bool _isShareMode = false;
+    private string _errorMessage = null;
 
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
-        _tournament = await _trackingService.GetTournament(TournId);
-        if (_tournament == null) { NavigationManager.NavigateTo("/ViewTournament/" + TournId); }
+        _tournament = await TrackingService.GetTournament(TournId);
+        if (_tournament == null)
+        {
+            NavigationManager.NavigateTo("/ViewTournament/" + TournId);
+        }
         else
         {
             _record = _tournament.TrackingRecords.FirstOrDefault(f => f.Id == TrackingId);
 
-            if (_record == null) { NavigationManager.NavigateTo("/ViewTournament/" + TournId); }
+            if (_record == null)
+            {
+                NavigationManager.NavigateTo("/ViewTournament/" + TournId);
+            }
         }
     }
 
@@ -208,17 +212,23 @@
                 {
                     var (year, month, day) = _record.StartTime.GetSeparatedDate();
 
-                    if (d.EndTime.Value.Day == day && d.EndTime.Value.Month == month) { continue; }
+                    if (d.EndTime.Value.Day == day && d.EndTime.Value.Month == month)
+                    {
+                        continue;
+                    }
 
-                    if (d.EndTime == null) { continue; }
+                    if (d.EndTime == null)
+                    {
+                        continue;
+                    }
 
-                    var(hour, minute, second) = d.EndTime.Value.GetSeparatedTime();
+                    var (hour, minute, second) = d.EndTime.Value.GetSeparatedTime();
 
-    //Console.WriteLine($"Old Datetime : {d.EndTime}");
+                    //Console.WriteLine($"Old Datetime : {d.EndTime}");
 
                     d.EndTime = new DateTime(year, month, day, hour, minute, second);
 
-    //Console.WriteLine($"New Datetime : {d.EndTime}");
+                    //Console.WriteLine($"New Datetime : {d.EndTime}");
                 }
 
                 _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);
@@ -226,34 +236,34 @@
                 _tournament.TrackingRecords.Add(_record);
             }
 
-            await _trackingService.UpsertTournament(_tournament);
+            await TrackingService.UpsertTournament(_tournament);
 
-            isViewMode = true;
+            _isViewMode = true;
             StateHasChanged();
-    /*NavigationManager.NavigateTo("/ViewTournament/" + TournId);*/
+            /*NavigationManager.NavigateTo("/ViewTournament/" + TournId);*/
         }
         catch (Exception e)
         {
-            errorMessage = "<b>Error Saving. </b><br>";
-            errorMessage += e.Message;
+            _errorMessage = "<b>Error Saving. </b><br>";
+            _errorMessage += e.Message;
             Console.WriteLine(e);
         }
     }
 
     private void IsViewModeButtonClick()
     {
-        isViewMode = !isViewMode;
+        _isViewMode = !_isViewMode;
     }
 
     private void ShareButtonClick()
     {
-        isShareMode = !isShareMode;
+        _isShareMode = !_isShareMode;
     }
 
     private void CopyToClipBoard(string text)
     {
         JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
-        JsRuntime.InvokeVoidAsync("alert", "Records has been copied!");
+        // JsRuntime.InvokeVoidAsync("alert", "Records has been copied!");
     }
 
 }

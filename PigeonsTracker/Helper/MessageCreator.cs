@@ -1,13 +1,12 @@
-using System;
 using System.Globalization;
 using PigeonsTracker.DataModels;
 
-namespace PigeonsTracker.Helper
+namespace PigeonsTracker.Helper;
+
+public static class MessageCreator
 {
-    public static class MessageCreator
+    public static string Create(PigeonsTrackingRecord record)
     {
-        public static string Create(PigeonsTrackingRecord record)
-        {
             string result;
 
             result = $"{record.RoofName}{Environment.NewLine}";
@@ -27,5 +26,4 @@ namespace PigeonsTracker.Helper
 
             return result;
         }
-    }
 }

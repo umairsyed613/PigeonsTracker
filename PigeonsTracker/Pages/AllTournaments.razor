@@ -1,17 +1,17 @@
 @page "/AllTournaments"
-@inject IStringLocalizer<Language> localizer
-@inject IPigeonTrackingService _trackingService
+@inject IStringLocalizer<Language> Localizer
+@inject IPigeonTrackingService TrackingService
 @inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column flex-nowrap w-100 py-2 animate__animated animate__fadeInRight overflow-hidden">
-    <div class="border-bottom mb-3 all-tour-title">
-        <h5>@localizer["AllTournaments"]</h5>
+    <div class="px-2 mb-3 all-tour-title">
+        <h4>@Localizer["AllTournaments"]</h4>
     </div>
     <div class="d-flex flex-column flex-nowrap w-100">
 
         @if (_tournaments == null)
         {
-            <pre>@message</pre>
+            <pre>@_message</pre>
         }
         else
         {
@@ -33,9 +33,9 @@
                     <div class="d-flex align-items-center mx-2 flex-grow-1 border-right px-2 cursor-btn" @onclick='() => NavigationManager.NavigateTo($"/ViewTournament/{data.Id}")'>
                         <div class="d-flex flex-column w-100">
                             <h5>@data.Name</h5>
-                            <div class="d-flex flex-row flex-wrap justify-content-center text-muted fs-0-5">
-                                <span>@localizer["Start"] : @data.StartsFrom.ToString("dd MMMM yyyy")</span>
-                                <span class="ms-2">@localizer["End"] : @data.EndTo.ToString("dd MMMM yyyy")</span>
+                            <div class="d-flex flex-row flex-wrap justify-content-start text-muted fs-0-5">
+                                <span>@Localizer["Start"] : @data.StartsFrom.ToString("dd MMMM yyyy")</span>
+                                <span class="ms-2">@Localizer["End"] : @data.EndTo.ToString("dd MMMM yyyy")</span>
                             </div>
                         </div>
 
@@ -60,7 +60,7 @@
 </button>
 
 @code {
-    private string message = "Loading .... ";
+    private string _message = "Loading .... ";
     private List<Tournament> _tournaments;
 
     protected override async Task OnInitializedAsync()
@@ -72,15 +72,15 @@
 
     private async Task LoadList()
     {
-        _tournaments = await _trackingService.GetAllTournaments();
+        _tournaments = await TrackingService.GetAllTournaments();
         if (_tournaments != null) { _tournaments = _tournaments.OrderByDescending(o => o.CreatedAt).ToList(); }
         else
-        { message = "No Data Found!"; }
+        { _message = "No Data Found!"; }
     }
 
     private async Task DeleteTournament(string id)
     {
-        await _trackingService.DeleteTournament(id);
+        await TrackingService.DeleteTournament(id);
 
         await LoadList();
     }

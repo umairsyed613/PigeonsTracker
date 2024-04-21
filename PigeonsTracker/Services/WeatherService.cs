@@ -1,29 +1,26 @@
-using System;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using PigeonsTracker.Shared.Models;
 
-namespace PigeonsTracker.Services
+namespace PigeonsTracker.Services;
+
+public sealed class WeatherService
 {
-    public sealed class WeatherService
+    private readonly HttpClient _client;
+
+    public DateTime LastUpdatedAt { get; set; }
+
+    private const string StorageKey = "0aab67a5b2164d939ae74d75955f1336";
+    private ILocalStorageService LocalStorage { get; init; }
+
+    public WeatherService(HttpClient client, ILocalStorageService localStorage)
     {
-        private readonly HttpClient _client;
-
-        public DateTime LastUpdatedAt { get; set; }
-
-        private const string StorageKey = "0aab67a5b2164d939ae74d75955f1336";
-        private ILocalStorageService LocalStorage { get; init; }
-
-        public WeatherService(HttpClient client, ILocalStorageService localStorage)
-        {
             LocalStorage = localStorage;
             _client = client;
         }
 
-        public async Task<OpenWeatherApiResult> GetWeatherResult(string lat, string lng, bool force)
-        {
+    public async Task<OpenWeatherApiResult> GetWeatherResult(string lat, string lng, bool force)
+    {
             if (_client == null)
             {
                 return null;
@@ -58,8 +55,8 @@ namespace PigeonsTracker.Services
             return null;
         }
 
-        private async Task<DateTime?> GetLastRead()
-        {
+    private async Task<DateTime?> GetLastRead()
+    {
             if (!await LocalStorage.ContainKeyAsync(StorageKey))
             {
                 return null;
@@ -68,9 +65,8 @@ namespace PigeonsTracker.Services
             return await LocalStorage.GetItemAsync<DateTime>(StorageKey);
         }
 
-        private async Task SetLastRead(DateTime dateTime)
-        {
+    private async Task SetLastRead(DateTime dateTime)
+    {
             await LocalStorage.SetItemAsync(StorageKey, dateTime);
         }
-    }
 }

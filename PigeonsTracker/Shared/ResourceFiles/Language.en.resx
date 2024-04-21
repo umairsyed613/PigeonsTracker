@@ -51,10 +51,10 @@
         <value>All Tournaments</value>
     </data>
     <data name="TournamentStartDate" xml:space="preserve">
-        <value>Tournament Start Date</value>
+        <value>Start</value>
     </data>
     <data name="TournamentEndDate" xml:space="preserve">
-        <value>Tournament End Date</value>
+        <value>End</value>
     </data>
     <data name="Submit" xml:space="preserve">
         <value>Submit</value>
@@ -141,6 +141,12 @@
         <value>Average</value>
     </data>
     <data name="ComingSoon" xml:space="preserve">
-        <value>Comming soon ...</value>
+        <value>Coming soon ...</value>
+    </data>
+    <data name="NoRecords" xml:space="preserve">
+        <value>No Records found, please create new records..</value>
+    </data>
+    <data name="TrackingRecord" xml:space="preserve">
+        <value>Tracking Record</value>
     </data>
 </root>

@@ -56,6 +56,14 @@
     gtag('js', new Date());
 
     gtag('config', 'G-7X8JWPY5G0');
+
+
+    function adjustHeight() {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    }
+
+    window.addEventListener('resize', adjustHeight);
+    adjustHeight(); // Call on initial load
 </script>
 
 <script>navigator.serviceWorker.register('service-worker.js');</script>

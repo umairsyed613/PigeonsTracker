@@ -58,10 +58,10 @@
         <value>تمام ٹورنامنٹ یا مشقین</value>
     </data>
     <data name="TournamentStartDate" xml:space="preserve">
-        <value>ٹورنامنٹ شروع ہونے کی تاریخ</value>
+        <value>شروع</value>
     </data>
     <data name="TournamentEndDate" xml:space="preserve">
-        <value>ٹورنامنٹ اختتامی تاریخ</value>
+        <value>اختتام</value>
     </data>
     <data name="Submit" xml:space="preserve">
         <value>اسٹور کرائیں</value>
@@ -149,5 +149,11 @@
     </data>
     <data name="ComingSoon" xml:space="preserve">
         <value>جلد آرہا ہے۔</value>
+    </data>
+    <data name="NoRecords" xml:space="preserve">
+        <value>کوئی ریکارڈ نہیں ملا، براہ کرم نیا ریکارڈ بنائیں..</value>
+    </data>
+    <data name="TrackingRecord" xml:space="preserve">
+        <value>ٹریکنگ ریکارڈ</value>
     </data>
 </root>

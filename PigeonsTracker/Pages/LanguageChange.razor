@@ -1,11 +1,11 @@
 @page "/LanguageChange"
 @using System.Globalization
-@inject IStringLocalizer<Language> localizer
-@inject ILocalStorageService _service
+@inject IStringLocalizer<Language> Localizer
+@inject ILocalStorageService Service
 @inject NavigationManager Manager
 
 <div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
-    <h3>@localizer["ChangeLanguage"]</h3>
+    <h3>@Localizer["ChangeLanguage"]</h3>
 
     <div class="d-flex flex-row align-items-center border-bottom cursor-btn p-2" @onclick='() => ChangeCulture("en-US")'>
         <div>
@@ -52,7 +52,7 @@
     {
         if (_currentCultureName != name)
         {
-            _service.SetItemAsStringAsync("BlazorCulture", name);
+            Service.SetItemAsStringAsync("BlazorCulture", name);
             _returnUrl ??= Manager.BaseUri;
             Manager.NavigateTo(_returnUrl, forceLoad: true);
         }

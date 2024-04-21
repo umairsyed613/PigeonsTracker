@@ -105,7 +105,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Comming soon ....
+        ///   Looks up a localized string similar to Coming soon ....
         /// </summary>
         internal static string ComingSoon {
             get {
@@ -276,6 +276,15 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Records found, please create new records...
+        /// </summary>
+        internal static string NoRecords {
+            get {
+                return ResourceManager.GetString("NoRecords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nr..
         /// </summary>
         internal static string Nr {
@@ -366,7 +375,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tournament End Date.
+        ///   Looks up a localized string similar to End.
         /// </summary>
         internal static string TournamentEndDate {
             get {
@@ -384,7 +393,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tournament Start Date.
+        ///   Looks up a localized string similar to Start.
         /// </summary>
         internal static string TournamentStartDate {
             get {
@@ -416,6 +425,15 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         internal static string TournamentType2 {
             get {
                 return ResourceManager.GetString("TournamentType2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tracking Record.
+        /// </summary>
+        internal static string TrackingRecord {
+            get {
+                return ResourceManager.GetString("TrackingRecord", resourceCulture);
             }
         }
         
