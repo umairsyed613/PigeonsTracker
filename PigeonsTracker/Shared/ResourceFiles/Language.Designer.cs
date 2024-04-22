@@ -276,6 +276,15 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to My Tournaments.
+        /// </summary>
+        internal static string MyTournaments {
+            get {
+                return ResourceManager.GetString("MyTournaments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Records found, please create new records...
         /// </summary>
         internal static string NoRecords {

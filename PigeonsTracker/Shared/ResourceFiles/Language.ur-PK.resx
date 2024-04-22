@@ -156,4 +156,7 @@
     <data name="TrackingRecord" xml:space="preserve">
         <value>ٹریکنگ ریکارڈ</value>
     </data>
+    <data name="MyTournaments" xml:space="preserve">
+        <value>میرے ٹورنامنٹس</value>
+    </data>
 </root>

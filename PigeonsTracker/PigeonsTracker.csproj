@@ -1,55 +1,57 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>true</ImplicitUsings>
-    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>true</ImplicitUsings>
+        <EmccMaximumHeapSize>268435456</EmccMaximumHeapSize>
+        <WasmEnableWebcil>false</WasmEnableWebcil>
+        <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AspNetMonsters.Blazor.Geolocation" Version="0.5.0-preview1" />
-    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.4" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
-    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AspNetMonsters.Blazor.Geolocation" Version="0.5.0-preview1"/>
+        <PackageReference Include="Blazored.LocalStorage" Version="4.5.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.4" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4"/>
+        <PackageReference Include="System.Net.Http.Json" Version="8.0.0"/>
+        <PackageReference Include="System.Text.Json" Version="8.0.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Shared\ResourceFiles\Language.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Language.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Shared\ResourceFiles\Language.ur-PK.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Language.ur-PK.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Shared\ResourceFiles\Language.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Language.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Shared\ResourceFiles\Language.ur-PK.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Language.ur-PK.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Shared\ResourceFiles\Language.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Language.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Shared\ResourceFiles\Language.ur-PK.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Language.ur-PK.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Shared\ResourceFiles\Language.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Language.resx</DependentUpon>
+        </Compile>
+        <Compile Update="Shared\ResourceFiles\Language.ur-PK.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Language.ur-PK.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-  </ItemGroup>
+    <ItemGroup>
+        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PigeonsTracker.Shared\PigeonsTracker.Shared.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\PigeonsTracker.Shared\PigeonsTracker.Shared.csproj"/>
+    </ItemGroup>
 
-  <PropertyGroup>
-    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
-  </PropertyGroup>
+    <PropertyGroup>
+        <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+    </PropertyGroup>
 </Project>
