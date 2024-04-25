@@ -42,13 +42,13 @@
     @if (_record != null)
     {
         <div class="row @(AppSate.IsLanguageUrdu() ? "rtl" : "")  px-3 my-2 text-muted w-100">
-            <div class="col-sm-12 col-md-3 p-0">
+            <div class="col-12 p-0 mb-2">
                 <div class="row">
                     <span class="col-4">@Localizer["RoofName"] :</span>
                     <span class="col-8">@_record.RoofName</span>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-3 p-0">
+            <div class="col-12 p-0">
                 <div class="row">
                     <span class="col-4">@Localizer["Start"] :</span>
                     <span class="col-8">@_record.StartTime.ToString("dd MMMM yyyy hh:mm tt", CultureInfo.CurrentCulture)</span>
