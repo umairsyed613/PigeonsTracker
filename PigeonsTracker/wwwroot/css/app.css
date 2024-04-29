@@ -13,7 +13,7 @@
 html, body {
     font-family: 'Roboto', sans-serif;
     height: calc(var(--vh, 1vh) * 100); /* Adjust height based on the --vh custom property */
-    
+
 }
 
 .container {
@@ -134,7 +134,7 @@ h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
 }
 
 .ripple:active {
-    background-color: #6eb9f7;
+    background-color: #38006d;
     background-size: 100%;
     transition: background 0s;
 }

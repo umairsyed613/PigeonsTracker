@@ -285,7 +285,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to کوئی ریکارڈ نہیں ملا، براہ کرم نیا ریکارڈ بنائیں...
+        ///   Looks up a localized string similar to کوئی ریکارڈ نہیں ملا، براہ کرم نیچے + بٹن دبا کر نئے ریکارڈ بنائیں.
         /// </summary>
         internal static string NoRecords {
             get {

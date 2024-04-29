@@ -45,7 +45,7 @@
                 <div class="row mb-2">
                     <div class="col-2 my-1">
                         @* <label for="@i _1" class="form-label w-100 fs-1">Nr.</label> *@
-                        <input type="text" disabled readonly class="form-control text-center" id="@i _1" value="@i">
+                        <input type="text" disabled readonly class="form-control text-center primary-bg text-white" id="@i _1" value="@i">
                     </div>
                     <div class="col-10 my-1">
                         @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
@@ -61,12 +61,12 @@
         </div>
     }
 
-    <button type="submit" class="btn btn-primary" @onclick="CreateTrackingRecords">@Localizer["Submit"]</button>
+    <button type="submit" class="btn primary-bg text-white ripple" @onclick="CreateTrackingRecords">@Localizer["Submit"]</button>
 </div>
 
 @if (!string.IsNullOrEmpty(_errorMessage))
 {
-    <div class="alert alert-danger" role="alert">
+    <div class="alert alert-danger my-3" role="alert">
         @((MarkupString)_errorMessage)
     </div>
 }
@@ -111,8 +111,6 @@
                     CreatedAt = DateTime.Now
                 };
             }
-
-            if (_tournament.TournamentType == TournamentType.Practice) { _record.RoofName = _tournament.TrackingRecords.FirstOrDefault(f => !string.IsNullOrEmpty(f.RoofName))?.RoofName ?? string.Empty; }
         }
     }
 

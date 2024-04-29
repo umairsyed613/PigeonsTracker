@@ -151,7 +151,7 @@
         <value>جلد آرہا ہے۔</value>
     </data>
     <data name="NoRecords" xml:space="preserve">
-        <value>کوئی ریکارڈ نہیں ملا، براہ کرم نیا ریکارڈ بنائیں..</value>
+        <value>کوئی ریکارڈ نہیں ملا، براہ کرم نیچے + بٹن دبا کر نئے ریکارڈ بنائیں</value>
     </data>
     <data name="TrackingRecord" xml:space="preserve">
         <value>ٹریکنگ ریکارڈ</value>

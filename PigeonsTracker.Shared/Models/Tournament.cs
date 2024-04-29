@@ -1,19 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace PigeonsTracker.DataModels;
-
-/*
-public enum TournamentType
-{
-    Tournament = 0,
-    Practice = 1
-}
+namespace PigeonsTracker.Shared.Models;
 
 public class Tournament
 {
-    [Required] public string Id { get; set; }
-    [Required] public string Name { get; set; }
-    [Required] public TournamentType TournamentType { get; set; }
+    public string? FireStoreId { get; set; }
+    public string Id { get; set; }
+    public string Name { get; set; }
     public List<PigeonsTrackingRecord> TrackingRecords { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime StartsFrom { get; set; }
@@ -45,5 +39,6 @@ public class PigeonTrackingRecord
     public string BirdName { get; set; }
     public DateTime? EndTime { get; set; }
 
+    public bool IsCrossed { get; set; }
     public TimeSpan? TotalBirdFlyingTime { get; set; }
-}*/
+}

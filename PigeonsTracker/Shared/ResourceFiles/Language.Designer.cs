@@ -285,7 +285,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Records found, please create new records...
+        ///   Looks up a localized string similar to No Records found, please create new records by pressing the + button below.
         /// </summary>
         internal static string NoRecords {
             get {

@@ -1,5 +1,6 @@
 using AspNetMonsters.Blazor.Geolocation;
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using PigeonsTracker.Services;
 
@@ -11,6 +12,7 @@ public class Program
     {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+            builder.RootComponents.Add<HeadOutlet>("head::after");
 
             //Console.WriteLine(@"IsProduction : " + builder.HostEnvironment.IsProduction());
             builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

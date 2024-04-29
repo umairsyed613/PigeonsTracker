@@ -1,4 +1,5 @@
 using PigeonsTracker.DataModels;
+using PigeonsTracker.Shared.Models;
 
 namespace PigeonsTracker.Helper;
 
