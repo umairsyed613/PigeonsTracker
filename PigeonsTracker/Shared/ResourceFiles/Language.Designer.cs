@@ -213,6 +213,15 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to How to use.
+        /// </summary>
+        internal static string HowToUse {
+            get {
+                return ResourceManager.GetString("HowToUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PigeonsTracker application helps you store the tournaments or practice match score and provide you the ability to share the content with your friends and in groups..
         /// </summary>
         internal static string InfoPageContextP1 {
@@ -267,7 +276,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Follow your pigeon!.
+        ///   Looks up a localized string similar to Follow your pigeons!.
         /// </summary>
         internal static string MainPageTitle {
             get {
@@ -312,11 +321,29 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Private.
+        /// </summary>
+        internal static string Private {
+            get {
+                return ResourceManager.GetString("Private", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loft Name.
         /// </summary>
         internal static string RoofName {
             get {
                 return ResourceManager.GetString("RoofName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
             }
         }
         
@@ -420,7 +447,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tournament.
+        ///   Looks up a localized string similar to Tournaments.
         /// </summary>
         internal static string TournamentType1 {
             get {

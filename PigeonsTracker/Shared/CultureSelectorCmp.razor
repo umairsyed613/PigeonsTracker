@@ -1,14 +1,21 @@
-﻿@*<select class="form-control bg-dark text-light" style="width:100px;" @bind="SelectedValue">
-    @foreach (var culture in PigeonsTrackerCultures)
-    {
-        <option value="@culture.CultureInfo">@culture.DisplayName</option>
-    }
-</select>*@
-<EditForm Model="@SelectedValue">
-<InputSelect id="language" class="form-control bg-dark text-light" style="width:100px;" @bind-Value="SelectedValue">
-    @foreach (var culture in PigeonsTrackerCultures)
-    {
-        <option value="@culture.CultureInfo">@culture.DisplayName</option>
-    }
-</InputSelect>
-</EditForm>
+﻿<MudDialog>
+    <DialogContent>
+        @* <EditForm Model="@SelectedValue"> *@
+        @*     <InputSelect id="language" class="form-control bg-dark text-light" style="width:100px;" @bind-Value="SelectedValue"> *@
+        @*         @foreach (var culture in PigeonsTrackerCultures) *@
+        @*         { *@
+        @*             <option value="@culture.CultureInfo">@culture.DisplayName</option> *@
+        @*         } *@
+        @*     </InputSelect> *@
+        @* </EditForm> *@
+
+        <MudForm Class="p-4">
+            <MudRadioGroup @bind-Value="@SelectedValue">
+                @foreach (var culture in PigeonsTrackerCultures)
+                {
+                    <MudRadio Value="@culture.CultureInfo" Color="Color.Primary">@culture.DisplayName</MudRadio>
+                }
+            </MudRadioGroup>
+        </MudForm>
+    </DialogContent>
+</MudDialog>

@@ -4,7 +4,7 @@
 @inject IPigeonTrackingService TrackingService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
-@inject AppState AppSate
+@inject AppState AppState
 
 <div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
     <div class="d-flex flex-row align-items-center py-2 my-2">
@@ -19,52 +19,44 @@
             }
 
         </div>
-        <button class="btn btn-outline-primary" title="View/Edit Data" @onclick="IsViewModeButtonClick">
-            @if (_isViewMode)
-            {
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                </svg>
-            }
-            else
-            {
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
-                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
-                </svg>
-            }
-
-        </button>
+        @if (_isViewMode)
+        {
+            <MudFab Color="Color.Primary" Class="ms-2" StartIcon="@Icons.Material.Filled.Edit" OnClick="IsViewModeButtonClick" />
+        }
+        else
+        {
+            <MudFab Color="Color.Primary" Class="ms-2" StartIcon="@Icons.Material.Filled.ViewList" OnClick="IsViewModeButtonClick" />
+        }
     </div>
 
 
     @if (_record != null)
     {
-        <div class="row @(AppSate.IsLanguageUrdu() ? "rtl" : "")  px-3 my-2 text-muted w-100">
-            <div class="col-12 p-0 mb-2">
-                <div class="row">
-                    <span class="col-4">@Localizer["RoofName"] :</span>
-                    <span class="col-8">@_record.RoofName</span>
-                </div>
-            </div>
-            <div class="col-12 p-0">
-                <div class="row">
-                    <span class="col-4">@Localizer["Start"] :</span>
-                    <span class="col-8">@_record.StartTime.ToString("dd MMMM yyyy hh:mm tt", CultureInfo.CurrentCulture)</span>
-                </div>
-            </div>
-        </div>
-
         if (_isViewMode)
         {
+            <div class="row @(AppState.IsLanguageUrdu() ? "rtl" : "")  px-3 my-2 text-muted w-100">
+                <div class="col-12 p-0 mb-2">
+                    <div class="row">
+                        <span class="col-4">@Localizer["RoofName"] :</span>
+                        <span class="col-8">@_record.RoofName</span>
+                    </div>
+                </div>
+                <div class="col-12 p-0">
+                    <div class="row">
+                        <span class="col-4">@Localizer["Start"] :</span>
+                        <span class="col-8">@_record.StartTime.ToString("dd MMMM yyyy hh:mm tt", CultureInfo.CurrentCulture)</span>
+                    </div>
+                </div>
+            </div>
+
+
             var i = 1;
 
             <div class="d-flex flex-column w-100 mt-2">
                 <div class="d-flex flex-row align-items-center w-100 border-bottom">
                     <div class="d-flex justify-content-center px-2 border-right">@Localizer["Nr"]</div>
                     <div class="flex-grow-1 px-2">@Localizer["BirdsName"]</div>
-                    <div class="d-flex justify-content-center px-4 border-right @(AppSate.IsLanguageUrdu() ? "me-5" : "")">@Localizer["Landed"]</div>
+                    <div class="d-flex justify-content-center px-4 border-right @(AppState.IsLanguageUrdu() ? "me-5" : "")">@Localizer["Landed"]</div>
                     <div class="d-flex justify-content-center px-2">@Localizer["Average"]</div>
                 </div>
                 @foreach (var rec in _record.Records)
@@ -128,6 +120,10 @@
                     <label for="roofName" class="form-label fs-1 w-100">@Localizer["RoofName"]</label>
                     <input type="text" class="form-control" id="roofName" @bind="_record.RoofName">
                 </div>
+                <div class="my-1">
+                    <label for="roofName" class="form-label fs-1 w-100">@Localizer["Start"]</label>
+                    <input type="time" class="form-control" id="roofName" @bind="_record.StartTime">
+                </div>
                 <div class="d-flex flex-row mt-3"></div>
                 @{ var i = 1; }
                 @foreach (var rec in _record.Records)
@@ -175,6 +171,7 @@
     private Tournament _tournament;
     private PigeonsTrackingRecord _record;
 
+    private bool _isTrackingOnly = false;
     private bool _isViewMode = true;
     private bool _isShareMode = false;
     private string _errorMessage = null;
@@ -182,6 +179,13 @@
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
+        if (TournId.Equals("none"))
+        {
+            _isTrackingOnly = true;
+            _record = await TrackingService.GetTracking(TrackingId);
+            return;
+        }
+
         _tournament = await TrackingService.GetTournament(TournId);
         if (_tournament == null)
         {
@@ -202,6 +206,37 @@
     {
         try
         {
+            if (_isTrackingOnly)
+            {
+                foreach (var d in _record.Records.Where(w => w.EndTime != null))
+                {
+                    var (year, month, day) = _record.StartTime.GetSeparatedDate();
+
+                    if (d.EndTime.Value.Day == day && d.EndTime.Value.Month == month)
+                    {
+                        continue;
+                    }
+
+                    if (d.EndTime == null)
+                    {
+                        continue;
+                    }
+
+                    var (hour, minute, second) = d.EndTime.Value.GetSeparatedTime();
+
+                    //Console.WriteLine($"Old Datetime : {d.EndTime}");
+
+                    d.EndTime = new DateTime(year, month, day, hour, minute, second);
+
+                    //Console.WriteLine($"New Datetime : {d.EndTime}");
+                }
+
+                _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);
+                await TrackingService.UpsertTracking(_record);
+                _isViewMode = true;
+                StateHasChanged();
+                return;
+            }
             var temp = _tournament.TrackingRecords.FirstOrDefault(f => f.Id == TrackingId);
 
             if (temp != null)

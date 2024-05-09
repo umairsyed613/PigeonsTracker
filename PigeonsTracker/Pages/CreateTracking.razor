@@ -82,7 +82,7 @@
     private PigeonsTrackingRecord _record;
     private PigeonTrackingRecord[] _records;
     private Tournament _tournament;
-
+    private bool _isTrackingOnly = false;
     private string _errorMessage = null;
 
     protected override void OnInitialized()
@@ -98,6 +98,17 @@
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
+        if (TournId.Equals("none"))
+        {
+            _record ??= new PigeonsTrackingRecord()
+            {
+                Id = IdGenerator.GetNewId(),
+                CreatedAt = DateTime.Now
+            };
+            _isTrackingOnly = true;
+            return;
+        }
+
         _tournament = await TrackingService.GetTournament(TournId);
         if (_tournament == null) { NavigationManager.NavigateTo("/ViewTournament/" + TournId); }
         else
@@ -148,6 +159,11 @@
                 _record.Records = _records.ToList();
 
                 _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);
+                if (_isTrackingOnly)
+                {
+                    await TrackingService.UpsertTracking(_record);
+                    NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/none/{_record.Id}");
+                }
                 _tournament.TrackingRecords.Add(_record);
                 await TrackingService.UpsertTournament(_tournament);
                 NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/{TournId}/{_record.Id}");
@@ -156,7 +172,7 @@
             {
                 _errorMessage = "<b>Error Saving. </b><br>";
                 _errorMessage += e.Message;
-                Console.WriteLine(e);
+                Console.Write(e);
             }
         }
     }

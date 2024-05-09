@@ -27,7 +27,9 @@
     <link rel="canonical" href="https://www.pigeonstracker.com"/>
 
     <base href="/"/>
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap-icons.min.css">
     <link href="css/app.css" rel="stylesheet"/>
     <link rel="stylesheet" href="css/animate.min.css"/>
     <link href="css/meteocons.min.css" rel="stylesheet">
@@ -51,20 +53,21 @@
 </div>
 
 <div id="blazor-error-ui">
-    <div class="d-flex flex-row align-items-center p-2">
+    <div class="d-flex flex-row align-items-center p-2 text-black">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="btn dismiss">X</a>
     </div>
 </div>
 <script src="_framework/blazor.webassembly.js"></script>
-
+<script src="_content/MudBlazor/MudBlazor.min.js"></script>
 <script type="text/javascript">
     window.blazorCulture = {
         get: () => window.localStorage['BlazorCulture'],
         set: (value) => window.localStorage['BlazorCulture'] = value
     };
 </script>
+
 
 <script src="js/location.js"></script>
 <script src="js/script.js"></script>

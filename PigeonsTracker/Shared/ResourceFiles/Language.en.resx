@@ -12,16 +12,13 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="MainPageTitle" xml:space="preserve">
-        <value>Follow your pigeon!</value>
+        <value>Follow your pigeons!</value>
     </data>
     <data name="MainPageContent" xml:space="preserve">
         <value>Welcome to our new app.</value>
     </data>
     <data name="TournamentName" xml:space="preserve">
         <value>Tournament Name</value>
-    </data>
-    <data name="TournamentType1" xml:space="preserve">
-        <value>Tournament</value>
     </data>
     <data name="TournamentType2" xml:space="preserve">
         <value>Practice</value>
@@ -151,5 +148,17 @@
     </data>
     <data name="MyTournaments" xml:space="preserve">
         <value>My Tournaments</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>Settings</value>
+    </data>
+    <data name="HowToUse" xml:space="preserve">
+        <value>How to use</value>
+    </data>
+    <data name="TournamentType1" xml:space="preserve">
+        <value>Tournaments</value>
+    </data>
+    <data name="Private" xml:space="preserve">
+        <value>Private</value>
     </data>
 </root>

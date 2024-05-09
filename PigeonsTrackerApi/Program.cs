@@ -26,6 +26,7 @@ var host = new HostBuilder()
 
         services.AddSingleton(fdb);
         AddFirestoreService<FsTournament>(services, "Tournaments");
+        AddFirestoreService<FsUserApproved>(services, "ApprovedUsers");
         services.AddHttpClient();
     })
     .Build();

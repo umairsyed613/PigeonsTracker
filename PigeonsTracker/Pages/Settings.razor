@@ -1,0 +1,30 @@
+﻿@page "/Settings"
+<MyPageTitle Text="Settings"></MyPageTitle>
+
+<EditForm Model="@_settingsModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudCard Elevation="0" Outlined="false">
+                <MudCardContent>
+                    <MudTextField Label="Loft Name" HelperText="Max. 8 characters"
+                                  @bind-Value="_settingsModel.LoftName" For="@(() => _settingsModel.LoftName)"/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    private SettingsModel _settingsModel = new SettingsModel();
+    private bool success = false;
+    private const string SettingsKey = "f9a848e5155e4e399eebe36fabc8a583";
+    private void OnValidSubmit(EditContext context)
+    {
+        success = true;
+        StateHasChanged();
+    }
+}

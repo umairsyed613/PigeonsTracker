@@ -20,3 +20,9 @@
 #bz-body{
     margin-top: 4rem !important;
 }
+.version-sup {
+    font-size: 0.75rem !important;
+    top: -0.8rem !important;
+    right: -0.2rem;
+    opacity: 0.6;
+}

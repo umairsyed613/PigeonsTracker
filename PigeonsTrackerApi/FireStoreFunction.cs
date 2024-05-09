@@ -12,7 +12,8 @@ namespace PigeonsTrackerApi;
 
 public class FireStoreFunction
 {
-    private readonly IFireStoreService<FsTournament> _fireStoreService;
+    private readonly IFireStoreService<FsTournament> _fireStoreTournamentService;
+    private readonly IFireStoreService<FsUserApproved> _fireStoreUserApprovedService;
     private readonly ILogger<FireStoreFunction> _logger;
 
     private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
@@ -20,9 +21,10 @@ public class FireStoreFunction
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public FireStoreFunction(ILogger<FireStoreFunction> logger, IFireStoreService<FsTournament> fireStoreService)
+    public FireStoreFunction(ILogger<FireStoreFunction> logger, IFireStoreService<FsTournament> fireStoreService, IFireStoreService<FsUserApproved> fireStoreUserApprovedService)
     {
-        _fireStoreService = fireStoreService ?? throw new ArgumentNullException(nameof(fireStoreService));
+        _fireStoreTournamentService = fireStoreService ?? throw new ArgumentNullException(nameof(fireStoreService));
+        _fireStoreUserApprovedService = fireStoreUserApprovedService;
         _logger = logger;
     }
 
@@ -35,7 +37,7 @@ public class FireStoreFunction
         var body = await new StreamReader(req.Body).ReadToEndAsync();
         var data = JsonSerializer.Deserialize<Tournament>(body, _jsonSerializerOptions);
 
-        var resp = await _fireStoreService.AddDocumentAsync(data.Map());
+        var resp = await _fireStoreTournamentService.AddDocumentAsync(data.Map());
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(new FireStoreUpsertResponse()
@@ -60,7 +62,7 @@ public class FireStoreFunction
             return req.CreateResponse(HttpStatusCode.BadRequest);
         }
 
-        await _fireStoreService.UpdateDocumentAsync(data.FireStoreId, data.Map());
+        await _fireStoreTournamentService.UpdateDocumentAsync(data.FireStoreId, data.Map());
 
         return req.CreateResponse(HttpStatusCode.OK);
     }
@@ -71,7 +73,7 @@ public class FireStoreFunction
     {
         _logger.LogInformation("Getting all tournaments from firestore.");
 
-        var dd = await _fireStoreService.GetDocumentsAsync();
+        var dd = await _fireStoreTournamentService.GetDocumentsAsync();
         var response = req.CreateResponse(HttpStatusCode.OK);
 
         await response.WriteAsJsonAsync(dd);
@@ -86,7 +88,7 @@ public class FireStoreFunction
         ArgumentException.ThrowIfNullOrEmpty(id);
         _logger.LogInformation("Getting tournaments from firestore.");
 
-        var storeObjectResponse = await _fireStoreService.GetDocumentAsync(id);
+        var storeObjectResponse = await _fireStoreTournamentService.GetDocumentAsync(id);
 
         if (storeObjectResponse == null)
         {
@@ -96,6 +98,28 @@ public class FireStoreFunction
         var response = req.CreateResponse(HttpStatusCode.OK);
 
         await response.WriteAsJsonAsync(storeObjectResponse.Data.Map(storeObjectResponse.Id));
+
+        return response;
+    }
+
+    [Function("FireStoreUserApprovedFunction")]
+    public async Task<HttpResponseData> IsUserApproved([HttpTrigger(AuthorizationLevel.Function, "get", Route = "data/approved/user/{id}")] HttpRequestData req,
+        string id, FunctionContext executionContext)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(id);
+        _logger.LogInformation("Getting ApprovedUser from firestore.");
+
+        var storeObjectResponse = await _fireStoreUserApprovedService.QueryDocumentsAsync("UserId", id);
+
+        if (storeObjectResponse == null)
+        {
+            return req.CreateResponse(HttpStatusCode.NotFound);
+        }
+
+        var first = storeObjectResponse.Single();
+        var response = req.CreateResponse(HttpStatusCode.OK);
+
+        await response.WriteAsJsonAsync(first.Data);
 
         return response;
     }

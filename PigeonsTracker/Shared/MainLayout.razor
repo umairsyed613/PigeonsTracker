@@ -1,13 +1,42 @@
+@using System.Globalization
+@using MudBlazor.Utilities
 @inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 @inject IStringLocalizer<Language> Localizer
+@inject NavigationManager Manager
+@inject IDialogService DialogService
+@inject AppState AppState
+@inject ILocalStorageService Service
 
-<div class="d-flex flex-column w-100">
-    <NavMenu/>
-    <div id="bz-body" class="container">
-        @Body
-    </div>
-</div>
+<MudThemeProvider Theme="_currentTheme"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h6">PigeonsTracker<sup class="version-sup">(v@(AppState.ApplicationVersion))</sup></MudText>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" OnClick='() => Manager.NavigateTo("Login")' />
+        <MudIconButton Icon="@Icons.Material.Filled.Language" Color="Color.Inherit" OnClick="OpenLanguageChangerCallback" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
+        <NavMenu/>
+    </MudDrawer>
+    @* Class="px-2" *@
+    <MudMainContent >
+        <MudContainer Class="px-2 pt-2">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@* <div class="d-flex flex-column w-100"> *@
+@*     <NavMenu/> *@
+@*     <div id="bz-body" class="container"> *@
+@*         @Body *@
+@*     </div> *@
+@* </div> *@
 
 @if (_installable)
 {
@@ -20,14 +49,44 @@
     </div>
 }
 
+
 @code
 {
     static bool _installable = false;
     static Action _onInstallable;
-    protected override void OnInitialized()
+    bool _drawerOpen = false;
+    private readonly string _currentCultureName = CultureInfo.CurrentCulture.Name;
+
+    private MudTheme _currentTheme = new MudTheme()
     {
+        Palette = new PaletteLight
+        {
+            AppbarBackground = "#38006d",
+            Primary = new MudColor("#38006d")
+        },
+        Typography = new Typography()
+        {
+            Default = new Default()
+            {
+                FontFamily =  new[] { "Roboto", "Helvetica", "Arial", "sans-serif" }
+            }
+        }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        AppState.IsMobile = await JSRuntime.InvokeAsync<bool>("isDevice");
+        Manager.LocationChanged += (sender, args) => { _drawerOpen = false; };
         _onInstallable = () => InvokeAsync(StateHasChanged);
+        ChangeLanguageInTheme();
     }
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+        StateHasChanged();
+    }
+
     [JSInvokable]
     public static Task PwaInstallable()
     {
@@ -35,9 +94,48 @@
         _onInstallable.Invoke();
         return Task.CompletedTask;
     }
+
     ValueTask InstallClicked()
     {
         _installable = false;
         return JSRuntime.InvokeVoidAsync("OnPwaInstallClick");
+    }
+
+    private void OpenLanguageChangerCallback()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullScreen = AppState.IsMobile };
+        DialogService.Show<CultureSelectorCmp>("Language Change", options);
+        AppState.OnLanguageChange += AppStateOnLanguageLanguageChange;
+        //Manager.NavigateTo($"/LanguageChange?returnUrl={Manager.Uri}");
+    }
+
+    private void AppStateOnLanguageLanguageChange()
+    {
+        if (_currentCultureName == AppState.LanguageName) return;
+        Service.SetItemAsStringAsync("BlazorCulture", AppState.LanguageName);
+        Manager.NavigateTo($"{Manager.Uri}", forceLoad: true);
+    }
+
+    private void ChangeLanguageInTheme()
+    {
+        if (AppState.IsLanguageUrdu())
+        {
+            _currentTheme = new MudTheme()
+            {
+                Palette = new PaletteLight
+                {
+                    AppbarBackground = "#38006d",
+                    Primary = new MudColor("#38006d")
+                },
+                Typography = new Typography()
+                {
+                    Default = new Default()
+                    {
+                        FontFamily = new[] { "Noto Sans Arabic", "sans-serif" }
+                    }
+                }
+            };
+            StateHasChanged();
+        }
     }
 }

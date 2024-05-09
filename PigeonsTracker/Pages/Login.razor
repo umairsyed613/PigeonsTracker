@@ -1,0 +1,23 @@
+﻿@page "/Login"
+@inject NavigationManager NavigationManager
+<MyPageTitle Text="Login"></MyPageTitle>
+
+<div class="d-flex flex-column">
+<MudButton Color="Color.Primary" Class="mb-3" Variant="Variant.Filled" OnClick="LoginWithGoogle" IconSize="Size.Large" StartIcon="@Icons.Material.Filled.Login">Login with Google</MudButton>
+<MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="LoginWithFacebook" IconSize="Size.Large" StartIcon="@Icons.Material.Filled.Login">Login with Facebook</MudButton>
+</div>
+@code {
+
+    private void LoginWithGoogle()
+    {
+        var redirectUrl = NavigationManager.Uri;
+        NavigationManager.NavigateTo($"authentication/login?provider=Google&returnUrl={Uri.EscapeDataString(redirectUrl)}");
+    }
+
+    private void LoginWithFacebook()
+    {
+        var redirectUrl = NavigationManager.Uri;
+        NavigationManager.NavigateTo($"authentication/login?provider=Facebook&returnUrl={Uri.EscapeDataString(redirectUrl)}");
+    }
+
+}

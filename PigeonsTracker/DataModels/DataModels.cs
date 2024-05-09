@@ -2,6 +2,14 @@
 
 namespace PigeonsTracker.DataModels;
 
+public class SettingsModel
+{
+    [Required]
+    [StringLength(100, ErrorMessage = "Name must be at least 5 characters long.", MinimumLength = 5)]
+    public string LoftName { get; set; }
+
+}
+
 /*
 public enum TournamentType
 {

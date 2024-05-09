@@ -31,7 +31,7 @@
         <value>ٹورنامنٹ</value>
     </data>
     <data name="TournamentType2" xml:space="preserve">
-        <value>پریکٹس </value>
+        <value>پریکٹس میچ</value>
     </data>
     <data name="TournamentType" xml:space="preserve">
         <value>ٹورنامنٹ کی قسم منتخب کریں</value>
@@ -158,5 +158,14 @@
     </data>
     <data name="MyTournaments" xml:space="preserve">
         <value>میرے ٹورنامنٹس</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>سیٹنگ</value>
+    </data>
+    <data name="HowToUse" xml:space="preserve">
+        <value>استعمال کرنے کا طریقہ</value>
+    </data>
+    <data name="Private" xml:space="preserve">
+        <value>پراویٹ</value>
     </data>
 </root>

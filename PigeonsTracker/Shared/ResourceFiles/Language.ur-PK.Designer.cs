@@ -213,6 +213,15 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to استعمال کرنے کا طریقہ.
+        /// </summary>
+        internal static string HowToUse {
+            get {
+                return ResourceManager.GetString("HowToUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کبوتر ٹریکر کی ایپلی کیشن آپ کو ٹورنامنٹ کو اسٹور کرنے یا میچ اسکور کی مشق کرنے میں مدد دیتی ہے اور آپ کو اپنے دوستوں اور گروپس میں مواد کو شیئر کرنے کی اہلیت فراہم کرتی ہے۔.
         /// </summary>
         internal static string InfoPageContextP1 {
@@ -312,11 +321,29 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to پراویٹ.
+        /// </summary>
+        internal static string Private {
+            get {
+                return ResourceManager.GetString("Private", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to چھت کا نام.
         /// </summary>
         internal static string RoofName {
             get {
                 return ResourceManager.GetString("RoofName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سیٹنگ.
+        /// </summary>
+        internal static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
             }
         }
         
@@ -429,7 +456,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to پریکٹس .
+        ///   Looks up a localized string similar to پریکٹس میچ.
         /// </summary>
         internal static string TournamentType2 {
             get {

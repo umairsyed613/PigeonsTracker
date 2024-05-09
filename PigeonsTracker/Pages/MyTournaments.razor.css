@@ -1,0 +1,14 @@
+﻿.btnAdd {
+    position: fixed;
+    bottom: 50px;
+    right: 25px;
+}
+
+@media (min-width: 992px){
+    .btnAdd {
+        top: 75px;
+    }
+    .all-tour-title{
+        margin-right: 3rem!important;
+    }
+}

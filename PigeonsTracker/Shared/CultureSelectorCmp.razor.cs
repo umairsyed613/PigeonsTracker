@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using PigeonsTracker.Services;
 
 namespace PigeonsTracker.Shared;
@@ -7,6 +8,7 @@ namespace PigeonsTracker.Shared;
 public partial class CultureSelectorCmp
 {
     [Inject] private AppState AppState { get; set; }
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     public PigeonsTrackerCultureInfo[] PigeonsTrackerCultures = new[]
     {

@@ -36,3 +36,9 @@ public class FsPigeonTrackingRecord
     [FirestoreProperty] public bool IsCrossed { get; set; }
     [FirestoreProperty] public long? TotalBirdFlyingTime { get; set; }
 }
+
+[FirestoreData]
+public class FsUserApproved
+{
+    [FirestoreProperty] public string UserId { get; set; }
+}
