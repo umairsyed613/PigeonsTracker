@@ -29,6 +29,8 @@ public class PigeonsTrackingRecord
     public string RoofName { get; set; }
     public DateTime StartTime { get; set; }
     public List<PigeonTrackingRecord> Records { get; set; }
+
+    public PigeonTrackingRecord? BabyBird { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public TimeSpan? TotalFlyingTime { get; set; }

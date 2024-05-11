@@ -146,12 +146,13 @@ h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
     transition: background 0s;
 }
 
+.btnFloating {
+    position: fixed !important;
+    bottom: 50px !important;
+    right: 25px !important;
+}
 
 @media (max-width: 575.98px) {
-
-    p, label {
-        font-size: 1.25rem;
-    }
 
     .number {
         font-size: 5rem !important;
@@ -167,9 +168,6 @@ h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
 }
 
 @media (min-width: 576px) and (max-width: 767.98px) {
-    p, label {
-        font-size: 1.5rem;
-    }
 
     .number {
         font-size: 5rem !important;
@@ -181,21 +179,18 @@ h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {
-    p, label {
-        font-size: 1.5rem;
+
+    .btnFloating {
+        top: 75px;
     }
 }
 
 @media (min-width: 992px) and (max-width: 1199.98px) {
-    p, label {
-        font-size: 1.5rem;
-    }
+
 }
 
 @media (min-width: 1200px) {
-    p, label {
-        font-size: 1.5rem;
-    }
+
 }
 
 

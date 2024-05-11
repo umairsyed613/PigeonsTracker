@@ -1,9 +1,5 @@
 
-.btnAdd {
-    position: fixed;
-    bottom: 50px;
-    right: 25px;
-}
+
 
 .flying-rec {
     background-color: #f9f9f9;
@@ -27,10 +23,4 @@
 
 .flying-rec:hover .flying-day-title{
     font-weight: bold;
-}
-
-@media (min-width: 992px) {
-    .btnAdd {
-        top: 75px;
-    }
 }

@@ -15,7 +15,7 @@
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h6">PigeonsTracker<sup class="version-sup">(v@(AppState.ApplicationVersion))</sup></MudText>
+        <MudText Typo="Typo.h6" @onclick='() => Manager.NavigateTo("/")' Class="cursor-btn">PigeonsTracker<sup class="version-sup">(v@(AppState.ApplicationVersion))</sup></MudText>
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" OnClick='() => Manager.NavigateTo("Login")' />
         <MudIconButton Icon="@Icons.Material.Filled.Language" Color="Color.Inherit" OnClick="OpenLanguageChangerCallback" />
