@@ -1,8 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
-using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Web;
-using PigeonsTracker.DataModels;
+﻿using Blazored.LocalStorage;
 using PigeonsTracker.Shared.Models;
 
 namespace PigeonsTracker.Services;

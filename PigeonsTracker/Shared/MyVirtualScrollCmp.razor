@@ -1,0 +1,16 @@
+﻿<div class="d-flex flex-column overflow-x-hidden overflow-y-scroll" style="@_height">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public int SubtractTotalPixel { get; set; } = 80;
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private string _height;
+
+    protected override void OnParametersSet()
+    {
+        _height = $"height: calc(100vh - {SubtractTotalPixel}px) !important;";
+    }
+
+}

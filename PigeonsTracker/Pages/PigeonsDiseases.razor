@@ -1,11 +1,14 @@
 @page "/PigeonsDiseases"
 @inject IStringLocalizer<Language> Localizer
+<PagesBase>
+    <MyPageTitle Text="@Localizer["PigeonsDiseasesAndCure"]"></MyPageTitle>
 
-<MyPageTitle Text="@Localizer["PigeonsDiseasesAndCure"]"></MyPageTitle>
+    <p>
+        @Localizer["ComingSoon"]
+    </p>
 
-<p>
-    @Localizer["ComingSoon"]
-</p>
+</PagesBase>
+
 @code {
 
 }

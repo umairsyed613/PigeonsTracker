@@ -27,6 +27,7 @@ public class Program
             builder.Services.AddScoped<WeatherService>();
             builder.Services.AddScoped<IPigeonTrackingService, PigeonTrackingService>();
 
+            builder.Services.AddScoped<SettingsService>();
             builder.Services.AddSingleton<AppState>();
 
             builder.Services.AddGoogleAnalytics("G-7X8JWPY5G0");

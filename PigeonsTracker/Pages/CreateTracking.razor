@@ -5,77 +5,77 @@
 @inject NavigationManager NavigationManager
 @inject AppState AppSate
 
-<div class="d-flex flex-column w-100 @(AppSate.IsLanguageUrdu() ? "rtl" : "") animate__animated animate__fadeInLeft">
-    <div class="d-flex flex-row align-items-center">
-        <MyPageTitle Text="@Localizer["CreateTrackingRecord"]"></MyPageTitle>
-        @*<h5 class="w-100">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clock-fill mx-2 " viewBox="0 0 16 16">
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-            </svg> @Localizer["CreateTrackingRecord"]
-        </h5>*@
-    </div>
-    <div class="mt-3">
-        @* <label for="roofName" class="form-label fs-1 w-100">@Localizer["RoofName"]</label> *@
-        <input type="text" class="form-control" id="roofName" placeholder="@Localizer["RoofName"]" @bind="_record.RoofName">
-    </div>
-    <div class="form-row my-1">
-        <div class="col-md-4 my-2">
-            <label for="startDateTime" class="form-label fs-1 w-100">@Localizer["FlyingStartDate"]</label>
-            <input type="date" class="form-control" id="startDateTime" @bind="@StartDate" min="2021-01-01" max="9999-12-31">
-            <label id="startDateTimeHelp" class="form-text text-muted fs-0-5 px-2">@StartDate.ToString("dd MMMM yyyy", CultureInfo.CurrentCulture)</label>
-        </div>
-        <div class="col-md-4 my-2">
-            <label for="startTime" class="form-label fs-1 w-100">@Localizer["FlyingStartTime"]</label>
-            <input type="time" class="form-control" id="startTime" @bind="StartTime">
-            <label id="startTimeHelp" class="form-text text-muted fs-0-5 px-2">@StartTime.ToString("HH:mm:ss", CultureInfo.CurrentCulture)</label>
-        </div>
-        <div class="col-md-4 my-2">
-            <label for="birdsCount" class="form-label fs-1 w-100">@Localizer["TotalBirdsCount"]</label>
-            <input type="number" class="form-control" id="birdsCount" @bind="_numberOfBirds">
-        </div>
-    </div>
-
-    @if (_records != null)
-    {
-        <div class="d-flex flex-column w-100 my-3">
-            <div class="py-2"><label class="w-100">@Localizer["BirdsInformation"]</label></div>
-
-            @{ var i = 1; }
-            @foreach (var rec in _records)
-            {
-                <div class="row mb-2">
-                    <div class="col-2 my-1">
-                        @* <label for="@i _1" class="form-label w-100 fs-1">Nr.</label> *@
-                        <input type="text" disabled readonly class="form-control text-center primary-bg text-white" id="@i _1" value="@i">
-                    </div>
-                    <div class="col-10 my-1">
-                        @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
-                        <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@rec.BirdName">
-                    </div>
-                    @* <div class="col-md-4 my-1"> *@
-                    @*     <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
-                    @*     <input type="time" class="form-control" id="@i _3" @bind="@rec.EndTime"> *@
-                    @* </div> *@
+<PagesBase>
+    <MyVirtualScrollCmp>
+        <div class="d-flex flex-column w-100 @(AppSate.IsLanguageUrdu() ? "rtl" : "")">
+            <div class="d-flex flex-row align-items-center">
+                <MyPageTitle Text="@Localizer["CreateTrackingRecord"]"></MyPageTitle>
+            </div>
+            <div class="mt-3">
+                @* <label for="roofName" class="form-label fs-1 w-100">@Localizer["RoofName"]</label> *@
+                <input type="text" class="form-control" id="roofName" placeholder="@Localizer["RoofName"]" @bind="_record.RoofName">
+            </div>
+            <div class="form-row my-1">
+                <div class="col-md-4 my-2">
+                    <label for="startDateTime" class="form-label fs-1 w-100">@Localizer["FlyingStartDate"]</label>
+                    <input type="date" class="form-control" id="startDateTime" @bind="@StartDate" min="2021-01-01" max="9999-12-31">
+                    <label id="startDateTimeHelp" class="form-text text-muted fs-0-5 px-2">@StartDate.ToString("dd MMMM yyyy", CultureInfo.CurrentCulture)</label>
                 </div>
-                i++;
+                <div class="col-md-4 my-2">
+                    <label for="startTime" class="form-label fs-1 w-100">@Localizer["FlyingStartTime"]</label>
+                    <input type="time" class="form-control" id="startTime" @bind="StartTime">
+                    <label id="startTimeHelp" class="form-text text-muted fs-0-5 px-2">@StartTime.ToString("HH:mm:ss", CultureInfo.CurrentCulture)</label>
+                </div>
+                <div class="col-md-4 my-2">
+                    <label for="birdsCount" class="form-label fs-1 w-100">@Localizer["TotalBirdsCount"]</label>
+                    <input type="number" class="form-control" id="birdsCount" @bind="_numberOfBirds">
+                </div>
+            </div>
+
+            @if (_records != null)
+            {
+                <div class="d-flex flex-column w-100 my-3">
+                    <div class="py-2">
+                        <label class="w-100">@Localizer["BirdsInformation"]</label>
+                    </div>
+
+                    @{ var i = 1; }
+                    @foreach (var rec in _records)
+                    {
+                        <div class="row mb-2">
+                            <div class="col-2 my-1">
+                                @* <label for="@i _1" class="form-label w-100 fs-1">Nr.</label> *@
+                                <input type="text" disabled readonly class="form-control text-center primary-bg text-white" id="@i _1" value="@i">
+                            </div>
+                            <div class="col-10 my-1">
+                                @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
+                                <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@rec.BirdName">
+                            </div>
+                            @* <div class="col-md-4 my-1"> *@
+                            @*     <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
+                            @*     <input type="time" class="form-control" id="@i _3" @bind="@rec.EndTime"> *@
+                            @* </div> *@
+                        </div>
+                        i++;
+                    }
+                </div>
             }
+
+            <button type="submit" class="btn primary-bg text-white ripple" @onclick="CreateTrackingRecords">@Localizer["Submit"]</button>
         </div>
-    }
 
-    <button type="submit" class="btn primary-bg text-white ripple" @onclick="CreateTrackingRecords">@Localizer["Submit"]</button>
-</div>
-
-@if (!string.IsNullOrEmpty(_errorMessage))
-{
-    <div class="alert alert-danger my-3" role="alert">
-        @((MarkupString)_errorMessage)
-    </div>
-}
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="alert alert-danger my-3" role="alert">
+                @((MarkupString)_errorMessage)
+            </div>
+        }
+    </MyVirtualScrollCmp>
+</PagesBase>
 
 @code {
 
-    [Parameter]
-    public string TournId { get; set; }
+    [Parameter] public string TournId { get; set; }
 
     [Inject] private Blazor.Analytics.IAnalytics Analytics { get; set; }
     private int _numberOfBirds = 7;
@@ -112,7 +112,10 @@
         }
 
         _tournament = await TrackingService.GetTournament(TournId);
-        if (_tournament == null) { NavigationManager.NavigateTo("/ViewTournament/" + TournId); }
+        if (_tournament == null)
+        {
+            NavigationManager.NavigateTo("/ViewTournament/" + TournId);
+        }
         else
         {
             if (_tournament.TrackingRecords == null)
@@ -132,7 +135,10 @@
         if (_records == null)
         {
             _records = new PigeonTrackingRecord[_numberOfBirds];
-            for (var i = 0; i < _numberOfBirds; i++) { _records[i] = new PigeonTrackingRecord(); }
+            for (var i = 0; i < _numberOfBirds; i++)
+            {
+                _records[i] = new PigeonTrackingRecord();
+            }
         }
         else
         {
@@ -166,16 +172,18 @@
                     await TrackingService.UpsertTracking(_record);
                     NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/none/{_record.Id}");
                 }
+
                 _tournament.TrackingRecords.Add(_record);
                 await TrackingService.UpsertTournament(_tournament);
                 try
                 {
-                    await Analytics.TrackEvent("CreateTrackingRecord", _record.RoofName);
+                    await Analytics.TrackEvent("CreateTrackingRecord", _record);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
+
                 NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/{TournId}/{_record.Id}");
             }
             catch (Exception e)

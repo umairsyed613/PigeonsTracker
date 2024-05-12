@@ -32,8 +32,8 @@
             </div>
         </div>
         <div class="row pt-2 px-2">
-            <div class="col  mx-0 px-0">
-                <MyTile Text="@Localizer["InfoText"]" SvgClass="bi bi-info-circle"></MyTile>
+            <div class="col mx-0 px-0" @onclick='() => NavigationManager.NavigateTo("/MyPracticeView")'>
+                <MyTile Text="@Localizer["TournamentType2"]" SvgClass="bi bi-activity"></MyTile>
             </div>
             <div class="col mx-0 px-0" @onclick='() => NavigationManager.NavigateTo("/PigeonsDiseases")'>
                 <MyTile Text="@Localizer["PigeonsDiseasesAndCure"]" SvgClass="bi bi-capsule"></MyTile>

@@ -58,7 +58,7 @@
         Console.WriteLine("Tournament has been created");
         try
         {
-            await Analytics.TrackEvent("CreateTournament", Tournament.Name);
+            await Analytics.TrackEvent("CreateTournament", Tournament);
         }
         catch (Exception e)
         {

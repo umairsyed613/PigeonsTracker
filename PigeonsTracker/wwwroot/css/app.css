@@ -148,7 +148,7 @@ h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
 
 .btnFloating {
     position: fixed !important;
-    bottom: 50px !important;
+    bottom: 20px !important;
     right: 25px !important;
 }
 

@@ -6,161 +6,162 @@
 @inject IJSRuntime JsRuntime
 @inject AppState AppState
 
-<div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
-    <div class="d-flex flex-row align-items-center py-2 my-2">
-        <div class="flex-grow-1">
+<PagesBase>
+    <div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
+        <div class="d-flex flex-row align-items-center py-2 my-2">
+            <div class="flex-grow-1">
+                @if (_isViewMode)
+                {
+                    <h5 class="w-100 m-0">@Localizer["TrackingRecord"]</h5>
+                }
+                else
+                {
+                    <h5 class="w-100 m-0">@Localizer["UpdateTrackingRecord"]</h5>
+                }
+
+            </div>
             @if (_isViewMode)
             {
-                <h5 class="w-100 m-0">@Localizer["TrackingRecord"]</h5>
+                <MudFab Color="Color.Primary" Class="ms-2" StartIcon="@Icons.Material.Filled.Edit" OnClick="IsViewModeButtonClick"/>
             }
             else
             {
-                <h5 class="w-100 m-0">@Localizer["UpdateTrackingRecord"]</h5>
+                <MudFab Color="Color.Primary" Class="ms-2" StartIcon="@Icons.Material.Filled.ViewList" OnClick="IsViewModeButtonClick"/>
             }
-
         </div>
-        @if (_isViewMode)
+
+
+        @if (_record != null)
         {
-            <MudFab Color="Color.Primary" Class="ms-2" StartIcon="@Icons.Material.Filled.Edit" OnClick="IsViewModeButtonClick" />
-        }
-        else
-        {
-            <MudFab Color="Color.Primary" Class="ms-2" StartIcon="@Icons.Material.Filled.ViewList" OnClick="IsViewModeButtonClick" />
-        }
-    </div>
-
-
-    @if (_record != null)
-    {
-        if (_isViewMode)
-        {
-            <div class="row @(AppState.IsLanguageUrdu() ? "rtl" : "")  px-3 my-2 text-muted w-100">
-                <div class="col-12 p-0 mb-2">
-                    <div class="row">
-                        <span class="col-4">@Localizer["RoofName"] :</span>
-                        <span class="col-8">@_record.RoofName</span>
-                    </div>
-                </div>
-                <div class="col-12 p-0">
-                    <div class="row">
-                        <span class="col-4">@Localizer["Start"] :</span>
-                        <span class="col-8">@_record.StartTime.ToString("dd MMMM yyyy hh:mm tt", CultureInfo.CurrentCulture)</span>
-                    </div>
-                </div>
-            </div>
-
-
-            var i = 1;
-
-            <div class="d-flex flex-column w-100 mt-2">
-                <div class="d-flex flex-row align-items-center w-100 border-bottom">
-                    <div class="d-flex justify-content-center px-2 border-right">@Localizer["Nr"]</div>
-                    <div class="flex-grow-1 px-2">@Localizer["BirdsName"]</div>
-                    <div class="d-flex justify-content-center px-4 border-right @(AppState.IsLanguageUrdu() ? "me-5" : "")">@Localizer["Landed"]</div>
-                    <div class="d-flex justify-content-center px-2">@Localizer["Average"]</div>
-                </div>
-                @foreach (var rec in _record.Records)
-                {
-                    <div class="d-flex flex-row align-items-center w-100 border-bottom py-2">
-                        <div class="d-flex justify-content-center px-2 primary-bg text-white rounded">@i</div>
-                        <div class="flex-grow-1 px-3">@rec.BirdName</div>
-                        <div class="d-flex justify-content-center px-3">@rec.EndTime.ToCustomFormat()</div>
-                        <div class="d-flex justify-content-center px-2">
-                            @rec.TotalBirdFlyingTime?.ToCustomFormat()
+            if (_isViewMode)
+            {
+                <div class="row @(AppState.IsLanguageUrdu() ? "rtl" : "")  px-3 my-2 text-muted w-100">
+                    <div class="col-12 p-0 mb-2">
+                        <div class="row">
+                            <span class="col-4">@Localizer["RoofName"] :</span>
+                            <span class="col-8">@_record.RoofName</span>
                         </div>
                     </div>
-                    i++;
-                }
-                <div class="d-flex flex-row align-items-center w-100 border-bottom my-2">
-                    <div class="d-flex justify-content-center"></div>
-                    <div class="flex-grow-1 px-3 d-flex justify-content-end">
-                        <label>@Localizer["TotalAverage"]</label>
-                    </div>
-                    <div class="d-flex justify-content-center px-2">
-                        <label>
-                            @{
-                                var customFormat = _record.TotalFlyingTime?.ToCustomFormat() ?? "00:00";
-                            }
-                            @customFormat
-                        </label>
+                    <div class="col-12 p-0">
+                        <div class="row">
+                            <span class="col-4">@Localizer["Start"] :</span>
+                            <span class="col-8">@_record.StartTime.ToString("dd MMMM yyyy hh:mm tt", CultureInfo.CurrentCulture)</span>
+                        </div>
                     </div>
                 </div>
-                <div class="d-flex flex-row-reverse my-2">
-                    <button class="btn btn-outline-info" title="Share" @onclick="ShareButtonClick">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
-                            <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            @if (_isShareMode)
-            {
-                <div class="d-flex flex-column w-100 mt-2">
-                    <div class="d-flex flex-row border rounded-sm shadow-sm p-2">
-                        @{ var text = MessageCreator.Create(_record); }
 
-                        @text
+
+                var i = 1;
+
+                <div class="d-flex flex-column w-100 mt-2">
+                    <div class="d-flex flex-row align-items-center w-100 border-bottom">
+                        <div class="d-flex justify-content-center px-2 border-right">@Localizer["Nr"]</div>
+                        <div class="flex-grow-1 px-2">@Localizer["BirdsName"]</div>
+                        <div class="d-flex justify-content-center px-4 border-right @(AppState.IsLanguageUrdu() ? "me-5" : "")">@Localizer["Landed"]</div>
+                        <div class="d-flex justify-content-center px-2">@Localizer["Average"]</div>
                     </div>
-                    <div class="text-muted text-wrap fs-0-5">@Localizer["ShareFormatText"]</div>
-                    <div class="d-flex flex-row-reverse mt-2">
-                        <button class="btn btn-outline-secondary" title="Copy" @onclick="() => CopyToClipBoard(text)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
-                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                            </svg> @Localizer["Copy"]
+                    @foreach (var rec in _record.Records)
+                    {
+                        <div class="d-flex flex-row align-items-center w-100 border-bottom py-2">
+                            <div class="d-flex justify-content-center px-2 primary-bg text-white rounded">@i</div>
+                            <div class="flex-grow-1 px-3">@rec.BirdName</div>
+                            <div class="d-flex justify-content-center px-3">@rec.EndTime.ToCustomFormat()</div>
+                            <div class="d-flex justify-content-center px-2">
+                                @rec.TotalBirdFlyingTime?.ToCustomFormat()
+                            </div>
+                        </div>
+                        i++;
+                    }
+                    <div class="d-flex flex-row align-items-center w-100 border-bottom my-2">
+                        <div class="d-flex justify-content-center"></div>
+                        <div class="flex-grow-1 px-3 d-flex justify-content-end">
+                            <label>@Localizer["TotalAverage"]</label>
+                        </div>
+                        <div class="d-flex justify-content-center px-2">
+                            <label>
+                                @{
+                                    var customFormat = _record.TotalFlyingTime?.ToCustomFormat() ?? "00:00";
+                                }
+                                @customFormat
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row-reverse my-2">
+                        <button class="btn btn-outline-info" title="Share" @onclick="ShareButtonClick">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
+                                <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
-            }
-        }
-        else
-        {
-            <div class="d-flex flex-column w-100 my-3">
-                <div class="my-1">
-                    <label for="roofName" class="form-label fs-1 w-100">@Localizer["RoofName"]</label>
-                    <input type="text" class="form-control" id="roofName" @bind="_record.RoofName">
-                </div>
-                <div class="my-1">
-                    <label for="roofName" class="form-label fs-1 w-100">@Localizer["Start"]</label>
-                    <input type="time" class="form-control" id="roofName" @bind="_record.StartTime">
-                </div>
-                <div class="d-flex flex-row mt-3"></div>
-                @{ var i = 1; }
-                @foreach (var rec in _record.Records)
+                @if (_isShareMode)
                 {
-                    <div class="row mb-2">
-                        <div class="col-2 my-1">
-                            @* <label for="@i _1" class="form-label w-100 fs-1 text-center">@Localizer["Nr"]</label> *@
-                            <input type="text" disabled readonly class="form-control text-center" id="@i _1" value="@i">
+                    <div class="d-flex flex-column w-100 mt-2">
+                        <div class="d-flex flex-row border rounded-sm shadow-sm p-2">
+                            @{ var text = MessageCreator.Create(_record); }
+
+                            @text
                         </div>
-                        <div class="col-5 px-0 my-1">
-                            @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
-                            <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@rec.BirdName">
-                        </div>
-                        <div class="col-5 ps-1 my-1">
-                            @* <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
-                            <input type="time" class="form-control" id="@i _3" step="1" @bind="@rec.EndTime">
+                        <div class="text-muted text-wrap fs-0-5">@Localizer["ShareFormatText"]</div>
+                        <div class="d-flex flex-row-reverse mt-2">
+                            <button class="btn btn-outline-secondary" title="Copy" @onclick="() => CopyToClipBoard(text)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                </svg> @Localizer["Copy"]
+                            </button>
                         </div>
                     </div>
-                    i++;
                 }
-            </div>
+            }
+            else
+            {
+                <div class="d-flex flex-column w-100 my-3">
+                    <div class="my-1">
+                        <label for="roofName" class="form-label fs-1 w-100">@Localizer["RoofName"]</label>
+                        <input type="text" class="form-control" id="roofName" @bind="_record.RoofName">
+                    </div>
+                    <div class="my-1">
+                        <label for="roofName" class="form-label fs-1 w-100">@Localizer["Start"]</label>
+                        <input type="time" class="form-control" id="roofName" @bind="_record.StartTime">
+                    </div>
+                    <div class="d-flex flex-row mt-3"></div>
+                    @{ var i = 1; }
+                    @foreach (var rec in _record.Records)
+                    {
+                        <div class="row mb-2">
+                            <div class="col-2 my-1">
+                                @* <label for="@i _1" class="form-label w-100 fs-1 text-center">@Localizer["Nr"]</label> *@
+                                <input type="text" disabled readonly class="form-control text-center" id="@i _1" value="@i">
+                            </div>
+                            <div class="col-5 px-0 my-1">
+                                @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
+                                <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@rec.BirdName">
+                            </div>
+                            <div class="col-5 ps-1 my-1">
+                                @* <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
+                                <input type="time" class="form-control" id="@i _3" step="1" @bind="@rec.EndTime">
+                            </div>
+                        </div>
+                        i++;
+                    }
+                </div>
+            }
         }
-    }
 
-    @if (!_isViewMode)
-    {
-        <button type="submit" class="btn btn-primary primary-bg" @onclick="UpdateTrackingRecords">@Localizer["Update"]</button>
-    }
-</div>
-
-@if (!string.IsNullOrEmpty(_errorMessage))
-{
-    <div class="alert alert-danger" my-3 role="alert">
-        @((MarkupString)_errorMessage)
+        @if (!_isViewMode)
+        {
+            <button type="submit" class="btn btn-primary primary-bg" @onclick="UpdateTrackingRecords">@Localizer["Update"]</button>
+        }
     </div>
-}
 
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="alert alert-danger" my-3 role="alert">
+            @((MarkupString)_errorMessage)
+        </div>
+    }
+</PagesBase>
 
 @code {
 
@@ -237,6 +238,7 @@
                 StateHasChanged();
                 return;
             }
+
             var temp = _tournament.TrackingRecords.FirstOrDefault(f => f.Id == TrackingId);
 
             if (temp != null)

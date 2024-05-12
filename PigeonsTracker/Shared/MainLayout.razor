@@ -31,13 +31,6 @@
     </MudMainContent>
 </MudLayout>
 
-@* <div class="d-flex flex-column w-100"> *@
-@*     <NavMenu/> *@
-@*     <div id="bz-body" class="container"> *@
-@*         @Body *@
-@*     </div> *@
-@* </div> *@
-
 @if (_installable)
 {
     <div class="row justify-content-center">
@@ -83,7 +76,9 @@
         _onInstallable = () => InvokeAsync(StateHasChanged);
         ChangeLanguageInTheme();
 
-        var userId = $"userid{DateTime.Now.Ticks}";
+        var userIdFromStorage = await Service.GetItemAsStringAsync("userId");
+        var userId = userIdFromStorage ?? Guid.NewGuid().ToString("N");
+
         var globalConfigData = new Dictionary<string, object>
         {
             ["user_id"] = userId
@@ -95,6 +90,10 @@
 
         await Analytics.ConfigureGlobalConfigData(globalConfigData);
         Analytics.ConfigureGlobalEventData(globalEventData);
+        if (userIdFromStorage is null || string.IsNullOrWhiteSpace(userIdFromStorage))
+        {
+            await Service.SetItemAsStringAsync("userId", userId);
+        }
     }
 
     void DrawerToggle()

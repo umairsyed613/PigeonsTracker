@@ -1,4 +1,8 @@
 ﻿@page "/Settings"
+@inject SettingsService SettingsService
+@inject ISnackbar Snackbar
+
+
 <MyPageTitle Text="Settings"></MyPageTitle>
 
 <EditForm Model="@_settingsModel" OnValidSubmit="OnValidSubmit">
@@ -20,11 +24,23 @@
 
 @code {
     private SettingsModel _settingsModel = new SettingsModel();
-    private bool success = false;
-    private const string SettingsKey = "f9a848e5155e4e399eebe36fabc8a583";
-    private void OnValidSubmit(EditContext context)
+
+
+    private async Task OnValidSubmit(EditContext context)
     {
-        success = true;
+        await SettingsService.UpsertSettings(_settingsModel);
+        Snackbar.Add("Settings are saved!", Severity.Success);
         StateHasChanged();
     }
+
+    protected override async  Task OnInitializedAsync()
+    {
+        var temp = await SettingsService.GetSettings();
+
+        if (temp is not null)
+        {
+            _settingsModel = temp;
+        }
+    }
+
 }
