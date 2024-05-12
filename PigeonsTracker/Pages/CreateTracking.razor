@@ -77,6 +77,7 @@
     [Parameter]
     public string TournId { get; set; }
 
+    [Inject] private Blazor.Analytics.IAnalytics Analytics { get; set; }
     private int _numberOfBirds = 7;
     private DateTime StartDate { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
     private DateTime StartTime { get; set; } = DateTime.Now; //new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 05, 00, 00);
@@ -167,6 +168,14 @@
                 }
                 _tournament.TrackingRecords.Add(_record);
                 await TrackingService.UpsertTournament(_tournament);
+                try
+                {
+                    await Analytics.TrackEvent("CreateTrackingRecord", _record.RoofName);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
                 NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/{TournId}/{_record.Id}");
             }
             catch (Exception e)

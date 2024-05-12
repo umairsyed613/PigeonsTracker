@@ -1,6 +1,7 @@
 @page "/AllTournaments"
 @inject IStringLocalizer<Language> Localizer
 
+
 <div class="d-flex flex-column">
     @* <MudText Typo="Typo.h4" Class="mb-2">@Localizer["TournamentType1"]</MudText> *@
     <MyPageTitle Text="@Localizer["TournamentType1"]"></MyPageTitle>
@@ -9,3 +10,15 @@
         @Localizer["ComingSoon"]
     </p>
 </div>
+
+@code{
+
+    [Inject]
+    private Blazor.Analytics.IAnalytics Analytics { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Analytics.TrackEvent("AllTournament", 1);
+    }
+
+}

@@ -33,7 +33,7 @@
 
 
 @code {
-
+    [Inject] private Blazor.Analytics.IAnalytics Analytics { get; set; }
     private Tournament Tournament { get; set; }
     DateTime StartFrom { get; set; } = DateTime.Now;
     DateTime EndTo { get; set; } = DateTime.Now.AddDays(7);
@@ -56,6 +56,14 @@
         Tournament.EndTo = EndTo;
         await TrackingService.UpsertTournament(Tournament);
         Console.WriteLine("Tournament has been created");
+        try
+        {
+            await Analytics.TrackEvent("CreateTournament", Tournament.Name);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
         NavigationManager.NavigateTo("/MyTournaments");
     }
 

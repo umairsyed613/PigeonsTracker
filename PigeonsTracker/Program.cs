@@ -1,4 +1,5 @@
 using AspNetMonsters.Blazor.Geolocation;
+using Blazor.Analytics;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -27,6 +28,8 @@ public class Program
             builder.Services.AddScoped<IPigeonTrackingService, PigeonTrackingService>();
 
             builder.Services.AddSingleton<AppState>();
+
+            builder.Services.AddGoogleAnalytics("G-7X8JWPY5G0");
 
             var host = builder.Build();
             await host.SetDefaultCulture();

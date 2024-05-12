@@ -52,6 +52,9 @@
 
 @code
 {
+    [Inject]
+    private Blazor.Analytics.IAnalytics Analytics { get; set; }
+
     static bool _installable = false;
     static Action _onInstallable;
     bool _drawerOpen = false;
@@ -79,6 +82,19 @@
         Manager.LocationChanged += (sender, args) => { _drawerOpen = false; };
         _onInstallable = () => InvokeAsync(StateHasChanged);
         ChangeLanguageInTheme();
+
+        var userId = $"userid{DateTime.Now.Ticks}";
+        var globalConfigData = new Dictionary<string, object>
+        {
+            ["user_id"] = userId
+        };
+        var globalEventData = new Dictionary<string, object>
+        {
+            ["user_id"] = userId
+        };
+
+        await Analytics.ConfigureGlobalConfigData(globalConfigData);
+        Analytics.ConfigureGlobalEventData(globalEventData);
     }
 
     void DrawerToggle()
