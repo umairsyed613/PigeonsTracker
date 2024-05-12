@@ -15,5 +15,6 @@
   "url": "https://www.pigeonstracker.com/",
   "manifestUrl": "manifest.json",
   "lang": "en-US",
-  "screenshots": []
+  "screenshots": [],
+  "version": "3.22"
 }

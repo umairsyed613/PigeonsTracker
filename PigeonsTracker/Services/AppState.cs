@@ -7,7 +7,7 @@ namespace PigeonsTracker.Services;
 
 public class AppState
 {
-    public double ApplicationVersion { get; private set; } = 3.21;
+    public double ApplicationVersion { get; private set; } = 3.22;
     public bool IsMobile { get; set; }
     public OpenWeatherApiResult CachedOpenWeatherApiResult { get; set; }
     public Location Location { get; private set; }

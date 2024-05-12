@@ -28,10 +28,10 @@
 
     private async Task LoadList()
     {
-        _pigeonsTracking = await TrackingService.GetAllTracking();
-        if (_pigeonsTracking != null && _pigeonsTracking.Count > 0)
+        var pigeonsTracking = await TrackingService.GetAllTracking();
+        if (pigeonsTracking is { Count: > 0 })
         {
-            _pigeonsTracking = _pigeonsTracking.OrderByDescending(o => o.CreatedAt).ToList();
+            _pigeonsTracking = pigeonsTracking.OrderByDescending(o => o.CreatedAt).ToList();
         }
         else
         {

@@ -17,7 +17,7 @@
 
 @code {
     private string _message = "Loading .... ";
-    private List<Tournament> _tournaments = new List<Tournament>();
+    private List<Tournament> _tournaments = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -28,10 +28,10 @@
 
     private async Task LoadList()
     {
-        _tournaments = await TrackingService.GetAllTournaments();
-        if (_tournaments != null && _tournaments.Count > 0)
+        var tournaments = await TrackingService.GetAllTournaments();
+        if (tournaments is { Count: > 0 })
         {
-            _tournaments = _tournaments.OrderByDescending(o => o.CreatedAt).ToList();
+            _tournaments = tournaments.OrderByDescending(o => o.CreatedAt).ToList();
         }
         else
         {
