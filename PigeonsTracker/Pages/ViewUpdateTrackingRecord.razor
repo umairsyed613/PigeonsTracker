@@ -7,7 +7,7 @@
 @inject AppState AppState
 
 <PagesBase>
-    <div class="d-flex flex-column w-100 animate__animated animate__fadeInLeft">
+    <div class="d-flex flex-column">
         <div class="d-flex flex-row align-items-center py-2 my-2">
             <div class="flex-grow-1">
                 @if (_isViewMode)
@@ -22,11 +22,11 @@
             </div>
             @if (_isViewMode)
             {
-                <MudFab Color="Color.Primary" Class="ms-2" StartIcon="@Icons.Material.Filled.Edit" OnClick="IsViewModeButtonClick"/>
+                <MudFab Color="Color.Primary" Class="ms-2" Size="Size.Small" StartIcon="@Icons.Material.Filled.Edit" OnClick="IsViewModeButtonClick"/>
             }
             else
             {
-                <MudFab Color="Color.Primary" Class="ms-2" StartIcon="@Icons.Material.Filled.ViewList" OnClick="IsViewModeButtonClick"/>
+                <MudFab Color="Color.Primary" Class="ms-2" Size="Size.Small" StartIcon="@Icons.Material.Filled.ViewList" OnClick="IsViewModeButtonClick"/>
             }
         </div>
 
@@ -72,7 +72,7 @@
                         </div>
                         i++;
                     }
-                    <div class="d-flex flex-row align-items-center w-100 border-bottom my-2">
+                    <div class="d-flex flex-row align-items-center w-100 py-2 border-bottom my-2" style="background: #e9e3f5">
                         <div class="d-flex justify-content-center"></div>
                         <div class="flex-grow-1 px-3 d-flex justify-content-end">
                             <label>@Localizer["TotalAverage"]</label>
@@ -86,13 +86,25 @@
                             </label>
                         </div>
                     </div>
-                    <div class="d-flex flex-row-reverse my-2">
-                        <button class="btn btn-outline-info" title="Share" @onclick="ShareButtonClick">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
-                                <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
-                            </svg>
-                        </button>
-                    </div>
+                    @if (_record.BabyBird is not null)
+                    {
+                        <div class="d-flex flex-row align-items-center w-100 border-bottom py-2">
+                            <div class="d-flex justify-content-center px-2 primary-bg text-white rounded">1</div>
+                            <div class="flex-grow-1 px-3">@_record.BabyBird.BirdName</div>
+                            <div class="d-flex justify-content-center px-3">@_record.BabyBird.EndTime.ToCustomFormat()</div>
+                            <div class="d-flex justify-content-center px-2">
+                                @_record.BabyBird.TotalBirdFlyingTime?.ToCustomFormat()
+                            </div>
+                        </div>
+                    }
+
+                    @* <div class="d-flex flex-row-reverse my-2"> *@
+                    @*     <button class="btn btn-outline-info" title="Share" @onclick="ShareButtonClick"> *@
+                    @*         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16"> *@
+                    @*             <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/> *@
+                    @*         </svg> *@
+                    @*     </button> *@
+                    @* </div> *@
                 </div>
                 @if (_isShareMode)
                 {
@@ -140,10 +152,24 @@
                             </div>
                             <div class="col-5 ps-1 my-1">
                                 @* <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
-                                <input type="time" class="form-control" id="@i _3" step="1" @bind="@rec.EndTime">
+                                <input type="time" class="form-control" id="@i _3" step="1" placeholder="@Localizer["LandingTime"]" @bind="@rec.EndTime">
                             </div>
                         </div>
                         i++;
+                    }
+
+                    @if(_record.BabyBird is not null)
+                    {
+                    <div class="row mb-2">
+                        <div class="col-6 px-0 my-1">
+                            @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
+                            <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@_record.BabyBird.BirdName">
+                        </div>
+                        <div class="col-6 ps-1 my-1">
+                            @* <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
+                            <input type="time" class="form-control" id="@i _3" step="1" placeholder="@Localizer["LandingTime"]" @bind="@_record.BabyBird.EndTime">
+                        </div>
+                    </div>
                     }
                 </div>
             }
@@ -230,6 +256,15 @@
                     d.EndTime = new DateTime(year, month, day, hour, minute, second);
 
                     //Console.WriteLine($"New Datetime : {d.EndTime}");
+                }
+
+                if (_record.BabyBird?.EndTime != null)
+                {
+                    var (year, month, day) = _record.StartTime.GetSeparatedDate();
+
+                    var (hour, minute, second) = _record.BabyBird.EndTime.Value.GetSeparatedTime();
+
+                    _record.BabyBird.EndTime= new DateTime(year, month, day, hour, minute, second);
                 }
 
                 _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);

@@ -16,6 +16,11 @@ public static class PigeonsTrackingRecordTimeCalculator
             }
         }
 
+        if (trackingRecord.BabyBird?.EndTime != null)
+        {
+            trackingRecord.BabyBird.TotalBirdFlyingTime = trackingRecord.BabyBird.EndTime.Value.Subtract(trackingRecord.StartTime);
+        }
+
         var temp = trackingRecord.Records.Where(w => w.TotalBirdFlyingTime != null).Select(s => s.TotalBirdFlyingTime.Value).ToList();
 
         /*trackingRecord.TotalFlyingTime =

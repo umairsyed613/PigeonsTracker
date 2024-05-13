@@ -78,6 +78,24 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to بچه.
+        /// </summary>
+        internal static string BabyBird {
+            get {
+                return ResourceManager.GetString("BabyBird", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to بچے کا نام.
+        /// </summary>
+        internal static string BabyBirdName {
+            get {
+                return ResourceManager.GetString("BabyBirdName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to پرندوں کی معلومات.
         /// </summary>
         internal static string BirdsInformation {

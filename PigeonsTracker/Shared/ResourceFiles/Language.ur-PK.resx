@@ -168,4 +168,10 @@
     <data name="Private" xml:space="preserve">
         <value>پراویٹ</value>
     </data>
+    <data name="BabyBird" xml:space="preserve">
+        <value>بچه</value>
+    </data>
+    <data name="BabyBirdName" xml:space="preserve">
+        <value>بچے کا نام</value>
+    </data>
 </root>

@@ -30,6 +30,9 @@ html, body {
 .primary-bg {
     background-color: #38006d !important;
 }
+.primary-color {
+    color: #38006d !important;
+}
 
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;

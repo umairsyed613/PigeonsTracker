@@ -93,6 +93,40 @@ public static class Extensions
         return (year, month, day);
     }
 
+    public static (int year, int month, int day) GetSeparatedDate(this DateTime? input)
+    {
+        if (!input.HasValue)
+        {
+            throw new InvalidOperationException("Start Date is wrong");
+        }
+
+        var date = input.Value;
+        var year = DateTime.Now.Year;
+
+        if (date.Year >= 1 && date.Year <= 9999)
+        {
+            year = date.Year;
+        }
+
+        var month = DateTime.Now.Month;
+
+        if (date.Month >= 1 && date.Month <= 12)
+        {
+            month = date.Month;
+        }
+
+        var totalDaysInMonth = DateTime.DaysInMonth(year, month);
+
+        var day = 1;
+
+        if (date.Day >= 1 && date.Day <= totalDaysInMonth)
+        {
+            day = date.Day;
+        }
+
+        return (year, month, day);
+    }
+
     public static (int hour, int minute, int second) GetSeparatedTime(this DateTime date)
     {
         /*
