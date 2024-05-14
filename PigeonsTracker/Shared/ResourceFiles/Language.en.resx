@@ -15,7 +15,7 @@
         <value>Follow your pigeons!</value>
     </data>
     <data name="MainPageContent" xml:space="preserve">
-        <value>Welcome to our new app.</value>
+        <value>Welcome to our new app. For changing language use top right button</value>
     </data>
     <data name="TournamentName" xml:space="preserve">
         <value>Tournament Name</value>

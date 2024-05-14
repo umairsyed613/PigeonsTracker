@@ -161,7 +161,7 @@
                     @if(_record.BabyBird is not null)
                     {
                     <div class="row mb-2">
-                        <div class="col-6 px-0 my-1">
+                        <div class="col-6 ps-3 my-1">
                             @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
                             <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@_record.BabyBird.BirdName">
                         </div>
@@ -301,6 +301,15 @@
                     d.EndTime = new DateTime(year, month, day, hour, minute, second);
 
                     //Console.WriteLine($"New Datetime : {d.EndTime}");
+                }
+
+                if (_record.BabyBird?.EndTime != null)
+                {
+                    var (year, month, day) = _record.StartTime.GetSeparatedDate();
+
+                    var (hour, minute, second) = _record.BabyBird.EndTime.Value.GetSeparatedTime();
+
+                    _record.BabyBird.EndTime= new DateTime(year, month, day, hour, minute, second);
                 }
 
                 _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);

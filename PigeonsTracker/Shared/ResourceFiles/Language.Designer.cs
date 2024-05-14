@@ -285,7 +285,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to our new app..
+        ///   Looks up a localized string similar to Welcome to our new app. For changing language use top right button.
         /// </summary>
         internal static string MainPageContent {
             get {
