@@ -69,7 +69,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اورج.
+        ///   Looks up a localized string similar to ایوریج.
         /// </summary>
         internal static string Average {
             get {
@@ -393,7 +393,7 @@ namespace PigeonsTracker.Shared.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to کل اورج.
+        ///   Looks up a localized string similar to کل ایوریج.
         /// </summary>
         internal static string TotalAverage {
             get {

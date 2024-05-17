@@ -136,7 +136,7 @@
         <value>جب آپ اسے استعمال کریں گے تو نقل شدہ متن کی شکل درست ہوگی۔</value>
     </data>
     <data name="TotalAverage" xml:space="preserve">
-        <value>کل اورج</value>
+        <value>کل ایوریج</value>
     </data>
     <data name="Type" xml:space="preserve">
         <value>قسم</value>
@@ -145,7 +145,7 @@
         <value>اترا</value>
     </data>
     <data name="Average" xml:space="preserve">
-        <value>اورج</value>
+        <value>ایوریج</value>
     </data>
     <data name="ComingSoon" xml:space="preserve">
         <value>جلد آرہا ہے۔</value>
