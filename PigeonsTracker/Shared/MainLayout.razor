@@ -55,14 +55,20 @@
 
     private MudTheme _currentTheme = new MudTheme()
     {
-        Palette = new PaletteLight
+        PaletteLight = new PaletteLight
         {
-            AppbarBackground = "#38006d",
-            Primary = new MudColor("#38006d")
+            AppbarBackground = "#6c3ced",
+            Primary = new MudColor("#6c3ced"),
+            Secondary = new MudColor("#f59e0b"),
+            Tertiary = new MudColor("#10b981"),
+            Info = new MudColor("#8b5cf6"),
+            Success = new MudColor("#10b981"),
+            Warning = new MudColor("#f59e0b"),
+            Error = new MudColor("#ef4444")
         },
         Typography = new Typography()
         {
-            Default = new Default()
+            Default = new DefaultTypography()
             {
                 FontFamily =  new[] { "Roboto", "Helvetica", "Arial", "sans-serif" }
             }
@@ -137,14 +143,20 @@
         {
             _currentTheme = new MudTheme()
             {
-                Palette = new PaletteLight
+                PaletteLight = new PaletteLight
                 {
-                    AppbarBackground = "#38006d",
-                    Primary = new MudColor("#38006d")
+                    AppbarBackground = "#6c3ced",
+                    Primary = new MudColor("#6c3ced"),
+                    Secondary = new MudColor("#f59e0b"),
+                    Tertiary = new MudColor("#10b981"),
+                    Info = new MudColor("#8b5cf6"),
+                    Success = new MudColor("#10b981"),
+                    Warning = new MudColor("#f59e0b"),
+                    Error = new MudColor("#ef4444")
                 },
                 Typography = new Typography()
                 {
-                    Default = new Default()
+                    Default = new DefaultTypography()
                     {
                         FontFamily = new[] { "Noto Sans Arabic", "sans-serif" }
                     }

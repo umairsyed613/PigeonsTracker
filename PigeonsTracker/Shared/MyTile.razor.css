@@ -3,20 +3,82 @@
     justify-content: center;
     align-items: center;
     color: #fff;
-    min-height: 8rem;
+    min-height: 120px;
     user-select: none;
+    padding: 1.5rem 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    h5 {
-        margin-top: 1.4rem;
-        font-weight: 400;
+/* Default gradient - Purple */
+.my-tile {
+    background: linear-gradient(135deg, #6c3ced 0%, #8b5cf6 100%);
+}
+
+/* Secondary gradient - Orange/Yellow */
+.my-tile.tile-secondary {
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+}
+
+/* Accent gradient - Green */
+.my-tile.tile-accent {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+}
+
+/* Pink gradient */
+.my-tile.tile-pink {
+    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+}
+
+.my-tile .tile-text {
+    margin-top: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+    z-index: 2;
+}
+
+.my-tile .tile-icon {
+    font-size: 2.5rem;
+    opacity: 0.95;
+    z-index: 2;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Mobile-first responsive adjustments */
+@media (min-width: 576px) {
+    .my-tile {
+        min-height: 140px;
+        padding: 2rem 1.5rem;
+    }
+    
+    .my-tile .tile-text {
+        font-size: 1.2rem;
+    }
+    
+    .my-tile .tile-icon {
+        font-size: 3rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .my-tile {
+        min-height: 160px;
+    }
+    
+    .my-tile .tile-text {
         font-size: 1.3rem;
     }
+    
+    .my-tile .tile-icon {
+        font-size: 3.5rem;
+    }
+}
 
-    i {
-        font-size: 1.5rem;
-        position: absolute;
-        right: 15px;
-        top: 10px;
-        opacity: 0.5;
+/* Animation on hover for desktop */
+@media (hover: hover) and (pointer: fine) {
+    .my-tile:hover .tile-icon {
+        transform: scale(1.1) rotate(5deg);
+        transition: transform 0.3s ease;
     }
 }

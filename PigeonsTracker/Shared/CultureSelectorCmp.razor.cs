@@ -8,7 +8,7 @@ namespace PigeonsTracker.Shared;
 public partial class CultureSelectorCmp
 {
     [Inject] private AppState AppState { get; set; }
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; }
 
     public PigeonsTrackerCultureInfo[] PigeonsTrackerCultures = new[]
     {

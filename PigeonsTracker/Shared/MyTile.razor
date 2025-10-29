@@ -1,12 +1,10 @@
-﻿<div class="d-flex flex-row my-tile shadow-sm rounded mx-1 my-1 primary-bg p-2 cursor-btn">
-    @* <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="@SvgClass" viewBox="0 0 16 16"> *@
-    @*     <path d="@SvgPath"/> *@
-    @* </svg> *@
-    <i class="@SvgClass"></i>
-    <h5>@Text</h5>
+﻿<div class="d-flex flex-column my-tile tile-enhanced shadow-sm mx-1 my-1 cursor-btn @TileColorClass text-shadow-light">
+    <i class="@SvgClass tile-icon"></i>
+    <h5 class="tile-text">@Text</h5>
 </div>
 
 @code {
     [Parameter] public string Text { get; set; }
     [Parameter] public string SvgClass { get; set; }
+    [Parameter] public string TileColorClass { get; set; } = ""; // Default primary gradient
 }
