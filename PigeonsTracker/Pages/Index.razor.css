@@ -21,6 +21,18 @@
     }
 }
 
+/* Video Container - Responsive Width Control */
+.video-container {
+    width: 100%;
+    max-width: 800px;
+}
+
+@media (max-width: 767.98px) {
+    .video-container {
+        max-width: 100%;
+    }
+}
+
 #discover {
     animation: fadeInUp 0.6s ease-out;
 }
