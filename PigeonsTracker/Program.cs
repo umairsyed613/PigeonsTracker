@@ -19,7 +19,19 @@ public class Program
             builder.Services.AddMudServices();
 
             //Console.WriteLine(@"IsProduction : " + builder.HostEnvironment.IsProduction());
-            builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            
+            // Configure HttpClient with performance optimizations
+            builder.Services.AddScoped(sp => 
+            {
+                var httpClient = new HttpClient 
+                { 
+                    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
+                    Timeout = TimeSpan.FromSeconds(30)
+                };
+                httpClient.DefaultRequestHeaders.ConnectionClose = false;
+                return httpClient;
+            });
+            
             builder.Services.AddLocalization();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddSingleton<LocationService>();
