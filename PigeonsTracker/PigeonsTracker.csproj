@@ -1,24 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>true</ImplicitUsings>
-        <EmccMaximumHeapSize>268435456</EmccMaximumHeapSize>
-        <WasmEnableWebcil>false</WasmEnableWebcil>
         <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+        <LangVersion>latest</LangVersion>
+        <!-- Performance Optimizations -->
+        <RunAOTCompilation>true</RunAOTCompilation>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>partial</TrimMode>
+        <InvariantGlobalization>false</InvariantGlobalization>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="AspNetMonsters.Blazor.Geolocation" Version="0.5.0-preview1"/>
-        <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
+        <PackageReference Include="Blazor-Analytics" Version="4.0.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.5.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.4"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.4" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.4"/>
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4"/>
-        <PackageReference Include="MudBlazor" Version="6.19.1" />
-        <PackageReference Include="System.Net.Http.Json" Version="8.0.0"/>
-        <PackageReference Include="System.Text.Json" Version="8.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.9" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.9" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.9" />
+        <PackageReference Include="MudBlazor" Version="8.13.0" />
+        <PackageReference Include="System.Net.Http.Json" Version="9.0.9" />
+        <PackageReference Include="System.Text.Json" Version="9.0.9" />
     </ItemGroup>
 
     <ItemGroup>
@@ -66,6 +70,14 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+        <!-- Only load specific cultures instead of all globalization data -->
+        <BlazorWebAssemblyLoadAllGlobalizationData>false</BlazorWebAssemblyLoadAllGlobalizationData>
+        <BlazorWebAssemblyI18NAssemblies>all</BlazorWebAssemblyI18NAssemblies>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <!-- Specify cultures to reduce initial load -->
+        <SupportedCulture Include="en-US" />
+        <SupportedCulture Include="ur-PK" />
+    </ItemGroup>
 </Project>

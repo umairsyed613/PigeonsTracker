@@ -26,14 +26,21 @@
 
     <link rel="canonical" href="https://www.pigeonstracker.com"/>
 
-    <base href="/"/>
+    <!-- Preconnect to improve loading performance -->
+     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+     
+     <base href="/"/>
+    <!-- Critical CSS loaded synchronously -->
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="css/bootstrap/bootstrap-icons.min.css">
     <link href="css/app.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="css/animate.min.css"/>
-    <link href="css/meteocons.min.css" rel="stylesheet">
     <link href="css/loading.css" rel="stylesheet">
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap-icons.min.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="css/animate.min.css" media="print" onload="this.media='all'" />
+    <link href="css/meteocons.min.css" rel="stylesheet" media="print" onload="this.media='all'" />
 
     <link href="PigeonsTracker.styles.css" rel="stylesheet"/>
     <link href="manifest.json" rel="manifest" />
@@ -43,7 +50,7 @@
 <body>
 
 <div id="app">
-    <div class="d-flex flex-column w-100 align-items-center justify-content-center my-auto user-select-none loading-screen-bg"
+    <div class="d-flex flex-column w-100 align-items-center justify-content-center my-auto user-select-none"
          style="min-height: 100vh;">
         <img class="mb-3" src="icon-512.png" height="100px" alt="PigeonsTracker"/>
         <h5 class="mb-3">PigeonsTracker</h5>
@@ -59,8 +66,8 @@
     <a class="btn dismiss">X</a>
     </div>
 </div>
-<script src="_framework/blazor.webassembly.js"></script>
-<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+<script src="_framework/blazor.webassembly.js" defer></script>
+<script src="_content/MudBlazor/MudBlazor.min.js" defer></script>
 <script type="text/javascript">
     window.blazorCulture = {
         get: () => window.localStorage['BlazorCulture'],

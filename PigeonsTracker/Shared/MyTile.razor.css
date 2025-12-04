@@ -3,20 +3,142 @@
     justify-content: center;
     align-items: center;
     color: #fff;
-    min-height: 8rem;
+    min-height: 120px;
     user-select: none;
+    padding: 1.5rem 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+}
 
-    h5 {
-        margin-top: 1.4rem;
-        font-weight: 400;
+/* Pseudo-element for shine effect */
+.my-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.my-tile:hover::before {
+    left: 100%;
+}
+
+/* Default gradient - Purple */
+.my-tile {
+    background: linear-gradient(135deg, #6c3ced 0%, #8b5cf6 100%);
+    box-shadow: 0 4px 15px rgba(108, 60, 237, 0.3);
+}
+
+.my-tile:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(108, 60, 237, 0.4);
+}
+
+/* Secondary gradient - Orange/Yellow */
+.my-tile.tile-secondary {
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.my-tile.tile-secondary:hover {
+    box-shadow: 0 12px 30px rgba(245, 158, 11, 0.4);
+}
+
+/* Accent gradient - Green */
+.my-tile.tile-accent {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.my-tile.tile-accent:hover {
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+}
+
+/* Pink gradient */
+.my-tile.tile-pink {
+    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+}
+
+.my-tile.tile-pink:hover {
+    box-shadow: 0 12px 30px rgba(236, 72, 153, 0.4);
+}
+
+.my-tile .tile-text {
+    margin-top: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.my-tile:hover .tile-text {
+    transform: scale(1.05);
+}
+
+.my-tile .tile-icon {
+    font-size: 2.5rem;
+    opacity: 0.95;
+    z-index: 2;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.my-tile:hover .tile-icon {
+    transform: scale(1.2) rotate(-10deg);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Mobile-first responsive adjustments */
+@media (min-width: 576px) {
+    .my-tile {
+        min-height: 140px;
+        padding: 2rem 1.5rem;
+    }
+    
+    .my-tile .tile-text {
+        font-size: 1.2rem;
+    }
+    
+    .my-tile .tile-icon {
+        font-size: 3rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .my-tile {
+        min-height: 160px;
+    }
+    
+    .my-tile .tile-text {
         font-size: 1.3rem;
     }
+    
+    .my-tile .tile-icon {
+        font-size: 3.5rem;
+    }
+}
 
-    i {
-        font-size: 1.5rem;
-        position: absolute;
-        right: 15px;
-        top: 10px;
-        opacity: 0.5;
+/* Active/tap state for mobile */
+.my-tile:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* Disable complex animations on touch devices for better performance */
+@media (hover: none) and (pointer: coarse) {
+    .my-tile:hover {
+        transform: none;
+    }
+    
+    .my-tile:hover .tile-icon {
+        transform: scale(1.1);
     }
 }
