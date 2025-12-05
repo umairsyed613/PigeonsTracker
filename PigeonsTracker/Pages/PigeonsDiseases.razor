@@ -1,18 +1,121 @@
 @page "/PigeonsDiseases"
 @inject IStringLocalizer<Language> Localizer
 @inject NavigationManager NavigationManager
-
+@inject IDiseaseAndCureService DiseaseService
+@implements IDisposable
 
 <PagesBase>
     <MyPageTitle Text="@Localizer["PigeonsDiseasesAndCure"]"></MyPageTitle>
 
-    <p>
-        @Localizer["ComingSoon"]
-    </p>
-
+    <div class="diseases-container">
+        @if (_isLoading)
+        {
+            <div class="d-flex justify-content-center align-items-center py-5">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            </div>
+        }
+        else if (_diseases == null || !_diseases.Any())
+        {
+            <MudAlert Severity="Severity.Info" Class="my-3">
+                @Localizer["NoRecords"]
+            </MudAlert>
+        }
+        else
+        {
+            <div class="diseases-list">
+                @foreach (var disease in _diseases)
+                {
+                    var animationClass = _skipAnimation ? "" : "animate__animated animate__fadeInUp";
+                    var animationDelay = _skipAnimation ? "" : $"animation-delay: {(_diseases.IndexOf(disease) * 0.1)}s";
+                    
+                    <div class="disease-card @animationClass" 
+                         style="@animationDelay"
+                         @onclick="() => ViewDisease(disease.Id)">
+                        <div class="disease-card-content">
+                            <div class="disease-icon">
+                                <i class="bi bi-capsule"></i>
+                            </div>
+                            <div class="disease-info">
+                                <h3 class="disease-title">@disease.Title</h3>
+                                <p class="disease-preview">@DiseaseContentFormatter.TruncateText(disease.Cure, 120)</p>
+                            </div>
+                            <div class="disease-arrow">
+                                <i class="bi bi-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
 </PagesBase>
-<MudFab Color="Color.Primary" Class="btnFloating animate__animated animate__slideInUp" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => NavigationManager.NavigateTo("/AddDiseaseAndCure/"))"/>
 
 @code {
+    private List<DiseaseItem> _diseases = new();
+    private bool _isLoading = true;
+    private bool _skipAnimation = false;
 
+    protected override void OnInitialized()
+    {
+        DiseaseService.OnDataUpdated += HandleDataUpdated;
+        
+        // Check if data is already cached - show immediately without loading and animation
+        if (DiseaseService.HasCachedData)
+        {
+            _diseases = DiseaseService.GetCachedDiseases();
+            _isLoading = false;
+            _skipAnimation = true; // Skip animation when returning to the page
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // If data wasn't cached, load it
+        if (!DiseaseService.HasCachedData)
+        {
+            await LoadDiseases();
+        }
+        else
+        {
+            // Still trigger a background refresh to check for updates
+            _ = DiseaseService.GetAllDiseasesAsync();
+        }
+    }
+
+    private async Task LoadDiseases()
+    {
+        try
+        {
+            _isLoading = true;
+            _diseases = await DiseaseService.GetAllDiseasesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading diseases: {ex.Message}");
+            _diseases = new();
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void HandleDataUpdated()
+    {
+        InvokeAsync(async () =>
+        {
+            _diseases = await DiseaseService.GetAllDiseasesAsync();
+            StateHasChanged();
+        });
+    }
+
+    private void ViewDisease(string id)
+    {
+        NavigationManager.NavigateTo($"/ViewDiseaseAndCure/{id}");
+    }
+
+    public void Dispose()
+    {
+        DiseaseService.OnDataUpdated -= HandleDataUpdated;
+    }
 }

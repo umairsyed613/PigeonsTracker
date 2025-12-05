@@ -1,26 +1,306 @@
-﻿@page "/AddDiseaseAndCure"
-<h3>AddDiseaseAndCure</h3>
+﻿@page "/adac"
+@inject IStringLocalizer<Language> Localizer
+@inject ISnackbar Snackbar
+@inject IJSRuntime JSRuntime
 
-@* <MudForm> *@
-@*     <MudTextField Label="Id" Disabled="true" @bind-Value="_pigeonDiseaseAndCure.Id"></MudTextField> *@
-@*     <h5>Title</h5> *@
-@*     <MudTextField Label="English" @bind-Value="_pigeonDiseaseAndCure.Title[" English *@
-@*                   "]"> *@
-@*     </MudTextField> *@
-@*     <MudTextField Label="Spanish" @bind-Value="_pigeonDiseaseAndCure.Title[" Spanish *@
-@*                   "]"> *@
-@*     </MudTextField> *@
-@*     <h5>Content</h5> *@
-@*     <MudTextField Label="English" @bind-Value="_pigeonDiseaseAndCure.Content[" English *@
-@*                   "]" Multiline="true"> *@
-@*     </MudTextField> *@
-@*     <MudTextField Label="Spanish" @bind-Value="_pigeonDiseaseAndCure.Content[" Spanish *@
-@*                   "]" Multiline="true"> *@
-@*     </MudTextField> *@
-@*     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Submit</MudButton> *@
-@* </MudForm> *@
+<PagesBase>
+    <MyPageTitle Text="Disease & Cure Editor"></MyPageTitle>
+
+    <div class="editor-container">
+        <!-- Editor Section -->
+        <div class="editor-section">
+            <MudCard Class="mb-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">
+                            <i class="bi bi-pencil-square me-2"></i>Editor
+                        </MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTextField @bind-Value="_id" Label="ID (number)" Variant="Variant.Outlined" 
+                                  Class="mb-3" Placeholder="e.g., 11" />
+                    
+                    <MudTextField @bind-Value="_title" Label="Disease Title" Variant="Variant.Outlined" 
+                                  Class="mb-3" Placeholder="e.g., Canker (Trichomoniasis)" />
+                    
+                    <MudTextField @bind-Value="_cure" Label="Cure Content" Variant="Variant.Outlined" 
+                                  Lines="12" Class="mb-3"
+                                  Placeholder="Write the cure content here...&#10;&#10;Use **Text:** for headings&#10;Use - for bullet points"
+                                  HelperText="Use **Heading:** for section titles (e.g., **Treatment:**) and - for bullet points" />
+                    
+                    <div class="d-flex gap-2 flex-wrap">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" 
+                                   StartIcon="@Icons.Material.Filled.ContentCopy"
+                                   OnClick="CopyJsonToClipboard">
+                            Copy JSON
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
+                                   StartIcon="@Icons.Material.Filled.Refresh"
+                                   OnClick="InsertTemplate">
+                            Insert Template
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                                   StartIcon="@Icons.Material.Filled.Clear"
+                                   OnClick="ClearAll">
+                            Clear
+                        </MudButton>
+                    </div>
+                </MudCardContent>
+            </MudCard>
+
+            <!-- JSON Output Section -->
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">
+                            <i class="bi bi-code-slash me-2"></i>JSON Output
+                        </MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" 
+                                       Color="Color.Primary" OnClick="CopyJsonToClipboard" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <pre class="json-output">@GetJsonOutput()</pre>
+                </MudCardContent>
+            </MudCard>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">
+                            <i class="bi bi-eye me-2"></i>Live Preview
+                        </MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent Class="pa-0">
+                    <!-- Preview mimics ViewDiseaseAndCure page -->
+                    <div class="preview-wrapper">
+                        <div class="disease-header-preview">
+                            @* <div class="header-icon-preview">
+                                <i class="bi bi-capsule"></i>
+                            </div> *@
+                            <h1 class="disease-title-preview">
+                                @(string.IsNullOrWhiteSpace(_title) ? "Disease Title" : _title)
+                            </h1>
+                        </div>
+
+                        <div class="disease-content-preview">
+                            @if (string.IsNullOrWhiteSpace(_cure))
+                            {
+                                <p class="text-muted">Start typing in the editor to see the preview...</p>
+                            }
+                            else
+                            {
+                                @foreach (var paragraph in DiseaseContentFormatter.GetFormattedContent(_cure))
+                                {
+                                    @if (paragraph.IsHeading)
+                                    {
+                                        <h4 class="content-heading-preview">@paragraph.Text</h4>
+                                    }
+                                    else if (paragraph.IsBullet)
+                                    {
+                                        <div class="bullet-item-preview">
+                                            <i class="bi bi-check-circle-fill bullet-icon-preview"></i>
+                                            <span>@paragraph.Text</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="content-paragraph-preview">@paragraph.Text</p>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </div>
+    </div>
+</PagesBase>
+
+<style>
+    .editor-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    @@media (min-width: 992px) {
+        .editor-container {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .json-output {
+        background: #1e1e1e;
+        color: #9cdcfe;
+        padding: 1rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-word;
+        margin: 0;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .preview-wrapper {
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+        min-height: 400px;
+    }
+
+    .disease-header-preview {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .header-icon-preview {
+        width: 70px;
+        height: 70px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #6c3ced 0%, #8b5cf6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        margin: 0 auto 1rem;
+        box-shadow: 0 8px 24px rgba(108, 60, 237, 0.35);
+    }
+
+    .disease-title-preview {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .disease-content-preview {
+        background: white;
+        border-radius: 16px;
+        padding: 1.25rem;
+        border: 1px solid rgba(108, 60, 237, 0.1);
+        box-shadow: 0 4px 16px rgba(108, 60, 237, 0.1);
+    }
+
+    .content-paragraph-preview {
+        font-size: 0.95rem;
+        color: #374151;
+        line-height: 1.7;
+        margin: 0 0 0.75rem;
+    }
+
+    .content-heading-preview {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #6c3ced;
+        margin: 1rem 0 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(108, 60, 237, 0.1);
+    }
+
+    .content-heading-preview:first-child {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+    }
+
+    .bullet-item-preview {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        background: rgba(108, 60, 237, 0.05);
+        border-radius: 10px;
+        margin: 0.5rem 0 0.5rem 0.5rem;
+    }
+
+    .bullet-icon-preview {
+        flex-shrink: 0;
+        color: #6c3ced;
+        font-size: 0.9rem;
+        margin-top: 0.2rem;
+    }
+
+    .bullet-item-preview span {
+        font-size: 0.9rem;
+        color: #374151;
+        line-height: 1.5;
+    }
+</style>
 
 @code {
-    private PigeonDiseaseAndCure _pigeonDiseaseAndCure = new PigeonDiseaseAndCure();
+    private string _id = "";
+    private string _title = "";
+    private string _cure = "";
 
+    private string GetJsonOutput()
+    {
+        var escapedCure = _cure
+            .Replace("\\", "\\\\")
+            .Replace("\"", "\\\"")
+            .Replace("\r\n", "\\n")
+            .Replace("\n", "\\n")
+            .Replace("\r", "\\n")
+            .Replace("\t", "\\t");
+
+        return $@"{{
+  ""id"": ""{_id}"",
+  ""title"": ""{_title}"",
+  ""cure"": ""{escapedCure}""
+}}";
+    }
+
+    private async Task CopyJsonToClipboard()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", GetJsonOutput());
+            Snackbar.Add("JSON copied to clipboard!", Severity.Success);
+        }
+        catch
+        {
+            Snackbar.Add("Failed to copy. Please select and copy manually.", Severity.Error);
+        }
+    }
+
+    private void InsertTemplate()
+    {
+        _title = "Disease Name (Scientific Name)";
+        _cure = @"Brief description of the disease, its causes, and main symptoms. Explain how pigeons get infected and what signs to look for.
+
+**Treatment:**
+- First treatment option with dosage
+- Second treatment option
+- Supportive care instructions
+- Isolation recommendations
+- Duration of treatment
+
+**Prevention:**
+- Prevention method 1
+- Prevention method 2
+- Hygiene practices
+- Vaccination if applicable
+- Quarantine procedures";
+        
+        Snackbar.Add("Template inserted!", Severity.Info);
+    }
+
+    private void ClearAll()
+    {
+        _id = "";
+        _title = "";
+        _cure = "";
+        Snackbar.Add("Cleared!", Severity.Info);
+    }
 }

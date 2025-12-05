@@ -1,0 +1,55 @@
+{
+  "version": "1.2.0",
+  "diseases": [
+    {
+      "id": "1",
+      "title": "Canker (Trichomoniasis)",
+      "cure": "Canker is one of the most common diseases in pigeons, caused by a protozoan parasite called Trichomonas gallinae. Symptoms include yellowish-white cheesy growths in the mouth, throat, and crop area. Birds may have difficulty eating and drinking, leading to weight loss and lethargy.\n\n**Treatment:**\n- Administer Metronidazole (Flagyl) at 50mg per kg body weight for 5-7 days\n- Use Ronidazole as an alternative treatment\n- Clean and disinfect water containers daily\n- Isolate infected birds immediately\n- Provide soft, easy-to-swallow food\n\n**Prevention:**\n- Maintain clean drinking water\n- Regular preventive treatment before breeding season\n- Avoid overcrowding in the loft\n- Quarantine new birds before introducing them to the flock"
+    },
+    {
+      "id": "2",
+      "title": "Pigeon Pox (Avian Pox)",
+      "cure": "Pigeon Pox is a viral disease that appears in two forms: dry pox (skin form) and wet pox (diphtheritic form). The dry form shows as wart-like growths on featherless areas like the beak, eyes, and feet. The wet form affects the mouth and respiratory tract.\n\n**Treatment:**\n- There is no direct cure for the virus; treatment is supportive\n- Apply iodine solution to dry pox lesions\n- Keep wounds clean to prevent secondary bacterial infections\n- Administer antibiotics if secondary infections occur\n- Provide vitamins A, D, and E to boost immunity\n- Ensure proper nutrition and hydration\n\n**Prevention:**\n- Vaccinate pigeons against pox\n- Control mosquitoes and other biting insects\n- Maintain good loft hygiene\n- Isolate infected birds immediately"
+    },
+    {
+      "id": "3",
+      "title": "Salmonellosis (Paratyphoid)",
+      "cure": "Salmonellosis is a bacterial infection caused by Salmonella typhimurium. It can affect the intestines, joints, and internal organs. Symptoms include green watery droppings, swollen joints, twisted neck, and weight loss. It can be transmitted through contaminated food, water, or egg transmission.\n\n**Treatment:**\n- Enrofloxacin (Baytril) 10mg per kg for 10-14 days\n- Trimethoprim-Sulfa combination antibiotics\n- Probiotics to restore gut health after antibiotic treatment\n- Electrolytes to prevent dehydration\n- Cull severely affected birds to prevent spread\n\n**Prevention:**\n- Regular vaccination programs\n- Strict hygiene in the loft\n- Rodent control programs\n- Test new birds before introduction\n- Regular disinfection of feeders and waterers"
+    },
+    {
+      "id": "4",
+      "title": "Respiratory Infections (Mycoplasmosis)",
+      "cure": "Respiratory infections in pigeons are often caused by Mycoplasma bacteria, sometimes combined with other pathogens. Symptoms include sneezing, nasal discharge, swollen sinuses, watery eyes, and rattling breathing sounds. Stress, poor ventilation, and overcrowding can trigger outbreaks.\n\n**Treatment:**\n- Tylosin at 1g per liter of drinking water for 5-7 days\n- Doxycycline as an alternative antibiotic\n- Ensure good ventilation in the loft\n- Reduce stress factors\n- Provide immune-boosting supplements\n\n**Prevention:**\n- Maintain proper loft ventilation\n- Avoid overcrowding\n- Regular cleaning and disinfection\n- Minimize stress during racing and breeding\n- Quarantine birds with respiratory symptoms"
+    },
+    {
+      "id": "5",
+      "title": "Coccidiosis",
+      "cure": "Coccidiosis is caused by protozoan parasites of the Eimeria genus that affect the intestinal tract. Young pigeons are most susceptible. Symptoms include bloody or mucoid droppings, weight loss, ruffled feathers, and decreased appetite. Severe cases can be fatal.\n\n**Treatment:**\n- Amprolium (Corid) in drinking water for 5-7 days\n- Toltrazuril as a single-dose treatment\n- Sulfadimethoxine for severe cases\n- Provide B-vitamins during recovery\n- Clean and disinfect the loft thoroughly\n\n**Prevention:**\n- Keep loft dry and clean\n- Avoid overcrowding\n- Regular preventive treatments\n- Remove droppings regularly\n- Provide adequate ventilation"
+    },
+    {
+      "id": "6",
+      "title": "Worms (Helminthiasis)",
+      "cure": "Pigeons can be infected by various internal parasites including roundworms (Ascaridia), hairworms (Capillaria), and tapeworms. Symptoms include weight loss, poor feather condition, diarrhea, and reduced performance. Heavy infestations can cause intestinal blockage.\n\n**Treatment:**\n- Levamisole for roundworms - single dose treatment\n- Fenbendazole (Panacur) for various worm types - 3-5 day treatment\n- Praziquantel for tapeworms\n- Ivermectin for broad-spectrum treatment\n- Repeat treatment after 14 days to kill newly hatched worms\n\n**Prevention:**\n- Regular deworming schedule (every 3-4 months)\n- Maintain clean loft conditions\n- Control intermediate hosts (snails, beetles)\n- Regular fecal testing\n- Rotate dewormers to prevent resistance"
+    },
+    {
+      "id": "7",
+      "title": "Ornithosis (Chlamydiosis)",
+      "cure": "Ornithosis is caused by Chlamydia psittaci bacteria and can be transmitted to humans (zoonotic). Symptoms include eye inflammation, nasal discharge, respiratory distress, and green droppings. Infected birds may appear sleepy and lose weight.\n\n**Treatment:**\n- Doxycycline 50mg per kg for 45 days (long treatment required)\n- Chlortetracycline as an alternative\n- Treat all birds in the loft, not just symptomatic ones\n- Wear protective masks when handling infected birds\n- Thoroughly clean and disinfect the loft\n\n**Prevention:**\n- Test new birds before introduction\n- Maintain good hygiene\n- Reduce stress factors\n- Regular health screenings\n- Avoid contact with wild birds"
+    },
+    {
+      "id": "8",
+      "title": "Paramyxovirus (PMV)",
+      "cure": "Paramyxovirus is a highly contagious viral disease that affects the nervous and digestive systems. Symptoms include twisted neck, paralysis, watery green droppings, and inability to eat properly. The disease can spread rapidly through a flock.\n\n**Treatment:**\n- There is no specific cure for PMV\n- Supportive care is essential\n- Hand-feed and water affected birds\n- Provide vitamins and electrolytes\n- Keep birds warm and comfortable\n- Some birds may recover with nursing care\n\n**Prevention:**\n- Annual vaccination is essential\n- Quarantine new birds for 4-6 weeks\n- Avoid contact with wild pigeons\n- Maintain strict biosecurity\n- Report outbreaks to authorities"
+    },
+    {
+      "id": "9",
+      "title": "E. coli Infection",
+      "cure": "E. coli bacteria are normally present in the pigeon gut but can cause disease when birds are stressed or immunocompromised. Symptoms include watery droppings, lethargy, and loss of appetite. Young birds and breeding pairs are particularly susceptible.\n\n**Treatment:**\n- Enrofloxacin based on sensitivity testing\n- Amoxicillin as an alternative antibiotic\n- Probiotics to restore beneficial gut bacteria\n- Electrolyte supplements\n- Address underlying stress factors\n\n**Prevention:**\n- Maintain clean drinking water\n- Regular loft cleaning\n- Reduce stress factors\n- Good nutrition and immune support\n- Avoid overcrowding"
+    },
+    {
+      "id": "10",
+      "title": "Hexamitiasis",
+      "cure": "Hexamitiasis is caused by the protozoan Hexamita columbae and affects the small intestine. Symptoms are similar to canker but primarily affect the intestinal tract rather than the mouth. Birds show weight loss, loose droppings, and poor performance.\n\n**Treatment:**\n- Metronidazole at 40mg per kg for 7 days\n- Dimetridazole as an alternative\n- Carnidazole (Spartrix) can also be effective\n- Improve water hygiene\n- Provide easily digestible food during recovery\n\n**Prevention:**\n- Clean water sources regularly\n- Avoid contaminated grit\n- Regular preventive treatments\n- Reduce stress during racing season\n- Maintain good loft ventilation"
+    }
+  ]
+}

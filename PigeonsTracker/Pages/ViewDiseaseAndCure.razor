@@ -1,0 +1,107 @@
+@page "/ViewDiseaseAndCure/{Id}"
+@inject IStringLocalizer<Language> Localizer
+@inject NavigationManager NavigationManager
+@inject IDiseaseAndCureService DiseaseService
+
+<PagesBase>
+    <div class="disease-detail-container">
+        @if (_isLoading)
+        {
+            <div class="d-flex justify-content-center align-items-center py-5">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            </div>
+        }
+        else if (_disease == null)
+        {
+            <MudAlert Severity="Severity.Warning" Class="my-3">
+                Disease not found
+            </MudAlert>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" 
+                       OnClick="GoBack" Class="mt-2">
+                @Localizer["Back"]
+            </MudButton>
+        }
+        else
+        {
+            <div class="disease-header animate__animated animate__fadeInDown">
+                <div class="header-row">
+                    <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" 
+                                   OnClick="GoBack" Class="back-button" />
+                    <div class="header-center">
+                        <div class="header-icon">
+                            <i class="bi bi-capsule"></i>
+                        </div>
+                    </div>
+                    <div class="header-spacer"></div>
+                </div>
+                <h1 class="disease-detail-title">@_disease.Title</h1>
+            </div>
+
+            <div class="disease-content-card animate__animated animate__fadeInUp animate__delay-1s">
+                <div class="content-body">
+                    @foreach (var paragraph in DiseaseContentFormatter.GetFormattedContent(_disease.Cure))
+                    {
+                        @if (paragraph.IsHeading)
+                        {
+                            <h4 class="content-heading">@paragraph.Text</h4>
+                        }
+                        else if (paragraph.IsBullet)
+                        {
+                            <div class="bullet-item">
+                                <i class="bi bi-check-circle-fill bullet-icon"></i>
+                                <span>@paragraph.Text</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="content-paragraph">@paragraph.Text</p>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="action-buttons animate__animated animate__fadeInUp animate__delay-2s">
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowBack" 
+                           OnClick="GoBack" FullWidth="true" Class="action-btn">
+                    @Localizer["Back"]
+                </MudButton>
+            </div>
+        }
+    </div>
+</PagesBase>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = string.Empty;
+
+    private DiseaseItem _disease = null!;
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDisease();
+    }
+
+    private async Task LoadDisease()
+    {
+        try
+        {
+            _isLoading = true;
+            _disease = await DiseaseService.GetDiseaseByIdAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading disease: {ex.Message}");
+            _disease = null;
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/PigeonsDiseases");
+    }
+}
