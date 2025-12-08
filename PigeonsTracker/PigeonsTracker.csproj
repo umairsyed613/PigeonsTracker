@@ -5,10 +5,6 @@
         <ImplicitUsings>true</ImplicitUsings>
         <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
         <LangVersion>latest</LangVersion>
-        <!-- Performance Optimizations -->
-        <RunAOTCompilation>true</RunAOTCompilation>
-        <PublishTrimmed>true</PublishTrimmed>
-        <TrimMode>partial</TrimMode>
         <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
     </PropertyGroup>
 
@@ -69,15 +65,5 @@
       <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\README.md" />
     </ItemGroup>
 
-    <PropertyGroup>
-        <!-- Only load specific cultures instead of all globalization data -->
-        <BlazorWebAssemblyLoadAllGlobalizationData>false</BlazorWebAssemblyLoadAllGlobalizationData>
-        <BlazorWebAssemblyI18NAssemblies>all</BlazorWebAssemblyI18NAssemblies>
-    </PropertyGroup>
-    
-    <ItemGroup>
-        <!-- Specify cultures to reduce initial load -->
-        <SupportedCulture Include="en-US" />
-        <SupportedCulture Include="ur-PK" />
-    </ItemGroup>
+
 </Project>
