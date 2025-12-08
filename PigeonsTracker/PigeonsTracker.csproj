@@ -9,7 +9,7 @@
         <RunAOTCompilation>true</RunAOTCompilation>
         <PublishTrimmed>true</PublishTrimmed>
         <TrimMode>partial</TrimMode>
-        <InvariantGlobalization>false</InvariantGlobalization>
+        <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
     </PropertyGroup>
 
     <ItemGroup>
