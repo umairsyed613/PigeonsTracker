@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,11 +18,13 @@ var host = new HostBuilder()
         var unescapedJsonString = JsonConvert.DeserializeObject<string>(firebaseSecret);
         var parsed = JObject.Parse(unescapedJsonString);
         var projectId = parsed.Property("project_id")?.Value.ToString();
+        using var credentialStream = new MemoryStream(Encoding.UTF8.GetBytes(unescapedJsonString));
+        var serviceAccountCredential = ServiceAccountCredential.FromServiceAccountData(credentialStream);
 
         var fdb = new FirestoreDbBuilder()
         {
             ProjectId = projectId,
-            JsonCredentials = unescapedJsonString
+            GoogleCredential = GoogleCredential.FromServiceAccountCredential(serviceAccountCredential)
         }.Build();
 
         services.AddSingleton(fdb);

@@ -123,10 +123,10 @@
         return JSRuntime.InvokeVoidAsync("OnPwaInstallClick");
     }
 
-    private void OpenLanguageChangerCallback()
+    private async Task OpenLanguageChangerCallback()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, FullScreen = AppState.IsMobile };
-        DialogService.Show<CultureSelectorCmp>("Language Change", options);
+        await DialogService.ShowAsync<CultureSelectorCmp>("Language Change", options);
         AppState.OnLanguageChange += AppStateOnLanguageLanguageChange;
         //Manager.NavigateTo($"/LanguageChange?returnUrl={Manager.Uri}");
     }

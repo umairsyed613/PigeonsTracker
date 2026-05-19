@@ -5,7 +5,7 @@ namespace PigeonsTracker.Shared.Models;
 
 public class Tournament
 {
-    public string? FireStoreId { get; set; }
+    public string FireStoreId { get; set; }
     public string Id { get; set; }
     public string Name { get; set; }
     public List<PigeonsTrackingRecord> TrackingRecords { get; set; }
@@ -30,7 +30,7 @@ public class PigeonsTrackingRecord
     public DateTime StartTime { get; set; }
     public List<PigeonTrackingRecord> Records { get; set; }
 
-    public PigeonTrackingRecord? BabyBird { get; set; }
+    public PigeonTrackingRecord BabyBird { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public TimeSpan? TotalFlyingTime { get; set; }
