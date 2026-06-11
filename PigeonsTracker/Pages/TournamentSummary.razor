@@ -27,6 +27,7 @@
                         <thead>
                             <tr>
                                 <th>@Localizer["DateOfRecord"]</th>
+                                <th>@Localizer["RoofName"]</th>
                                 <th class="text-center">@Localizer["TotalBirdsCount"]</th>
                                 <th class="text-center">@Localizer["TotalLanded"]</th>
                                 <th class="text-center">@Localizer["NotLanded"]</th>
@@ -39,6 +40,7 @@
                             {
                                 <tr>
                                     <td>@row.RecordDate.ToString("dd MMM yyyy", CultureInfo.CurrentCulture)</td>
+                                    <td>@row.RoofName</td>
                                     <td class="text-center">@row.TotalBirds</td>
                                     <td class="text-center">@row.TotalLanded</td>
                                     <td class="text-center">@row.NotLanded</td>
@@ -50,6 +52,7 @@
                         <tfoot>
                             <tr class="summary-total-row">
                                 <td>@Localizer["Total"]</td>
+                                <td>-</td>
                                 <td class="text-center">@_totalBirds</td>
                                 <td class="text-center">@_totalLanded</td>
                                 <td class="text-center">@_totalNotLanded</td>
@@ -119,6 +122,7 @@
         return new SummaryRow
         {
             RecordDate = rec.StartTime,
+            RoofName = rec.RoofName,
             TotalBirds = totalBirds,
             TotalLanded = totalLanded,
             NotLanded = Math.Max(0, totalBirds - totalLanded),
@@ -137,6 +141,7 @@
     private sealed class SummaryRow
     {
         public DateTime RecordDate { get; set; }
+        public string RoofName { get; set; }
         public int TotalBirds { get; set; }
         public int TotalLanded { get; set; }
         public int NotLanded { get; set; }
