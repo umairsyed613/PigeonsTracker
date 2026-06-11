@@ -167,4 +167,31 @@
     <data name="BabyBirdName" xml:space="preserve">
         <value>Baby Bird Name</value>
     </data>
+    <data name="Summary" xml:space="preserve">
+        <value>Summary</value>
+    </data>
+    <data name="ViewSummary" xml:space="preserve">
+        <value>View Summary</value>
+    </data>
+    <data name="BackToTournament" xml:space="preserve">
+        <value>Back to Tournament</value>
+    </data>
+    <data name="DateOfRecord" xml:space="preserve">
+        <value>Date of Record</value>
+    </data>
+    <data name="TotalLanded" xml:space="preserve">
+        <value>Total Landed</value>
+    </data>
+    <data name="NotLanded" xml:space="preserve">
+        <value>Not Landed</value>
+    </data>
+    <data name="BabyBirdTime" xml:space="preserve">
+        <value>Baby Bird Time</value>
+    </data>
+    <data name="TotalDayTime" xml:space="preserve">
+        <value>Total Sum of the Day</value>
+    </data>
+    <data name="Total" xml:space="preserve">
+        <value>Total</value>
+    </data>
 </root>

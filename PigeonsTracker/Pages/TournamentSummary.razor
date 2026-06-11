@@ -1,0 +1,146 @@
+@page "/TournamentSummary/{tournId}"
+@using System.Globalization
+@inject IPigeonTrackingService TrackingService
+@inject IStringLocalizer<Language> Localizer
+@inject NavigationManager NavigationManager
+@inject AppState AppState
+
+<PagesBase>
+    <div class="d-flex flex-column py-2 @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+        @if (_tournament != null)
+        {
+            <div class="d-flex flex-row align-items-center justify-content-between gap-2 flex-wrap">
+                <MyPageTitle Text="@($"{_tournament.Name} - {Localizer["Summary"]}")"></MyPageTitle>
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="NavigateBack">
+                    @Localizer["BackToTournament"]
+                </MudButton>
+            </div>
+
+            @if (_summaryRows.Count == 0)
+            {
+                <p class="text-wrap p-2 mt-2">@Localizer["NoRecords"]</p>
+            }
+            else
+            {
+                <div class="summary-table-wrapper mt-3">
+                    <table class="table table-bordered align-middle summary-table">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["DateOfRecord"]</th>
+                                <th class="text-center">@Localizer["TotalBirdsCount"]</th>
+                                <th class="text-center">@Localizer["TotalLanded"]</th>
+                                <th class="text-center">@Localizer["NotLanded"]</th>
+                                <th class="text-center">@Localizer["BabyBirdTime"]</th>
+                                <th class="text-center">@Localizer["TotalDayTime"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in _summaryRows)
+                            {
+                                <tr>
+                                    <td>@row.RecordDate.ToString("dd MMM yyyy", CultureInfo.CurrentCulture)</td>
+                                    <td class="text-center">@row.TotalBirds</td>
+                                    <td class="text-center">@row.TotalLanded</td>
+                                    <td class="text-center">@row.NotLanded</td>
+                                    <td class="text-center">@FormatTime(row.BabyBirdTime)</td>
+                                    <td class="text-center">@FormatTime(row.DayTotalTime)</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="summary-total-row">
+                                <td>@Localizer["Total"]</td>
+                                <td class="text-center">@_totalBirds</td>
+                                <td class="text-center">@_totalLanded</td>
+                                <td class="text-center">@_totalNotLanded</td>
+                                <td class="text-center">@_totalBabyBirdTime.ToCustomFormat()</td>
+                                <td class="text-center">@_totalDayTime.ToCustomFormat()</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+        }
+    </div>
+</PagesBase>
+
+@code {
+    [Parameter] public string TournId { get; set; }
+
+    private Tournament _tournament;
+    private List<SummaryRow> _summaryRows = [];
+    private int _totalBirds;
+    private int _totalLanded;
+    private int _totalNotLanded;
+    private TimeSpan _totalBabyBirdTime = TimeSpan.Zero;
+    private TimeSpan _totalDayTime = TimeSpan.Zero;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _tournament = await TrackingService.GetTournament(TournId);
+
+        if (_tournament == null)
+        {
+            NavigationManager.NavigateTo("/MyTournaments");
+            return;
+        }
+
+        _summaryRows = (_tournament.TrackingRecords ?? [])
+            .OrderBy(o => o.StartTime)
+            .Select(CreateSummaryRow)
+            .ToList();
+
+        _totalBirds = _summaryRows.Sum(s => s.TotalBirds);
+        _totalLanded = _summaryRows.Sum(s => s.TotalLanded);
+        _totalNotLanded = _summaryRows.Sum(s => s.NotLanded);
+        _totalBabyBirdTime = _summaryRows
+            .Where(w => w.BabyBirdTime.HasValue)
+            .Select(s => s.BabyBirdTime!.Value)
+            .DefaultIfEmpty(TimeSpan.Zero)
+            .Sum();
+        _totalDayTime = _summaryRows
+            .Where(w => w.DayTotalTime.HasValue)
+            .Select(s => s.DayTotalTime!.Value)
+            .DefaultIfEmpty(TimeSpan.Zero)
+            .Sum();
+    }
+
+    private SummaryRow CreateSummaryRow(PigeonsTrackingRecord rec)
+    {
+        var totalBirds = rec.Records?.Count ?? 0;
+        var totalLanded = rec.Records?.Count(c => c.EndTime.HasValue) ?? 0;
+
+        return new SummaryRow
+        {
+            RecordDate = rec.StartTime,
+            TotalBirds = totalBirds,
+            TotalLanded = totalLanded,
+            NotLanded = Math.Max(0, totalBirds - totalLanded),
+            BabyBirdTime = rec.BabyBird?.TotalBirdFlyingTime,
+            DayTotalTime = rec.TotalFlyingTime
+        };
+    }
+
+    private string FormatTime(TimeSpan? time) => time?.ToCustomFormat() ?? "--:--:--";
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo($"/ViewTournament/{TournId}");
+    }
+
+    private sealed class SummaryRow
+    {
+        public DateTime RecordDate { get; set; }
+        public int TotalBirds { get; set; }
+        public int TotalLanded { get; set; }
+        public int NotLanded { get; set; }
+        public TimeSpan? BabyBirdTime { get; set; }
+        public TimeSpan? DayTotalTime { get; set; }
+    }
+}
