@@ -174,4 +174,31 @@
     <data name="BabyBirdName" xml:space="preserve">
         <value>بچے کا نام</value>
     </data>
+    <data name="Summary" xml:space="preserve">
+        <value>خلاصہ</value>
+    </data>
+    <data name="ViewSummary" xml:space="preserve">
+        <value>خلاصہ دیکھیں</value>
+    </data>
+    <data name="BackToTournament" xml:space="preserve">
+        <value>ٹورنامنٹ پر واپس جائیں</value>
+    </data>
+    <data name="DateOfRecord" xml:space="preserve">
+        <value>ریکارڈ کی تاریخ</value>
+    </data>
+    <data name="TotalLanded" xml:space="preserve">
+        <value>کل اترے</value>
+    </data>
+    <data name="NotLanded" xml:space="preserve">
+        <value>نہ اترے</value>
+    </data>
+    <data name="BabyBirdTime" xml:space="preserve">
+        <value>بچے کا وقت</value>
+    </data>
+    <data name="TotalDayTime" xml:space="preserve">
+        <value>دن کا کل مجموعہ</value>
+    </data>
+    <data name="Total" xml:space="preserve">
+        <value>کل</value>
+    </data>
 </root>

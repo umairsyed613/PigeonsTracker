@@ -9,7 +9,12 @@
 
         @if (_tournament != null)
         {
-            <MyPageTitle Text="@_tournament.Name"></MyPageTitle>
+            <div class="d-flex flex-row align-items-center justify-content-between gap-2 flex-wrap">
+                <MyPageTitle Text="@_tournament.Name"></MyPageTitle>
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.TableView" OnClick="NavigateToSummary">
+                    @Localizer["ViewSummary"]
+                </MudButton>
+            </div>
             <MudGrid Spacing="1">
                 <MudItem xs="4">
                     <MudText Typo="Typo.body2">@Localizer["TotalAverage"] :</MudText>
@@ -111,6 +116,11 @@
     private void NavigateToViewAndUpdate(string recId)
     {
         NavigationManager.NavigateTo($"/ViewUpdateTrackingRecord/{TournId}/{recId}");
+    }
+
+    private void NavigateToSummary()
+    {
+        NavigationManager.NavigateTo($"/TournamentSummary/{TournId}");
     }
 
     private async Task DeleteTrackingRecord(string id)
