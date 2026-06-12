@@ -1,0 +1,72 @@
+@page "/PublicTournamentSummaryTotals/{tournId}"
+@inject IPublicTournamentService PublicTournamentService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Language> Localizer
+@inject AppState AppState
+
+<PagesBase>
+    <div class="d-flex flex-column py-2 @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+        <div class="d-flex flex-row align-items-center justify-content-between gap-2 flex-wrap">
+            <MyPageTitle Text='@($"{Localizer["Summary"]} ({Localizer["Total"]})")'></MyPageTitle>
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="NavigateBack">@Localizer["BackToTournament"]</MudButton>
+        </div>
+
+        @if (_isLoading)
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true"></MudProgressCircular>
+        }
+        else if (_rows.Count == 0)
+        {
+            <p>@Localizer["NoRecords"]</p>
+        }
+        else
+        {
+            <div class="summary-table-wrapper mt-3">
+                <table class="table table-bordered align-middle summary-table">
+                    <thead>
+                    <tr>
+                        <th>@Localizer["RoofName"]</th>
+                        <th>@Localizer["DateOfRecord"]</th>
+                        <th class="text-center">@Localizer["TotalLanded"]</th>
+                        <th class="text-center">@Localizer["NotLanded"]</th>
+                        <th class="text-center">@Localizer["BabyBirdTime"]</th>
+                        <th class="text-center">@Localizer["TotalHours"]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var row in _rows)
+                    {
+                        <tr>
+                            <td>@row.LoftName</td>
+                            <td>@row.DateOfFlying.ToString("dd MMM yyyy")</td>
+                            <td class="text-center">@row.TotalLanded</td>
+                            <td class="text-center">@row.TotalNotLanded</td>
+                            <td class="text-center">@TimeSpan.FromTicks(row.BabyPigeonSumTicks).ToCustomFormat()</td>
+                            <td class="text-center">@TimeSpan.FromTicks(row.TotalHoursTicks).ToCustomFormat()</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</PagesBase>
+
+@code {
+    [Parameter] public string TournId { get; set; }
+
+    private bool _isLoading = true;
+    private List<PublicTournamentTotalsSummaryRow> _rows = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _isLoading = true;
+        _rows = await PublicTournamentService.GetTotalsSummary(TournId);
+        _isLoading = false;
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo($"/ViewPublicTournament/{TournId}");
+    }
+}

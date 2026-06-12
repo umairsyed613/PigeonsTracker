@@ -10,5 +10,6 @@ public interface IFireStoreService<T>
     Task UpdateDocumentAsync(string documentId,T updates);
     Task DeleteDocumentAsync(string documentId);
     Task<List<Dictionary<string, object>>> GetDocumentsAsync();
+    Task<List<FireStoreObjectResponse<T>>> GetDocumentObjectsAsync();
     Task<List<FireStoreObjectResponse<T>>> QueryDocumentsAsync(string fieldName, object fieldValue);
 }

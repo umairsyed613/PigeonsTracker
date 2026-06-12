@@ -1,0 +1,201 @@
+@page "/CreatePublicTournament"
+@inject IPublicTournamentService PublicTournamentService
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Language> Localizer
+@inject AppState AppState
+
+<PagesBase>
+    <div class="d-flex flex-column @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+        <MyPageTitle Text='@($"{Localizer["CreateTournament"]} (Public)")'></MyPageTitle>
+
+        <MudTextField Label="@Localizer["TournamentName"]" @bind-Value="_tournament.Name" Variant="Variant.Outlined" Required="true"></MudTextField>
+
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudDatePicker Label="@Localizer["TournamentStartDate"]" Editable="true" @bind-Date="_startDate" DateFormat="dd.MM.yyyy" Required="true"/>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudDatePicker Label="@Localizer["TournamentEndDate"]" Editable="true" @bind-Date="_endDate" DateFormat="dd.MM.yyyy" Required="true"/>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudTextField InputType="InputType.Time" Label="@Localizer["FlyingStartTime"]" @bind-Value="_flyingStartTime" Format="HH:mm:ss" Required="true"></MudTextField>
+            </MudItem>
+        </MudGrid>
+
+        <MudSwitch @bind-Value="_tournament.CanManageLoftRecords" Color="Color.Primary" Label="Ask users to manage loft records with a key"></MudSwitch>
+
+        <MudDivider Class="my-2"></MudDivider>
+        <MudText Typo="Typo.h6">@Localizer["RoofName"]</MudText>
+
+        <MudPaper Class="p-2 mb-2">
+            <MudGrid>
+                <MudItem xs="12" md="4">
+                    <MudTextField Label="@Localizer["RoofName"]" @bind-Value="_newLoftName"></MudTextField>
+                </MudItem>
+                <MudItem xs="6" md="3">
+                    <MudNumericField Label="@Localizer["TotalBirdsCount"]" @bind-Value="_newLoftBirdCount" Min="1" Max="500"></MudNumericField>
+                </MudItem>
+                <MudItem xs="6" md="3" Class="d-flex align-center">
+                    <MudSwitch @bind-Value="_newLoftHasBabyBird" Color="Color.Primary" Label="Baby pigeon"></MudSwitch>
+                </MudItem>
+                <MudItem xs="12" md="2" Class="d-flex align-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddLoft">Add loft</MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        @if (_tournament.Lofts.Count > 0)
+        {
+            <table class="table table-sm table-bordered">
+                <thead>
+                <tr>
+                    <th>Loft</th>
+                    <th>Birds</th>
+                    <th>Baby Pigeon</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var loft in _tournament.Lofts)
+                {
+                    <tr>
+                        <td>@loft.LoftName</td>
+                        <td>@loft.BirdCount</td>
+                        <td>@(loft.HasBabyPigeon ? "Yes" : "No")</td>
+                        <td>
+                            <MudButton Variant="Variant.Text" Color="Color.Error" OnClick="() => RemoveLoft(loft.LoftId)">Remove</MudButton>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" OnClick="CreateTournament" Disabled="@_isSaving">
+            @(_isSaving ? "Creating..." : "Create Public Tournament")
+        </MudButton>
+
+        @if (_createdTournament is not null)
+        {
+            <MudAlert Severity="Severity.Success" Dense="true" Class="mt-3">
+                <div><strong>Manager code:</strong> @_createdTournament.ManagerCode</div>
+                <div><strong>Recovery key:</strong> @_createdTournament.ManagerRecoveryKey</div>
+                <div class="mt-1">Saved on this phone as manager credentials.</div>
+            </MudAlert>
+        }
+    </div>
+</PagesBase>
+
+@code {
+    private PublicTournament _tournament = new()
+    {
+        Id = IdGenerator.GetNewId(),
+        CreatedAt = DateTime.Now,
+        Lofts = [],
+        DayRecords = []
+    };
+
+    private DateTime? _startDate = DateTime.Today;
+    private DateTime? _endDate = DateTime.Today.AddDays(7);
+    private DateTime _flyingStartTime = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 0, 0);
+
+    private string _newLoftName = string.Empty;
+    private int _newLoftBirdCount = 10;
+    private bool _newLoftHasBabyBird;
+
+    private bool _isSaving;
+    private PublicTournament _createdTournament;
+
+    private void AddLoft()
+    {
+        if (string.IsNullOrWhiteSpace(_newLoftName))
+        {
+            Snackbar.Add("Loft name is required", Severity.Warning);
+            return;
+        }
+
+        if (_tournament.Lofts.Any(a => a.LoftName.Equals(_newLoftName.Trim(), StringComparison.OrdinalIgnoreCase)))
+        {
+            Snackbar.Add("Loft name already exists", Severity.Warning);
+            return;
+        }
+
+        if (_newLoftBirdCount <= 0)
+        {
+            Snackbar.Add("Bird count must be greater than 0", Severity.Warning);
+            return;
+        }
+
+        _tournament.Lofts.Add(new PublicTournamentLoft
+        {
+            LoftId = IdGenerator.GetNewId(),
+            LoftName = _newLoftName.Trim(),
+            BirdCount = Math.Max(1, _newLoftBirdCount),
+            HasBabyPigeon = _newLoftHasBabyBird,
+            CreatedAt = DateTime.Now
+        });
+
+        _newLoftName = string.Empty;
+        _newLoftBirdCount = 10;
+        _newLoftHasBabyBird = false;
+    }
+
+    private void RemoveLoft(string loftId)
+    {
+        var found = _tournament.Lofts.FirstOrDefault(f => f.LoftId == loftId);
+        if (found != null)
+        {
+            _tournament.Lofts.Remove(found);
+        }
+    }
+
+    private async Task CreateTournament()
+    {
+        if (string.IsNullOrWhiteSpace(_tournament.Name))
+        {
+            Snackbar.Add(Localizer["HelpTournamentName"], Severity.Warning);
+            return;
+        }
+
+        if (_tournament.Lofts.Count == 0)
+        {
+            Snackbar.Add("Add at least one loft", Severity.Warning);
+            return;
+        }
+
+        if (!_startDate.HasValue || !_endDate.HasValue)
+        {
+            Snackbar.Add("Select start and end dates", Severity.Warning);
+            return;
+        }
+
+        if (_endDate.Value.Date < _startDate.Value.Date)
+        {
+            Snackbar.Add("End date must be after start date", Severity.Warning);
+            return;
+        }
+
+        _isSaving = true;
+        try
+        {
+            _tournament.StartsFrom = _startDate.Value.Date;
+            _tournament.EndTo = _endDate.Value.Date;
+            _tournament.FlyingStartTime = new TimeSpan(_flyingStartTime.Hour, _flyingStartTime.Minute, _flyingStartTime.Second);
+
+            _createdTournament = await PublicTournamentService.CreatePublicTournament(_tournament);
+            await PublicTournamentService.StoreManagerCredentials(_createdTournament.Id, _createdTournament.ManagerCode, _createdTournament.ManagerRecoveryKey);
+
+            Snackbar.Add("Public tournament created", Severity.Success);
+            NavigationManager.NavigateTo($"/ViewPublicTournament/{_createdTournament.Id}");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Create failed: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isSaving = false;
+        }
+    }
+}

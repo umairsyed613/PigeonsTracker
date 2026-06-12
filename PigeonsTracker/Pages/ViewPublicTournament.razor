@@ -1,0 +1,446 @@
+@page "/ViewPublicTournament/{tournId}"
+@inject IPublicTournamentService PublicTournamentService
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Language> Localizer
+@inject AppState AppState
+@inject IDialogService DialogService
+
+<PagesBase>
+    @if (_isLoading)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true"></MudProgressCircular>
+    }
+    else if (_tournament is null)
+    {
+        <MudAlert Severity="Severity.Warning">@Localizer["NoRecords"]</MudAlert>
+    }
+    else
+    {
+        <div class="d-flex flex-column py-2 @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+            <div class="d-flex flex-row align-items-center justify-content-between gap-2 flex-wrap">
+                <MyPageTitle Text="@_tournament.Name"></MyPageTitle>
+                <div class="d-flex gap-1">
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.TableView" OnClick="NavigateToBirdSummary">Bird Index @Localizer["Summary"]</MudButton>
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.TableRows" OnClick="NavigateToTotalsSummary">@Localizer["Summary"] (@Localizer["Total"])</MudButton>
+                </div>
+            </div>
+
+            <MudGrid Spacing="1">
+                <MudItem xs="4"><MudText Typo="Typo.body2">@Localizer["Start"] :</MudText></MudItem>
+                <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.StartsFrom.ToString("dd MMM yyyy")</MudText></MudItem>
+                <MudItem xs="4"><MudText Typo="Typo.body2">@Localizer["End"] :</MudText></MudItem>
+                <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.EndTo.ToString("dd MMM yyyy")</MudText></MudItem>
+                <MudItem xs="4"><MudText Typo="Typo.body2">@Localizer["FlyingStartTime"] :</MudText></MudItem>
+                <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.FlyingStartTime</MudText></MudItem>
+                <MudItem xs="4"><MudText Typo="Typo.body2">Lofts :</MudText></MudItem>
+                <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.Lofts.Count</MudText></MudItem>
+            </MudGrid>
+
+            <MudDivider Class="my-3"></MudDivider>
+            <MudText Typo="Typo.h6">Loft code visibility</MudText>
+            <MudGrid>
+                <MudItem xs="12" md="4">
+                    <MudTextField Label="Manager code or recovery key" @bind-Value="_codeRevealAccess" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="8" Class="d-flex align-end gap-2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UnlockLoftCodes">Reveal loft codes</MudButton>
+                    @if (_codesUnlocked)
+                    {
+                        <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="HideLoftCodes">Hide loft codes</MudButton>
+                    }
+                </MudItem>
+            </MudGrid>
+
+            <MudDivider Class="my-3"></MudDivider>
+            <MudText Typo="Typo.h6">Lofts</MudText>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>Loft</th>
+                        <th>@Localizer["TotalBirdsCount"]</th>
+                        <th>@Localizer["BabyBird"]</th>
+                        <th>Loft Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var loft in _tournament.Lofts)
+                    {
+                        <tr>
+                            <td>@loft.LoftName</td>
+                            <td>@loft.BirdCount</td>
+                            <td>@(loft.HasBabyPigeon ? "Yes" : "No")</td>
+                            <td>@(_codesUnlocked ? loft.LoftCode : "***-***-***")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <MudDivider Class="my-3"></MudDivider>
+            <MudText Typo="Typo.h6">Manage Loft Records</MudText>
+            <MudSwitch @bind-Value="_manageMode" Label="Do you want to manage loft records and put key in there?" Color="Color.Primary"></MudSwitch>
+
+            @if (_manageMode)
+            {
+                <MudPaper Class="p-3 mt-2">
+                    <MudGrid>
+                        <MudItem xs="12" md="4">
+                            <MudTextField Label="Access code (manager/loft)" @bind-Value="_accessCode" Variant="Variant.Outlined"></MudTextField>
+                        </MudItem>
+                        <MudItem xs="12" md="4">
+                            <MudSelect T="string" Label="Loft" Value="@_selectedLoftId" ValueChanged="OnLoftChanged">
+                                @foreach (var loft in _tournament.Lofts)
+                                {
+                                    <MudSelectItem Value="@loft.LoftId">@loft.LoftName</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" md="4">
+                            <MudDatePicker Label="Date of flying" Editable="true" @bind-Date="_selectedFlyingDate" DateFormat="dd.MM.yyyy"/>
+                        </MudItem>
+                    </MudGrid>
+
+                    @if (_selectedLoft is not null)
+                    {
+                        <MudText Typo="Typo.subtitle1" Class="mt-2">Bird landing times (@_selectedLoft.LoftName)</MudText>
+                        <MudGrid>
+                            @for (var i = 0; i < _birdEndTimes.Count; i++)
+                            {
+                                var index = i;
+                                <MudItem xs="12" md="4">
+                                    <MudTextField InputType="InputType.Time" Label="@($"Bird{index + 1}")" @bind-Value="_birdEndTimes[index]" Format="HH:mm:ss"></MudTextField>
+                                </MudItem>
+                            }
+
+                            @if (_selectedLoft.HasBabyPigeon)
+                            {
+                                <MudItem xs="12" md="4">
+                                    <MudTextField InputType="InputType.Time" Label="Baby pigeon" @bind-Value="_babyBirdEndTime" Format="HH:mm:ss"></MudTextField>
+                                </MudItem>
+                            }
+                        </MudGrid>
+
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" OnClick="SaveLoftDayRecord">Save day record</MudButton>
+                    }
+                </MudPaper>
+            }
+
+            <MudDivider Class="my-3"></MudDivider>
+            <MudText Typo="Typo.h6">Regenerate Codes (Manager only)</MudText>
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                            <MudDatePicker Label="Date of flying" Editable="true" @bind-Date="_selectedFlyingDate" DateFormat="dd.MM.yyyy"/>
+                </MudItem>
+                <MudItem xs="12" md="6" Class="d-flex align-end">
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="RegenerateCodes">Regenerate codes</MudButton>
+                </MudItem>
+            </MudGrid>
+
+            <MudDivider Class="my-3"></MudDivider>
+            <MudText Typo="Typo.h6">Day Records</MudText>
+            @if (_tournament.DayRecords.Count == 0)
+            {
+                <p>No day records yet.</p>
+            }
+            else
+            {
+                @foreach (var day in _tournament.DayRecords.OrderBy(o => o.Date))
+                {
+                    <MudPaper Class="p-2 mb-2">
+                        <MudText Typo="Typo.subtitle1">@day.Date.ToString("dd MMM yyyy")</MudText>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Loft</th>
+                                    <th>Landed</th>
+                                    <th>Not Landed</th>
+                                    <th>Baby Sum</th>
+                                    <th>Total Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var rec in day.LoftRecords.OrderBy(o => o.LoftName))
+                                {
+                                    <tr>
+                                        <td>@rec.LoftName</td>
+                                        <td>@rec.TotalLanded</td>
+                                        <td>@rec.TotalNotLanded</td>
+                                        <td>@(rec.BabyPigeonSum?.ToCustomFormat() ?? "00:00:00")</td>
+                                        <td>@(rec.TotalHours?.ToCustomFormat() ?? "00:00:00")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </MudPaper>
+                }
+            }
+        </div>
+    }
+</PagesBase>
+
+@code {
+    [Parameter] public string TournId { get; set; }
+
+    private PublicTournament _tournament;
+    private bool _isLoading = true;
+
+    private bool _manageMode;
+    private bool _codesUnlocked;
+    private string _accessCode = string.Empty;
+    private string _codeRevealAccess = string.Empty;
+    private string _managerRegenerateCode = string.Empty;
+    private string _selectedLoftId = string.Empty;
+    private DateTime? _selectedFlyingDate = DateTime.Today;
+    private List<DateTime?> _birdEndTimes = [];
+    private DateTime? _babyBirdEndTime;
+
+    private PublicTournamentLoft _selectedLoft => _tournament?.Lofts?.FirstOrDefault(f => f.LoftId == _selectedLoftId);
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var creds = await PublicTournamentService.GetManagerCredentials(TournId);
+            if (!string.IsNullOrWhiteSpace(creds.managerCode))
+            {
+                _managerRegenerateCode = creds.managerCode;
+                _accessCode = creds.managerCode;
+                _codeRevealAccess = creds.managerCode;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        try
+        {
+            _tournament = await PublicTournamentService.GetPublicTournament(TournId);
+            if (_tournament == null)
+            {
+                NavigationManager.NavigateTo("/AllTournaments");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(_selectedLoftId) && _tournament.Lofts.Count > 0)
+            {
+                _selectedLoftId = _tournament.Lofts.First().LoftId;
+                RebuildBirdInputRows();
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Failed to load tournament: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void RebuildBirdInputRows()
+    {
+        _birdEndTimes.Clear();
+        if (_selectedLoft is null)
+        {
+            return;
+        }
+
+        for (var i = 0; i < _selectedLoft.BirdCount; i++)
+        {
+            _birdEndTimes.Add(null);
+        }
+
+        _babyBirdEndTime = null;
+    }
+
+    private Task OnLoftChanged(string loftId)
+    {
+        _selectedLoftId = loftId;
+        RebuildBirdInputRows();
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveLoftDayRecord()
+    {
+        if (string.IsNullOrWhiteSpace(_accessCode))
+        {
+            Snackbar.Add("Access code is required", Severity.Warning);
+            return;
+        }
+
+        if (_selectedLoft is null)
+        {
+            Snackbar.Add("Select a loft", Severity.Warning);
+            return;
+        }
+
+        if (!_selectedFlyingDate.HasValue)
+        {
+            Snackbar.Add("Date of flying is required", Severity.Warning);
+            return;
+        }
+
+        if (_selectedFlyingDate.Value.Date < _tournament.StartsFrom.Date || _selectedFlyingDate.Value.Date > _tournament.EndTo.Date)
+        {
+            Snackbar.Add("Date of flying must be inside tournament date range", Severity.Warning);
+            return;
+        }
+
+        var start = _selectedFlyingDate.Value.Date + _tournament.FlyingStartTime;
+
+        var birds = new List<PublicTournamentBirdRecord>();
+        for (var i = 0; i < _birdEndTimes.Count; i++)
+        {
+            var end = _birdEndTimes[i];
+
+            if (end.HasValue && end.Value < start)
+            {
+                Snackbar.Add($"Bird{i + 1} time cannot be before start time", Severity.Warning);
+                return;
+            }
+
+            TimeSpan? dur = null;
+            if (end.HasValue && end.Value >= start)
+            {
+                dur = end.Value - start;
+            }
+
+            birds.Add(new PublicTournamentBirdRecord
+            {
+                BirdIndex = i + 1,
+                EndTime = end,
+                TotalBirdFlyingTime = dur
+            });
+        }
+
+        PublicTournamentBirdRecord babyBird = null;
+        if (_selectedLoft.HasBabyPigeon)
+        {
+            if (_babyBirdEndTime.HasValue && _babyBirdEndTime.Value < start)
+            {
+                Snackbar.Add("Baby pigeon time cannot be before start time", Severity.Warning);
+                return;
+            }
+
+            TimeSpan? babyDur = null;
+            if (_babyBirdEndTime.HasValue && _babyBirdEndTime.Value >= start)
+            {
+                babyDur = _babyBirdEndTime.Value - start;
+            }
+
+            babyBird = new PublicTournamentBirdRecord
+            {
+                BirdIndex = 1,
+                EndTime = _babyBirdEndTime,
+                TotalBirdFlyingTime = babyDur
+            };
+        }
+
+        var request = new PublicTournamentUpsertDayRecordRequest
+        {
+            TournamentId = _tournament.Id,
+            LoftId = _selectedLoft.LoftId,
+            DateOfFlying = _selectedFlyingDate.Value,
+            AccessCode = _accessCode,
+            LoftRecord = new PublicTournamentLoftDayRecord
+            {
+                LoftId = _selectedLoft.LoftId,
+                LoftName = _selectedLoft.LoftName,
+                StartTime = start,
+                BirdRecords = birds,
+                BabyBird = babyBird
+            }
+        };
+
+        try
+        {
+            await PublicTournamentService.UpsertDayRecord(request);
+            Snackbar.Add("Day record saved", Severity.Success);
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Save failed: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task RegenerateCodes()
+    {
+        if (string.IsNullOrWhiteSpace(_managerRegenerateCode))
+        {
+            Snackbar.Add("Manager code or recovery key is required", Severity.Warning);
+            return;
+        }
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium };
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Confirmation?", options);
+        var result = await dialog.Result;
+        if (result.Canceled)
+        {
+            return;
+        }
+
+        try
+        {
+            var response = await PublicTournamentService.RegenerateCodes(new PublicTournamentRegenerateCodesRequest
+            {
+                TournamentId = _tournament.Id,
+                ManagerAccessCodeOrRecovery = _managerRegenerateCode,
+                RegenerateManagerCode = true,
+                RegenerateRecoveryKey = false,
+                RegenerateAllLoftCodes = true
+            });
+
+            _managerRegenerateCode = response.ManagerCode;
+            _codeRevealAccess = response.ManagerCode;
+            _codesUnlocked = true;
+            await PublicTournamentService.StoreManagerCredentials(_tournament.Id, response.ManagerCode, response.ManagerRecoveryKey);
+            Snackbar.Add("Codes regenerated", Severity.Success);
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Regenerate failed: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void NavigateToBirdSummary()
+    {
+        NavigationManager.NavigateTo($"/PublicTournamentSummaryBirdIndex/{_tournament.Id}");
+    }
+
+    private void NavigateToTotalsSummary()
+    {
+        NavigationManager.NavigateTo($"/PublicTournamentSummaryTotals/{_tournament.Id}");
+    }
+
+    private void UnlockLoftCodes()
+    {
+        if (string.IsNullOrWhiteSpace(_codeRevealAccess))
+        {
+            Snackbar.Add("Manager code or recovery key is required", Severity.Warning);
+            return;
+        }
+
+        if (_codeRevealAccess != _tournament.ManagerCode && _codeRevealAccess != _tournament.ManagerRecoveryKey)
+        {
+            Snackbar.Add("Invalid manager credentials", Severity.Error);
+            return;
+        }
+
+        _codesUnlocked = true;
+        Snackbar.Add("Loft codes are now visible", Severity.Success);
+    }
+
+    private void HideLoftCodes()
+    {
+        _codesUnlocked = false;
+    }
+}

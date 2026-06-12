@@ -60,6 +60,16 @@ public class FireStoreService<T> : IFireStoreService<T>
         return querySnapshot.Documents.Select(snapshot => snapshot.ToDictionary()).ToList();
     }
 
+    public async Task<List<FireStoreObjectResponse<T>>> GetDocumentObjectsAsync()
+    {
+        var querySnapshot = await _collection.GetSnapshotAsync();
+        return querySnapshot.Documents.Select(doc => new FireStoreObjectResponse<T>
+        {
+            Id = doc.Id,
+            Data = doc.ConvertTo<T>()
+        }).ToList();
+    }
+
     public async Task<List<FireStoreObjectResponse<T>>> QueryDocumentsAsync(string fieldName, object fieldValue)
     {
         var query = _collection.WhereEqualTo(fieldName, fieldValue);

@@ -1,0 +1,75 @@
+@page "/PublicTournamentSummaryBirdIndex/{tournId}"
+@inject IPublicTournamentService PublicTournamentService
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Language> Localizer
+@inject AppState AppState
+
+<PagesBase>
+    <div class="d-flex flex-column py-2 @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+        <div class="d-flex flex-row align-items-center justify-content-between gap-2 flex-wrap">
+            <MyPageTitle Text='@($"Bird Index {Localizer["Summary"]}")'></MyPageTitle>
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.ArrowBack" OnClick="NavigateBack">@Localizer["BackToTournament"]</MudButton>
+        </div>
+
+        @if (_isLoading)
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true"></MudProgressCircular>
+        }
+        else if (_summary.Rows.Count == 0)
+        {
+            <p>@Localizer["NoRecords"]</p>
+        }
+        else
+        {
+            <div class="summary-table-wrapper mt-3">
+                <table class="table table-bordered align-middle summary-table">
+                    <thead>
+                    <tr>
+                        <th>@Localizer["RoofName"]</th>
+                        <th>@Localizer["DateOfRecord"]</th>
+                        @for (var i = 1; i <= _summary.MaxBirdCount; i++)
+                        {
+                            <th class="text-center">Bird@i</th>
+                        }
+                        <th class="text-center">@Localizer["TotalDayTime"]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var row in _summary.Rows)
+                    {
+                        <tr>
+                            <td>@row.LoftName</td>
+                            <td>@row.DateOfFlying.ToString("dd MMM yyyy")</td>
+                            @for (var i = 0; i < _summary.MaxBirdCount; i++)
+                            {
+                                var ticks = row.BirdHoursTicks.Count > i ? row.BirdHoursTicks[i] : null;
+                                <td class="text-center">@(ticks.HasValue ? TimeSpan.FromTicks(ticks.Value).ToCustomFormat() : "--:--:--")</td>
+                            }
+                            <td class="text-center">@TimeSpan.FromTicks(row.TotalSumOfDayTicks).ToCustomFormat()</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</PagesBase>
+
+@code {
+    [Parameter] public string TournId { get; set; }
+
+    private bool _isLoading = true;
+    private PublicTournamentBirdIndexSummaryResponse _summary = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _isLoading = true;
+        _summary = await PublicTournamentService.GetBirdIndexSummary(TournId);
+        _isLoading = false;
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo($"/ViewPublicTournament/{TournId}");
+    }
+}

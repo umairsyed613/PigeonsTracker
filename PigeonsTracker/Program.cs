@@ -38,6 +38,7 @@ public class Program
 
             builder.Services.AddScoped<WeatherService>();
             builder.Services.AddScoped<IPigeonTrackingService, PigeonTrackingService>();
+            builder.Services.AddScoped<IPublicTournamentService, PublicTournamentService>();
             builder.Services.AddScoped<IDiseaseAndCureService, DiseaseAndCureService>();
 
             builder.Services.AddScoped<SettingsService>();
