@@ -8,6 +8,9 @@
     <div class="d-flex flex-column">
         <MyPageTitle Text="@Localizer["TournamentType1"]"></MyPageTitle>
 
+        <SyncStatusBar CacheKey="@CacheKeys.PublicTournaments" />
+        <DataUpdatedBanner CacheKey="@CacheKeys.PublicTournaments" OnRefresh="ReloadFromCache" />
+
         @if (!string.IsNullOrWhiteSpace(_error))
         {
             <MudAlert Severity="Severity.Error" Dense="true" Class="mb-3">@_error</MudAlert>
@@ -84,6 +87,12 @@
         {
             _isLoading = false;
         }
+    }
+
+    private async Task ReloadFromCache()
+    {
+        await LoadData();
+        StateHasChanged();
     }
 
 }

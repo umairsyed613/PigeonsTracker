@@ -23,6 +23,9 @@ public static class PublicTournamentMapper
             LastCodeRegeneratedAt = tournament.LastCodeRegeneratedAt.HasValue
                 ? DateTime.SpecifyKind(tournament.LastCodeRegeneratedAt.Value, DateTimeKind.Local).ToUniversalTime()
                 : null,
+            UpdatedAt = tournament.UpdatedAt.HasValue
+                ? DateTime.SpecifyKind(tournament.UpdatedAt.Value, DateTimeKind.Local).ToUniversalTime()
+                : null,
             Lofts = tournament.Lofts.Select(l => new FsPublicTournamentLoft
             {
                 LoftId = l.LoftId,
@@ -96,6 +99,9 @@ public static class PublicTournamentMapper
             CodeVersion = tournament.CodeVersion,
             LastCodeRegeneratedAt = tournament.LastCodeRegeneratedAt.HasValue
                 ? DateTime.SpecifyKind(tournament.LastCodeRegeneratedAt.Value, DateTimeKind.Utc).ToLocalTime()
+                : null,
+            UpdatedAt = tournament.UpdatedAt.HasValue
+                ? DateTime.SpecifyKind(tournament.UpdatedAt.Value, DateTimeKind.Utc).ToLocalTime()
                 : null,
             Lofts = tournament.Lofts.Select(l => new PublicTournamentLoft
             {

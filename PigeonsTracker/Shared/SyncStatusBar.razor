@@ -1,0 +1,100 @@
+@implements IDisposable
+@inject ISyncNotificationService SyncNotification
+@inject IBackgroundSyncService BackgroundSync
+@inject ICacheService CacheService
+
+<div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+    @if (_state.Status == SyncStatus.Syncing)
+    {
+        <MudProgressCircular Size="Size.Small" Indeterminate="true" Color="Color.Primary" />
+        <span class="text-muted small">Syncing...</span>
+    }
+    else if (_state.Status == SyncStatus.Failed)
+    {
+        <MudIcon Icon="@Icons.Material.Filled.CloudOff" Color="Color.Error" Size="Size.Small" />
+        <span class="text-muted small">Sync failed</span>
+    }
+    else
+    {
+        <MudIcon Icon="@Icons.Material.Filled.CloudDone" Color="Color.Success" Size="Size.Small" />
+        @if (_state.LastSyncAt.HasValue)
+        {
+            <span class="text-muted small">Synced @GetRelativeTime(_state.LastSyncAt.Value)</span>
+            @if (IsStale(_state.LastSyncAt.Value))
+            {
+                <MudChip T="string" Size="Size.Small" Color="Color.Warning" Variant="Variant.Outlined">Data may be stale</MudChip>
+            }
+        }
+        else
+        {
+            <span class="text-muted small">Not yet synced</span>
+        }
+    }
+    <MudIconButton Icon="@Icons.Material.Filled.Refresh"
+                   Size="Size.Small"
+                   Title="Sync now"
+                   OnClick="RefreshAsync"
+                   Disabled="_state.Status == SyncStatus.Syncing" />
+</div>
+
+@code {
+    [Parameter] public string CacheKey { get; set; } = string.Empty;
+
+    private CacheSyncState _state = new(SyncStatus.Idle, null, false);
+
+    protected override async Task OnInitializedAsync()
+    {
+        _state = SyncNotification.GetState(CacheKey);
+
+        // Seed LastSyncAt from localStorage so it shows correct time after page reload
+        if (!_state.LastSyncAt.HasValue)
+        {
+            var persisted = await CacheService.GetLastSyncAtAsync(CacheKey);
+            if (persisted.HasValue)
+                _state = _state with { LastSyncAt = persisted };
+        }
+
+        SyncNotification.OnDataUpdated += HandleUpdate;
+        SyncNotification.OnSyncFailed += HandleFailed;
+    }
+
+    private void HandleUpdate(string cacheKey)
+    {
+        if (cacheKey != CacheKey) return;
+        _state = SyncNotification.GetState(CacheKey);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleFailed(string cacheKey, Exception ex)
+    {
+        if (cacheKey != CacheKey) return;
+        _state = SyncNotification.GetState(CacheKey);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RefreshAsync()
+    {
+        _state = _state with { Status = SyncStatus.Syncing };
+        StateHasChanged();
+        await BackgroundSync.ForceSyncAsync(CacheKey);
+        _state = SyncNotification.GetState(CacheKey);
+        StateHasChanged();
+    }
+
+    private static string GetRelativeTime(DateTime utcTime)
+    {
+        var diff = DateTime.UtcNow - utcTime;
+        if (diff.TotalSeconds < 60) return "just now";
+        if (diff.TotalMinutes < 60) return $"{(int)diff.TotalMinutes} min ago";
+        return $"{(int)diff.TotalHours}h ago";
+    }
+
+    private static bool IsStale(DateTime lastSyncAt) =>
+        DateTime.UtcNow - lastSyncAt > TimeSpan.FromMinutes(30);
+
+    public void Dispose()
+    {
+        SyncNotification.OnDataUpdated -= HandleUpdate;
+        SyncNotification.OnSyncFailed -= HandleFailed;
+    }
+}

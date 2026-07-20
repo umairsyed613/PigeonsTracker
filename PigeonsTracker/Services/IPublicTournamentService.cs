@@ -15,4 +15,7 @@ public interface IPublicTournamentService
 
     Task StoreManagerCredentials(string tournamentId, string managerCode, string recoveryKey);
     Task<(string managerCode, string recoveryKey)> GetManagerCredentials(string tournamentId);
+
+    Task StoreLoftAccessCode(string tournamentId, string loftCode);
+    Task<string> GetLoftAccessCode(string tournamentId);
 }

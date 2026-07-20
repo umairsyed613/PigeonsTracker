@@ -20,6 +20,7 @@ public class PublicTournament
 
     public int CodeVersion { get; set; } = 1;
     public DateTime? LastCodeRegeneratedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public List<PublicTournamentLoft> Lofts { get; set; } = [];
     public List<PublicTournamentDayRecord> DayRecords { get; set; } = [];

@@ -50,6 +50,7 @@ public class FireStoreFunction
 
         data.Id = string.IsNullOrWhiteSpace(data.Id) ? Guid.NewGuid().ToString("N") : data.Id;
         data.CreatedAt = data.CreatedAt == default ? DateTime.Now : data.CreatedAt;
+        data.UpdatedAt = DateTime.UtcNow;
         data.DayRecords ??= [];
         data.FlyingStartTime = data.FlyingStartTime == default ? new TimeSpan(6, 0, 0) : data.FlyingStartTime;
         data.FlyingEndTime = data.FlyingEndTime == default ? new TimeSpan(19, 0, 0) : data.FlyingEndTime;
@@ -199,6 +200,7 @@ public class FireStoreFunction
             dayRecord.LoftRecords.Add(request.LoftRecord);
         }
 
+        tournament.UpdatedAt = DateTime.UtcNow;
         await _fireStorePublicTournamentService.UpdateDocumentAsync(stored.Id, tournament.Map());
 
         var response = req.CreateResponse(HttpStatusCode.OK);
@@ -259,6 +261,7 @@ public class FireStoreFunction
 
         tournament.CodeVersion = Math.Max(1, tournament.CodeVersion + 1);
         tournament.LastCodeRegeneratedAt = DateTime.Now;
+        tournament.UpdatedAt = DateTime.UtcNow;
 
         await _fireStorePublicTournamentService.UpdateDocumentAsync(stored.Id, tournament.Map());
 
@@ -363,8 +366,51 @@ public class FireStoreFunction
         return response;
     }
 
+    [Function("FireStorePublicTournamentHasChangesFunction")]
+    public async Task<HttpResponseData> HasPublicTournamentChanges(
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "publictournament/haschanges")] HttpRequestData req,
+        FunctionContext executionContext)
+    {
+        var sinceStr = System.Web.HttpUtility.ParseQueryString(req.Url.Query)["since"];
+        if (string.IsNullOrWhiteSpace(sinceStr) || !DateTime.TryParse(sinceStr, null, System.Globalization.DateTimeStyles.RoundtripKind, out var since))
+        {
+            var all = await _fireStorePublicTournamentService.GetDocumentObjectsAsync();
+            var hasAny = req.CreateResponse(HttpStatusCode.OK);
+            await hasAny.WriteAsJsonAsync(new { hasChanges = all.Count > 0 });
+            return hasAny;
+        }
+
+        var hasChanges = await _fireStorePublicTournamentService.HasDocumentsUpdatedSinceAsync("UpdatedAt", since);
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(new { hasChanges });
+        return response;
+    }
+
+    [Function("FireStorePublicTournamentUpdatesFunction")]
+    public async Task<HttpResponseData> GetPublicTournamentUpdates(
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "publictournament/updates")] HttpRequestData req,
+        FunctionContext executionContext)
+    {
+        var sinceStr = System.Web.HttpUtility.ParseQueryString(req.Url.Query)["since"];
+        if (string.IsNullOrWhiteSpace(sinceStr) || !DateTime.TryParse(sinceStr, null, System.Globalization.DateTimeStyles.RoundtripKind, out var since))
+        {
+            var allDocs = await _fireStorePublicTournamentService.GetDocumentObjectsAsync();
+            var allData = allDocs.Select(s => s.Data.Map(s.Id)).OrderByDescending(o => o.CreatedAt).ToList();
+            var allResponse = req.CreateResponse(HttpStatusCode.OK);
+            await allResponse.WriteAsJsonAsync(allData);
+            return allResponse;
+        }
+
+        var docs = await _fireStorePublicTournamentService.QueryDocumentsSinceAsync("UpdatedAt", since);
+        var data = docs.Select(s => s.Data.Map(s.Id)).OrderByDescending(o => o.UpdatedAt).ToList();
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(data);
+        return response;
+    }
+
     [Function("FireStorePigeonsDisease")]
-    public async Task<HttpResponseData> AddPigeonsDiseaseAndCure([HttpTrigger(AuthorizationLevel.Function, "post", Route = "data/pigeonsdisease/add")] HttpRequestData req,
+    public async Task<HttpResponseData> AddPigeonsDiseaseAndCure(
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "data/pigeonsdisease/add")] HttpRequestData req,
         FunctionContext executionContext)
     {
         _logger.LogInformation("Creating tournament on firestore.");

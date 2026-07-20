@@ -12,4 +12,6 @@ public interface IFireStoreService<T>
     Task<List<Dictionary<string, object>>> GetDocumentsAsync();
     Task<List<FireStoreObjectResponse<T>>> GetDocumentObjectsAsync();
     Task<List<FireStoreObjectResponse<T>>> QueryDocumentsAsync(string fieldName, object fieldValue);
+    Task<bool> HasDocumentsUpdatedSinceAsync(string fieldName, DateTime since);
+    Task<List<FireStoreObjectResponse<T>>> QueryDocumentsSinceAsync(string fieldName, DateTime since);
 }

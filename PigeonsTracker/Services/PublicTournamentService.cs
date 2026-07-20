@@ -10,19 +10,28 @@ public class PublicTournamentService : IPublicTournamentService
 {
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
+    private readonly ICacheService _cacheService;
+    private readonly IBackgroundSyncService _backgroundSync;
     private readonly HttpClient _fallbackApiClient;
 
     private const string ManagerCredentialStorageKey = "public_tournament_manager_credentials";
+    private const string LoftAccessCodeStorageKey = "public_tournament_loft_access_codes";
     private const string LocalFunctionsBaseUrl = "http://localhost:7071";
     private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true
     };
 
-    public PublicTournamentService(HttpClient httpClient, ILocalStorageService localStorage)
+    public PublicTournamentService(
+        HttpClient httpClient,
+        ILocalStorageService localStorage,
+        ICacheService cacheService,
+        IBackgroundSyncService backgroundSync)
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _localStorage = localStorage ?? throw new ArgumentNullException(nameof(localStorage));
+        _cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
+        _backgroundSync = backgroundSync ?? throw new ArgumentNullException(nameof(backgroundSync));
         _fallbackApiClient = new HttpClient
         {
             BaseAddress = new Uri(LocalFunctionsBaseUrl),
@@ -32,39 +41,97 @@ public class PublicTournamentService : IPublicTournamentService
 
     public async Task<List<PublicTournament>> GetAllPublicTournaments()
     {
-        return await GetJsonWithFallback<List<PublicTournament>>("/api/publictournament/getall") ?? [];
+        // Cache-first: return cached data immediately, trigger background delta-check
+        if (await _cacheService.HasCacheAsync(CacheKeys.PublicTournaments))
+        {
+            var cached = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
+            if (cached?.Data != null)
+            {
+                _ = _backgroundSync.ForceSyncAsync(CacheKeys.PublicTournaments);
+                return cached.Data.OrderByDescending(o => o.CreatedAt).ToList();
+            }
+        }
+
+        // No cache — fetch fresh and populate cache
+        var data = await GetJsonWithFallback<List<PublicTournament>>("/api/publictournament/getall") ?? [];
+        await _cacheService.SetAsync(CacheKeys.PublicTournaments, data);
+        return data.OrderByDescending(o => o.CreatedAt).ToList();
     }
 
     public async Task<PublicTournament> GetPublicTournament(string id)
     {
+        // Try to find in cached list first
+        if (await _cacheService.HasCacheAsync(CacheKeys.PublicTournaments))
+        {
+            var cached = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
+            var found = cached?.Data?.FirstOrDefault(t => t.Id == id);
+            if (found != null) return found;
+        }
+
         return await GetJsonWithFallback<PublicTournament>($"/api/publictournament/get/{id}");
     }
 
     public async Task<PublicTournament> CreatePublicTournament(PublicTournament tournament)
     {
-        return await PostJsonWithFallback<PublicTournament, PublicTournament>("/api/publictournament/create", tournament);
+        var result = await PostJsonWithFallback<PublicTournament, PublicTournament>("/api/publictournament/create", tournament);
+        // Add new tournament to cache
+        if (result != null && await _cacheService.HasCacheAsync(CacheKeys.PublicTournaments))
+        {
+            var cached = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
+            var list = cached?.Data ?? [];
+            list.Add(result);
+            await _cacheService.SetAsync(CacheKeys.PublicTournaments, list);
+        }
+        return result;
     }
 
     public async Task<PublicTournamentDayRecord> UpsertDayRecord(PublicTournamentUpsertDayRecordRequest request)
     {
-        return await PostJsonWithFallback<PublicTournamentUpsertDayRecordRequest, PublicTournamentDayRecord>("/api/publictournament/dayrecord/upsert", request);
+        var result = await PostJsonWithFallback<PublicTournamentUpsertDayRecordRequest, PublicTournamentDayRecord>("/api/publictournament/dayrecord/upsert", request);
+        // Invalidate tournament cache and related summary caches
+        await _cacheService.InvalidateAsync(CacheKeys.PublicTournaments);
+        await _cacheService.InvalidateAsync(CacheKeys.BirdIndexSummary(request.TournamentId));
+        await _cacheService.InvalidateAsync(CacheKeys.TotalsSummary(request.TournamentId));
+        return result;
     }
 
     public async Task<PublicTournamentRegenerateCodesResponse> RegenerateCodes(PublicTournamentRegenerateCodesRequest request)
     {
-        return await PostJsonWithFallback<PublicTournamentRegenerateCodesRequest, PublicTournamentRegenerateCodesResponse>("/api/publictournament/codes/regenerate", request);
+        var result = await PostJsonWithFallback<PublicTournamentRegenerateCodesRequest, PublicTournamentRegenerateCodesResponse>("/api/publictournament/codes/regenerate", request);
+        await _cacheService.InvalidateAsync(CacheKeys.PublicTournaments);
+        return result;
     }
 
     public async Task<PublicTournamentBirdIndexSummaryResponse> GetBirdIndexSummary(string tournamentId)
     {
-        return await GetJsonWithFallback<PublicTournamentBirdIndexSummaryResponse>($"/api/publictournament/summary/birdindex/{tournamentId}")
-               ?? new PublicTournamentBirdIndexSummaryResponse();
+        var cacheKey = CacheKeys.BirdIndexSummary(tournamentId);
+        if (await _cacheService.HasCacheAsync(cacheKey))
+        {
+            var cached = await _cacheService.GetAsync<PublicTournamentBirdIndexSummaryResponse>(cacheKey);
+            if (cached?.Data != null)
+                return cached.Data;
+        }
+
+        var data = await GetJsonWithFallback<PublicTournamentBirdIndexSummaryResponse>($"/api/publictournament/summary/birdindex/{tournamentId}")
+                   ?? new PublicTournamentBirdIndexSummaryResponse();
+        await _cacheService.SetAsync(cacheKey, data);
+        return data;
     }
 
     public async Task<List<PublicTournamentTotalsSummaryRow>> GetTotalsSummary(string tournamentId)
     {
-        return await GetJsonWithFallback<List<PublicTournamentTotalsSummaryRow>>($"/api/publictournament/summary/totals/{tournamentId}")
-               ?? [];
+        var cacheKey = CacheKeys.TotalsSummary(tournamentId);
+        if (await _cacheService.HasCacheAsync(cacheKey))
+        {
+            var cached = await _cacheService.GetAsync<List<PublicTournamentTotalsSummaryRow>>(cacheKey);
+            if (cached?.Data != null)
+                return cached.Data;
+        }
+
+        var data = await GetJsonWithFallback<List<PublicTournamentTotalsSummaryRow>>($"/api/publictournament/summary/totals/{tournamentId}")
+                   ?? [];
+        await _cacheService.SetAsync(cacheKey, data);
+        return data;
     }
 
     public async Task StoreManagerCredentials(string tournamentId, string managerCode, string recoveryKey)
@@ -98,6 +165,21 @@ public class PublicTournamentService : IPublicTournamentService
     {
         public string ManagerCode { get; set; }
         public string RecoveryKey { get; set; }
+    }
+
+    public async Task StoreLoftAccessCode(string tournamentId, string loftCode)
+    {
+        var all = await _localStorage.GetItemAsync<Dictionary<string, string>>(LoftAccessCodeStorageKey)
+                  ?? new Dictionary<string, string>();
+        all[tournamentId] = loftCode;
+        await _localStorage.SetItemAsync(LoftAccessCodeStorageKey, all);
+    }
+
+    public async Task<string> GetLoftAccessCode(string tournamentId)
+    {
+        var all = await _localStorage.GetItemAsync<Dictionary<string, string>>(LoftAccessCodeStorageKey)
+                  ?? new Dictionary<string, string>();
+        return all.TryGetValue(tournamentId, out var code) ? code ?? string.Empty : string.Empty;
     }
 
     private async Task<T> GetJsonWithFallback<T>(string path)

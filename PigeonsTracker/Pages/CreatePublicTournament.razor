@@ -6,87 +6,131 @@
 @inject AppState AppState
 
 <PagesBase>
-    <div class="d-flex flex-column flex-nowrap mt-3 w-100 animate__animated animate__fadeInRight @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+    <div class="d-flex flex-column gap-3 mt-3 w-100 animate__animated animate__fadeInRight @(AppState.IsLanguageUrdu() ? "rtl" : "")">
         <MyPageTitle Text='@($"{Localizer["CreateTournament"]} (Public)")'></MyPageTitle>
 
-        <div class="mt-2">
-            <MudTextField Label="@Localizer["TournamentName"]" @bind-Value="_tournament.Name" Variant="Variant.Text" Required="true"></MudTextField>
-        </div>
-
-        <MudGrid Class="mt-3">
-            <MudItem xs="12" md="3">
-                <MudDatePicker Label="@Localizer["TournamentStartDate"]" Editable="true" @bind-Date="_startDate" DateFormat="dd.MM.yyyy" Required="true"/>
-            </MudItem>
-            <MudItem xs="12" md="3">
-                <MudDatePicker Label="@Localizer["TournamentEndDate"]" Editable="true" @bind-Date="_endDate" DateFormat="dd.MM.yyyy" Required="true"/>
-            </MudItem>
-            <MudItem xs="12" md="3">
-                <MudTextField InputType="InputType.Time" Label="@Localizer["FlyingStartTime"]" @bind-Value="_flyingStartTime" Format="HH:mm:ss" Required="true"></MudTextField>
-            </MudItem>
-            <MudItem xs="12" md="3">
-                <MudTextField InputType="InputType.Time" Label="Flying end time" @bind-Value="_flyingEndTime" Format="HH:mm:ss" Required="true"></MudTextField>
-            </MudItem>
-        </MudGrid>
-
-        <MudSwitch Class="mt-3" @bind-Value="_tournament.CanManageLoftRecords" Color="Color.Primary" Label="Ask users to manage loft records with a key"></MudSwitch>
-
-        <MudDivider Class="my-3"></MudDivider>
-        <MudText Typo="Typo.h6" Class="mb-2">@Localizer["RoofName"]</MudText>
-
-        <MudPaper Class="p-3 mb-2" Elevation="1">
-            <MudGrid>
-                <MudItem xs="12" md="4">
-                    <MudTextField Label="@Localizer["RoofName"]" @bind-Value="_newLoftName"></MudTextField>
+        @* ── Tournament basics ──────────────────────────────────────────── *@
+        <MudPaper Class="pa-3" Elevation="1">
+            <MudText Typo="Typo.subtitle1" Class="mb-2">Tournament info</MudText>
+            <MudTextField Label="@Localizer["TournamentName"]"
+                          @bind-Value="_tournament.Name"
+                          Variant="Variant.Outlined"
+                          FullWidth="true"
+                          Required="true"
+                          Class="mb-3" />
+            <MudGrid Spacing="2">
+                <MudItem xs="12" sm="6">
+                    <MudDatePicker Label="@Localizer["TournamentStartDate"]"
+                                   Editable="true"
+                                   @bind-Date="_startDate"
+                                   DateFormat="dd.MM.yyyy"
+                                   Variant="Variant.Outlined"
+                                   Required="true" />
                 </MudItem>
-                <MudItem xs="6" md="3">
-                    <MudNumericField Label="@Localizer["TotalBirdsCount"]" @bind-Value="_newLoftBirdCount" Min="1" Max="500"></MudNumericField>
+                <MudItem xs="12" sm="6">
+                    <MudDatePicker Label="@Localizer["TournamentEndDate"]"
+                                   Editable="true"
+                                   @bind-Date="_endDate"
+                                   DateFormat="dd.MM.yyyy"
+                                   Variant="Variant.Outlined"
+                                   Required="true" />
                 </MudItem>
-                <MudItem xs="6" md="3" Class="d-flex align-center">
-                    <MudSwitch @bind-Value="_newLoftHasBabyBird" Color="Color.Primary" Label="Baby pigeon"></MudSwitch>
+                <MudItem xs="12" sm="6">
+                    <MudTextField InputType="InputType.Time"
+                                  Label="@Localizer["FlyingStartTime"]"
+                                  @bind-Value="_flyingStartTime"
+                                  Format="HH:mm:ss"
+                                  Variant="Variant.Outlined"
+                                  Required="true" />
                 </MudItem>
-                <MudItem xs="12" md="2" Class="d-flex align-center">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddLoft">Add loft</MudButton>
+                <MudItem xs="12" sm="6">
+                    <MudTextField InputType="InputType.Time"
+                                  Label="Flying end time"
+                                  @bind-Value="_flyingEndTime"
+                                  Format="HH:mm:ss"
+                                  Variant="Variant.Outlined"
+                                  Required="true" />
                 </MudItem>
             </MudGrid>
         </MudPaper>
 
-        @if (_tournament.Lofts.Count > 0)
-        {
-            <table class="table table-sm table-bordered">
-                <thead>
-                <tr>
-                    <th>Loft</th>
-                    <th>Birds</th>
-                    <th>Baby Pigeon</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var loft in _tournament.Lofts)
-                {
-                    <tr>
-                        <td>@loft.LoftName</td>
-                        <td>@loft.BirdCount</td>
-                        <td>@(loft.HasBabyPigeon ? "Yes" : "No")</td>
-                        <td>
-                            <MudButton Variant="Variant.Text" Color="Color.Error" OnClick="() => RemoveLoft(loft.LoftId)">Remove</MudButton>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        }
+        @* ── Bird configuration (global for all lofts) ─────────────────── *@
+        <MudPaper Class="pa-3" Elevation="1">
+            <MudText Typo="Typo.subtitle1" Class="mb-2">Bird configuration <MudText Typo="Typo.caption" Inline="true" Class="mud-text-secondary">(applies to all lofts)</MudText></MudText>
+            <MudGrid Spacing="2">
+                <MudItem xs="12" sm="6">
+                    <MudNumericField Label="@Localizer["TotalBirdsCount"]"
+                                     @bind-Value="_globalBirdCount"
+                                     Min="1"
+                                     Max="500"
+                                     Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" sm="6" Class="d-flex align-center">
+                    <MudSwitch @bind-Value="_globalHasBabyBird" Color="Color.Primary" Label="Baby pigeon" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudSwitch @bind-Value="_tournament.CanManageLoftRecords" Color="Color.Secondary" Label="Allow loft owners to update records with a code" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
 
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" OnClick="CreateTournament" Disabled="@_isSaving">
+        @* ── Lofts ─────────────────────────────────────────────────────── *@
+        <MudPaper Class="pa-3" Elevation="1">
+            <MudText Typo="Typo.subtitle1" Class="mb-2">Lofts</MudText>
+            <div class="d-flex gap-2 align-end">
+                <MudTextField Label="Loft name"
+                              @bind-Value="_newLoftName"
+                              Variant="Variant.Outlined"
+                              Immediate="true"
+                              OnKeyDown="@(async e => { if (e.Key == "Enter") AddLoft(); })"
+                              FullWidth="true" />
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           OnClick="AddLoft"
+                           Style="min-width:90px;height:56px;">
+                    Add
+                </MudButton>
+            </div>
+
+            @if (_tournament.Lofts.Count > 0)
+            {
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    @foreach (var loft in _tournament.Lofts)
+                    {
+                        <MudChip T="string"
+                                 Color="Color.Primary"
+                                 Variant="Variant.Outlined"
+                                 OnClose="() => RemoveLoft(loft.LoftId)"
+                                 CloseIcon="@Icons.Material.Filled.Close">
+                            @loft.LoftName
+                        </MudChip>
+                    }
+                </div>
+            }
+            else
+            {
+                <MudText Typo="Typo.body2" Class="mt-2 mud-text-secondary">No lofts added yet.</MudText>
+            }
+        </MudPaper>
+
+        @* ── Submit ─────────────────────────────────────────────────────── *@
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   FullWidth="true"
+                   StartIcon="@Icons.Material.Filled.EmojiEvents"
+                   OnClick="CreateTournament"
+                   Disabled="@_isSaving">
             @(_isSaving ? "Creating..." : "Create Public Tournament")
         </MudButton>
 
         @if (_createdTournament is not null)
         {
-            <MudAlert Severity="Severity.Success" Dense="true" Class="mt-3">
+            <MudAlert Severity="Severity.Success" Class="mt-1">
                 <div><strong>Manager code:</strong> @_createdTournament.ManagerCode</div>
                 <div><strong>Recovery key:</strong> @_createdTournament.ManagerRecoveryKey</div>
-                <div class="mt-1">Saved on this phone as manager credentials.</div>
+                <div class="mt-1 mud-text-secondary">Saved on this device as manager credentials.</div>
             </MudAlert>
         }
     </div>
@@ -106,9 +150,10 @@
     private DateTime _flyingStartTime = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 0, 0);
     private DateTime _flyingEndTime = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 18, 0, 0);
 
+    private int _globalBirdCount = 7;
+    private bool _globalHasBabyBird;
+
     private string _newLoftName = string.Empty;
-    private int _newLoftBirdCount = 7;
-    private bool _newLoftHasBabyBird;
 
     private bool _isSaving;
     private PublicTournament _createdTournament;
@@ -127,33 +172,23 @@
             return;
         }
 
-        if (_newLoftBirdCount <= 0)
-        {
-            Snackbar.Add("Bird count must be greater than 0", Severity.Warning);
-            return;
-        }
-
         _tournament.Lofts.Add(new PublicTournamentLoft
         {
             LoftId = IdGenerator.GetNewId(),
             LoftName = _newLoftName.Trim(),
-            BirdCount = Math.Max(1, _newLoftBirdCount),
-            HasBabyPigeon = _newLoftHasBabyBird,
+            BirdCount = _globalBirdCount,
+            HasBabyPigeon = _globalHasBabyBird,
             CreatedAt = DateTime.Now
         });
 
         _newLoftName = string.Empty;
-        _newLoftBirdCount = 10;
-        _newLoftHasBabyBird = false;
     }
 
     private void RemoveLoft(string loftId)
     {
         var found = _tournament.Lofts.FirstOrDefault(f => f.LoftId == loftId);
         if (found != null)
-        {
             _tournament.Lofts.Remove(found);
-        }
     }
 
     private async Task CreateTournament()
@@ -212,3 +247,4 @@
         }
     }
 }
+

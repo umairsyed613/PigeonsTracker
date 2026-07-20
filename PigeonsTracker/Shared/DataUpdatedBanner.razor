@@ -1,0 +1,49 @@
+@implements IDisposable
+@inject ISyncNotificationService SyncNotification
+
+@if (_showBanner)
+{
+    <MudAlert Severity="Severity.Info"
+              Dense="true"
+              Class="mb-2"
+              ShowCloseIcon="true"
+              CloseIconClicked="Dismiss">
+        New data is available —
+        <MudLink OnClick="RefreshAndDismiss" Style="cursor:pointer;">click here to reload</MudLink>
+    </MudAlert>
+}
+
+@code {
+    [Parameter] public string CacheKey { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnRefresh { get; set; }
+
+    private bool _showBanner;
+
+    protected override void OnInitialized()
+    {
+        SyncNotification.OnDataUpdated += HandleUpdate;
+    }
+
+    private void HandleUpdate(string cacheKey)
+    {
+        if (cacheKey != CacheKey) return;
+        _showBanner = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void Dismiss()
+    {
+        _showBanner = false;
+    }
+
+    private async Task RefreshAndDismiss()
+    {
+        _showBanner = false;
+        await OnRefresh.InvokeAsync();
+    }
+
+    public void Dispose()
+    {
+        SyncNotification.OnDataUpdated -= HandleUpdate;
+    }
+}

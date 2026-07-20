@@ -1,4 +1,6 @@
-﻿<Router AppAssembly="@typeof(Program).Assembly">
+﻿@inject IBackgroundSyncService BackgroundSync
+
+<Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
@@ -35,3 +37,10 @@
     </NotFound>
 </Router>
 <NavigationTracker />
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await BackgroundSync.StartAsync();
+    }
+}
