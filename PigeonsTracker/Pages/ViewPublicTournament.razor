@@ -33,6 +33,8 @@
                 <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.EndTo.ToString("dd MMM yyyy")</MudText></MudItem>
                 <MudItem xs="4"><MudText Typo="Typo.body2">@Localizer["FlyingStartTime"] :</MudText></MudItem>
                 <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.FlyingStartTime</MudText></MudItem>
+                <MudItem xs="4"><MudText Typo="Typo.body2">Flying end time :</MudText></MudItem>
+                <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.FlyingEndTime</MudText></MudItem>
                 <MudItem xs="4"><MudText Typo="Typo.body2">Lofts :</MudText></MudItem>
                 <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.Lofts.Count</MudText></MudItem>
             </MudGrid>
@@ -43,11 +45,11 @@
                 <MudItem xs="12" md="4">
                     <MudTextField Label="Manager code or recovery key" @bind-Value="_codeRevealAccess" Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
-                <MudItem xs="12" md="8" Class="d-flex align-end gap-2">
+                <MudItem xs="12" md="8" Class="d-flex align-center gap-2">
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UnlockLoftCodes">Reveal loft codes</MudButton>
                     @if (_codesUnlocked)
                     {
-                        <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="HideLoftCodes">Hide loft codes</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Secondary" Class="h-100" OnClick="HideLoftCodes">Hide loft codes</MudButton>
                     }
                 </MudItem>
             </MudGrid>
@@ -107,15 +109,29 @@
                             @for (var i = 0; i < _birdEndTimes.Count; i++)
                             {
                                 var index = i;
-                                <MudItem xs="12" md="4">
+                                <MudItem xs="12" md="6">
                                     <MudTextField InputType="InputType.Time" Label="@($"Bird{index + 1}")" @bind-Value="_birdEndTimes[index]" Format="HH:mm:ss"></MudTextField>
+                                    <div class="d-flex align-center justify-content-between">
+                                        <MudSwitch @bind-Value="_birdCrossedFlags[index]" Color="Color.Warning" Label="Crossed"></MudSwitch>
+                                        @if (IsBirdOvertime(index))
+                                        {
+                                            <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime</MudChip>
+                                        }
+                                    </div>
                                 </MudItem>
                             }
 
                             @if (_selectedLoft.HasBabyPigeon)
                             {
-                                <MudItem xs="12" md="4">
+                                <MudItem xs="12" md="6">
                                     <MudTextField InputType="InputType.Time" Label="Baby pigeon" @bind-Value="_babyBirdEndTime" Format="HH:mm:ss"></MudTextField>
+                                    <div class="d-flex align-center justify-content-between">
+                                        <MudSwitch @bind-Value="_babyBirdIsCrossed" Color="Color.Warning" Label="Crossed"></MudSwitch>
+                                        @if (IsBabyBirdOvertime())
+                                        {
+                                            <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime</MudChip>
+                                        }
+                                    </div>
                                 </MudItem>
                             }
                         </MudGrid>
@@ -192,7 +208,9 @@
     private string _selectedLoftId = string.Empty;
     private DateTime? _selectedFlyingDate = DateTime.Today;
     private List<DateTime?> _birdEndTimes = [];
+    private List<bool> _birdCrossedFlags = [];
     private DateTime? _babyBirdEndTime;
+    private bool _babyBirdIsCrossed;
 
     private PublicTournamentLoft _selectedLoft => _tournament?.Lofts?.FirstOrDefault(f => f.LoftId == _selectedLoftId);
 
@@ -247,6 +265,7 @@
     private void RebuildBirdInputRows()
     {
         _birdEndTimes.Clear();
+        _birdCrossedFlags.Clear();
         if (_selectedLoft is null)
         {
             return;
@@ -255,9 +274,11 @@
         for (var i = 0; i < _selectedLoft.BirdCount; i++)
         {
             _birdEndTimes.Add(null);
+            _birdCrossedFlags.Add(false);
         }
 
         _babyBirdEndTime = null;
+        _babyBirdIsCrossed = false;
     }
 
     private Task OnLoftChanged(string loftId)
@@ -294,11 +315,13 @@
         }
 
         var start = _selectedFlyingDate.Value.Date + _tournament.FlyingStartTime;
+        var dayEnd = _selectedFlyingDate.Value.Date + _tournament.FlyingEndTime;
 
         var birds = new List<PublicTournamentBirdRecord>();
         for (var i = 0; i < _birdEndTimes.Count; i++)
         {
             var end = _birdEndTimes[i];
+            var isCrossed = _birdCrossedFlags.Count > i && _birdCrossedFlags[i];
 
             if (end.HasValue && end.Value < start)
             {
@@ -306,8 +329,16 @@
                 return;
             }
 
+            if (isCrossed && !end.HasValue)
+            {
+                Snackbar.Add($"Bird{i + 1} must have landing time if marked crossed", Severity.Warning);
+                return;
+            }
+
+            var isOvertime = end.HasValue && end.Value > dayEnd;
+
             TimeSpan? dur = null;
-            if (end.HasValue && end.Value >= start)
+            if (end.HasValue && end.Value >= start && !isCrossed)
             {
                 dur = end.Value - start;
             }
@@ -316,6 +347,8 @@
             {
                 BirdIndex = i + 1,
                 EndTime = end,
+                IsOvertime = isOvertime,
+                IsCrossed = isCrossed,
                 TotalBirdFlyingTime = dur
             });
         }
@@ -329,8 +362,16 @@
                 return;
             }
 
+            if (_babyBirdIsCrossed && !_babyBirdEndTime.HasValue)
+            {
+                Snackbar.Add("Baby pigeon must have landing time if marked crossed", Severity.Warning);
+                return;
+            }
+
+            var babyIsOvertime = _babyBirdEndTime.HasValue && _babyBirdEndTime.Value > dayEnd;
+
             TimeSpan? babyDur = null;
-            if (_babyBirdEndTime.HasValue && _babyBirdEndTime.Value >= start)
+            if (_babyBirdEndTime.HasValue && _babyBirdEndTime.Value >= start && !_babyBirdIsCrossed)
             {
                 babyDur = _babyBirdEndTime.Value - start;
             }
@@ -339,6 +380,8 @@
             {
                 BirdIndex = 1,
                 EndTime = _babyBirdEndTime,
+                IsOvertime = babyIsOvertime,
+                IsCrossed = _babyBirdIsCrossed,
                 TotalBirdFlyingTime = babyDur
             };
         }
@@ -442,5 +485,27 @@
     private void HideLoftCodes()
     {
         _codesUnlocked = false;
+    }
+
+    private bool IsBirdOvertime(int index)
+    {
+        if (_selectedFlyingDate == null || _birdEndTimes.Count <= index || !_birdEndTimes[index].HasValue)
+        {
+            return false;
+        }
+
+        var dayEnd = _selectedFlyingDate.Value.Date + _tournament.FlyingEndTime;
+        return _birdEndTimes[index].Value > dayEnd;
+    }
+
+    private bool IsBabyBirdOvertime()
+    {
+        if (_selectedFlyingDate == null || !_babyBirdEndTime.HasValue)
+        {
+            return false;
+        }
+
+        var dayEnd = _selectedFlyingDate.Value.Date + _tournament.FlyingEndTime;
+        return _babyBirdEndTime.Value > dayEnd;
     }
 }

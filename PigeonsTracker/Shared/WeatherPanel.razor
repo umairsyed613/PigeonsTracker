@@ -2,43 +2,49 @@
 @inject WeatherService WeatherService
 @inject AppState AppState
 
-<style>
-    .bg-weather-panel{
-    /*background-color: #2e637f !important;*/
-    background-color: #e4eef7 !important;
-    }
-</style>
-@if (_weatherApiResult != null)
+@if (Location != null)
 {
-    <div class="d-flex flex-column align-items-center rounded bg-weather-panel text-dark p-3 user-select-stop">
-        <div class="d-flex flex-row w-100 flex-nowrap">
-            <div class="d-flex flex-column flex-grow-1">
-                <h3>@_weatherApiResult.Name</h3>
-                <h6>@DateTime.Now.ToString("dd MMMM yyy")</h6>
-                @if (_weather != null)
-                {
-                    <div class="d-flex align-items-center mt-2">
-                        <span>@GetIcon(@_weather.Main)</span>
-                        <h6 class="mx-2">@_weather.Main</h6>
-                    </div>
-                }
+    @if (_weatherApiResult != null)
+    {
+        <div class="weather-strip animate__animated animate__fadeIn">
+            <div class="weather-icon-wrap">
+                @((MarkupString)GetIconHtml(_weather?.Main ?? ""))
             </div>
-            <div class="d-flex flex-column align-items-center justify-content-center mx-4">
-                <h1>@_weatherApiResult.Main.Temp.ToOneDecimal()°</h1>
-                <p class="fs-0-5">Feels @_weatherApiResult.Main.FeelsLike.ToOneDecimal()°</p>
+            <span class="weather-condition">@(_weather?.Main ?? "")</span>
+
+            <div class="weather-sep"></div>
+
+            <div class="weather-city">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>@_weatherApiResult.Name</span>
+            </div>
+
+            <div class="weather-sep"></div>
+
+            <div class="weather-temp">
+                <span class="temp-main">@_weatherApiResult.Main.Temp.ToOneDecimal()°</span>
+                <span class="temp-feels">Feels @_weatherApiResult.Main.FeelsLike.ToOneDecimal()°</span>
+            </div>
+
+            <div class="weather-sep d-none d-sm-block"></div>
+
+            <div class="weather-humidity d-none d-sm-flex">
+                <i class="bi bi-droplet-fill"></i>
+                <span>@_weatherApiResult.Main.Humidity%</span>
+            </div>
+
+            <div class="weather-updated ms-auto">
+                <i class="bi bi-arrow-clockwise"></i>
+                <span>@(_lastUpdated.HasValue ? _lastUpdated.Value.ToString("HH:mm") : "")</span>
             </div>
         </div>
-        @if (_lastUpdated.HasValue)
-        {
-            <div class="d-flex flex-row-reverse align-items-center w-100 fs-0-5 text-muted">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
-                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
-                </svg>
-                <span class="mx-2">@_lastUpdated.Value</span>
-            </div>
-        }
-    </div>
+    }
+    else if (_loading)
+    {
+        <div class="weather-strip">
+            <div class="weather-skeleton"></div>
+        </div>
+    }
 }
 
 @code {
@@ -49,47 +55,45 @@
     private OpenWeatherApiResult _weatherApiResult;
     private Weather _weather;
     private DateTime? _lastUpdated;
+    private bool _loading;
 
     protected override async Task OnParametersSetAsync()
     {
         if (Location != null)
         {
-            Console.WriteLine("fetching weather");
+            _loading = true;
+            StateHasChanged();
             try
             {
-
-                var temp = await WeatherService.GetWeatherResult(Location.Latitude.ToString(CultureInfo.InvariantCulture),
-                    Location.Longitude.ToString(CultureInfo.InvariantCulture), AppState.CachedOpenWeatherApiResult == null);
+                var temp = await WeatherService.GetWeatherResult(
+                    Location.Latitude.ToString(CultureInfo.InvariantCulture),
+                    Location.Longitude.ToString(CultureInfo.InvariantCulture),
+                    AppState.CachedOpenWeatherApiResult == null);
 
                 if (temp != null)
-                {
                     AppState.CachedOpenWeatherApiResult = temp;
-                    /*Console.WriteLine("Weather Data written to appsate");*/
-                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
 
-            /*Console.WriteLine(AppState.CachedOpenWeatherApiResult);*/
+            _loading = false;
             _weatherApiResult = AppState.CachedOpenWeatherApiResult;
             _weather = _weatherApiResult?.Weather.FirstOrDefault();
             _lastUpdated = WeatherService.LastUpdatedAt;
-
             StateHasChanged();
         }
     }
 
-    private MarkupString GetIcon(string main)
+    private string GetIconHtml(string main) => main switch
     {
-        return main switch
-        {
-            "Rain" => new MarkupString(@"<i class='mi mi-fw mi-lg mi-rain-heavy'></i>"),
-            "Clear" => new MarkupString(@"<i class='mi mi-fw mi-2x mi-sun'></i>"),
-            "Clouds" => new MarkupString(@"<i class='mi mi-fw mi-2x mi-cloud'></i>"),
-            _ => new MarkupString("")
-            };
-    }
-
+        "Rain" or "Drizzle" => "<i class='mi mi-fw mi-rain-heavy'></i>",
+        "Thunderstorm" => "<i class='mi mi-fw mi-thunderstorm'></i>",
+        "Clear" => "<i class='mi mi-fw mi-sun'></i>",
+        "Clouds" => "<i class='mi mi-fw mi-cloud'></i>",
+        "Snow" => "<i class='mi mi-fw mi-snow'></i>",
+        "Fog" or "Mist" or "Haze" or "Smoke" => "<i class='mi mi-fw mi-fog'></i>",
+        _ => "<i class='bi bi-cloud'></i>"
+    };
 }

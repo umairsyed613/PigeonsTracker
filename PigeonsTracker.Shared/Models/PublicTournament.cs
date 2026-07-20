@@ -12,6 +12,7 @@ public class PublicTournament
     public DateTime StartsFrom { get; set; }
     public DateTime EndTo { get; set; }
     public TimeSpan FlyingStartTime { get; set; }
+    public TimeSpan FlyingEndTime { get; set; }
     public bool CanManageLoftRecords { get; set; }
 
     public string ManagerCode { get; set; } = string.Empty;
@@ -60,6 +61,8 @@ public class PublicTournamentBirdRecord
 {
     public int BirdIndex { get; set; }
     public DateTime? EndTime { get; set; }
+    public bool IsOvertime { get; set; }
+    public bool IsCrossed { get; set; }
     public TimeSpan? TotalBirdFlyingTime { get; set; }
 }
 

@@ -6,29 +6,34 @@
 @inject AppState AppState
 
 <PagesBase>
-    <div class="d-flex flex-column @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+    <div class="d-flex flex-column flex-nowrap mt-3 w-100 animate__animated animate__fadeInRight @(AppState.IsLanguageUrdu() ? "rtl" : "")">
         <MyPageTitle Text='@($"{Localizer["CreateTournament"]} (Public)")'></MyPageTitle>
 
-        <MudTextField Label="@Localizer["TournamentName"]" @bind-Value="_tournament.Name" Variant="Variant.Outlined" Required="true"></MudTextField>
+        <div class="mt-2">
+            <MudTextField Label="@Localizer["TournamentName"]" @bind-Value="_tournament.Name" Variant="Variant.Text" Required="true"></MudTextField>
+        </div>
 
-        <MudGrid>
-            <MudItem xs="12" md="4">
+        <MudGrid Class="mt-3">
+            <MudItem xs="12" md="3">
                 <MudDatePicker Label="@Localizer["TournamentStartDate"]" Editable="true" @bind-Date="_startDate" DateFormat="dd.MM.yyyy" Required="true"/>
             </MudItem>
-            <MudItem xs="12" md="4">
+            <MudItem xs="12" md="3">
                 <MudDatePicker Label="@Localizer["TournamentEndDate"]" Editable="true" @bind-Date="_endDate" DateFormat="dd.MM.yyyy" Required="true"/>
             </MudItem>
-            <MudItem xs="12" md="4">
+            <MudItem xs="12" md="3">
                 <MudTextField InputType="InputType.Time" Label="@Localizer["FlyingStartTime"]" @bind-Value="_flyingStartTime" Format="HH:mm:ss" Required="true"></MudTextField>
+            </MudItem>
+            <MudItem xs="12" md="3">
+                <MudTextField InputType="InputType.Time" Label="Flying end time" @bind-Value="_flyingEndTime" Format="HH:mm:ss" Required="true"></MudTextField>
             </MudItem>
         </MudGrid>
 
-        <MudSwitch @bind-Value="_tournament.CanManageLoftRecords" Color="Color.Primary" Label="Ask users to manage loft records with a key"></MudSwitch>
+        <MudSwitch Class="mt-3" @bind-Value="_tournament.CanManageLoftRecords" Color="Color.Primary" Label="Ask users to manage loft records with a key"></MudSwitch>
 
-        <MudDivider Class="my-2"></MudDivider>
-        <MudText Typo="Typo.h6">@Localizer["RoofName"]</MudText>
+        <MudDivider Class="my-3"></MudDivider>
+        <MudText Typo="Typo.h6" Class="mb-2">@Localizer["RoofName"]</MudText>
 
-        <MudPaper Class="p-2 mb-2">
+        <MudPaper Class="p-3 mb-2" Elevation="1">
             <MudGrid>
                 <MudItem xs="12" md="4">
                     <MudTextField Label="@Localizer["RoofName"]" @bind-Value="_newLoftName"></MudTextField>
@@ -99,9 +104,10 @@
     private DateTime? _startDate = DateTime.Today;
     private DateTime? _endDate = DateTime.Today.AddDays(7);
     private DateTime _flyingStartTime = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 0, 0);
+    private DateTime _flyingEndTime = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 18, 0, 0);
 
     private string _newLoftName = string.Empty;
-    private int _newLoftBirdCount = 10;
+    private int _newLoftBirdCount = 7;
     private bool _newLoftHasBabyBird;
 
     private bool _isSaving;
@@ -176,12 +182,19 @@
             return;
         }
 
+        if (_flyingEndTime.TimeOfDay <= _flyingStartTime.TimeOfDay)
+        {
+            Snackbar.Add("Flying end time must be after flying start time", Severity.Warning);
+            return;
+        }
+
         _isSaving = true;
         try
         {
             _tournament.StartsFrom = _startDate.Value.Date;
             _tournament.EndTo = _endDate.Value.Date;
             _tournament.FlyingStartTime = new TimeSpan(_flyingStartTime.Hour, _flyingStartTime.Minute, _flyingStartTime.Second);
+            _tournament.FlyingEndTime = new TimeSpan(_flyingEndTime.Hour, _flyingEndTime.Minute, _flyingEndTime.Second);
 
             _createdTournament = await PublicTournamentService.CreatePublicTournament(_tournament);
             await PublicTournamentService.StoreManagerCredentials(_createdTournament.Id, _createdTournament.ManagerCode, _createdTournament.ManagerRecoveryKey);

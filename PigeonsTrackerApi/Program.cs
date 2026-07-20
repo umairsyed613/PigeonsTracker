@@ -28,9 +28,7 @@ var host = new HostBuilder()
         }.Build();
 
         services.AddSingleton(fdb);
-        AddFirestoreService<FsTournament>(services, "Tournaments");
         AddFirestoreService<FsPublicTournament>(services, "PublicTournaments");
-        AddFirestoreService<FsUserApproved>(services, "ApprovedUsers");
         AddFirestoreService<FsPigeonDiseaseAndCure>(services, "PigeonsDiseaseAndCure");
         services.AddHttpClient();
     })

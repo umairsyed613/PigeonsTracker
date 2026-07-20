@@ -14,9 +14,7 @@ namespace PigeonsTrackerApi;
 
 public class FireStoreFunction
 {
-    private readonly IFireStoreService<FsTournament> _fireStoreTournamentService;
     private readonly IFireStoreService<FsPublicTournament> _fireStorePublicTournamentService;
-    private readonly IFireStoreService<FsUserApproved> _fireStoreUserApprovedService;
     private readonly IFireStoreService<FsPigeonDiseaseAndCure> _firePigeonsDiseaseAndCureService;
     private readonly ILogger<FireStoreFunction> _logger;
 
@@ -27,14 +25,10 @@ public class FireStoreFunction
 
     public FireStoreFunction(
         ILogger<FireStoreFunction> logger,
-        IFireStoreService<FsTournament> fireStoreService,
         IFireStoreService<FsPublicTournament> fireStorePublicTournamentService,
-        IFireStoreService<FsUserApproved> fireStoreUserApprovedService,
         IFireStoreService<FsPigeonDiseaseAndCure> firePigeonsDiseaseAndCureService)
     {
-        _fireStoreTournamentService = fireStoreService ?? throw new ArgumentNullException(nameof(fireStoreService));
         _fireStorePublicTournamentService = fireStorePublicTournamentService ?? throw new ArgumentNullException(nameof(fireStorePublicTournamentService));
-        _fireStoreUserApprovedService = fireStoreUserApprovedService;
         _firePigeonsDiseaseAndCureService = firePigeonsDiseaseAndCureService;
         _logger = logger;
     }
@@ -57,6 +51,13 @@ public class FireStoreFunction
         data.Id = string.IsNullOrWhiteSpace(data.Id) ? Guid.NewGuid().ToString("N") : data.Id;
         data.CreatedAt = data.CreatedAt == default ? DateTime.Now : data.CreatedAt;
         data.DayRecords ??= [];
+        data.FlyingStartTime = data.FlyingStartTime == default ? new TimeSpan(6, 0, 0) : data.FlyingStartTime;
+        data.FlyingEndTime = data.FlyingEndTime == default ? new TimeSpan(19, 0, 0) : data.FlyingEndTime;
+
+        if (data.FlyingEndTime <= data.FlyingStartTime)
+        {
+            data.FlyingEndTime = data.FlyingStartTime.Add(TimeSpan.FromHours(12));
+        }
 
         if (string.IsNullOrWhiteSpace(data.ManagerCode))
         {
@@ -170,6 +171,7 @@ public class FireStoreFunction
             request.LoftRecord.StartTime = request.DateOfFlying.Date + tournament.FlyingStartTime;
         }
 
+        ApplyPublicBirdRules(request.LoftRecord, tournament.FlyingStartTime, tournament.FlyingEndTime, targetLoft.BirdCount, targetLoft.HasBabyPigeon);
         CalculateLoftRecordAggregates(request.LoftRecord, targetLoft.BirdCount, targetLoft.HasBabyPigeon);
 
         var normalizedDate = request.DateOfFlying.Date;
@@ -361,102 +363,6 @@ public class FireStoreFunction
         return response;
     }
 
-    [Function("FireStoreCreateFunction")]
-    public async Task<HttpResponseData> Create([HttpTrigger(AuthorizationLevel.Function, "post", Route = "data/create")] HttpRequestData req,
-        FunctionContext executionContext)
-    {
-        _logger.LogInformation("Creating tournament on firestore.");
-
-        var body = await new StreamReader(req.Body).ReadToEndAsync();
-        var data = JsonSerializer.Deserialize<Tournament>(body, _jsonSerializerOptions);
-
-        var resp = await _fireStoreTournamentService.AddDocumentAsync(data.Map());
-
-        var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(new FireStoreUpsertResponse()
-        {
-            Id = resp.Id
-        });
-
-        return response;
-    }
-
-    [Function("FireStoreUpdateFunction")]
-    public async Task<HttpResponseData> Update([HttpTrigger(AuthorizationLevel.Function, "post", Route = "data/update")] HttpRequestData req,
-        FunctionContext executionContext)
-    {
-        _logger.LogInformation("Updating tournament on firestore.");
-
-        var body = await new StreamReader(req.Body).ReadToEndAsync();
-        var data = JsonSerializer.Deserialize<Tournament>(body, _jsonSerializerOptions);
-
-        if (data.FireStoreId is null)
-        {
-            return req.CreateResponse(HttpStatusCode.BadRequest);
-        }
-
-        await _fireStoreTournamentService.UpdateDocumentAsync(data.FireStoreId, data.Map());
-
-        return req.CreateResponse(HttpStatusCode.OK);
-    }
-
-    [Function("FireStoreGetAllFunction")]
-    public async Task<HttpResponseData> GetAll([HttpTrigger(AuthorizationLevel.Function, "get", Route = "data/getall")] HttpRequestData req,
-        FunctionContext executionContext)
-    {
-        _logger.LogInformation("Getting all tournaments from firestore.");
-
-        var dd = await _fireStoreTournamentService.GetDocumentsAsync();
-        var response = req.CreateResponse(HttpStatusCode.OK);
-
-        await response.WriteAsJsonAsync(dd);
-
-        return response;
-    }
-
-    [Function("FireStoreGetFunction")]
-    public async Task<HttpResponseData> GetOne([HttpTrigger(AuthorizationLevel.Function, "get", Route = "data/get/{id}")] HttpRequestData req,
-        string id, FunctionContext executionContext)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(id);
-        _logger.LogInformation("Getting tournaments from firestore.");
-
-        var storeObjectResponse = await _fireStoreTournamentService.GetDocumentAsync(id);
-
-        if (storeObjectResponse == null)
-        {
-            return req.CreateResponse(HttpStatusCode.NotFound);
-        }
-
-        var response = req.CreateResponse(HttpStatusCode.OK);
-
-        await response.WriteAsJsonAsync(storeObjectResponse.Data.Map(storeObjectResponse.Id));
-
-        return response;
-    }
-
-    [Function("FireStoreUserApprovedFunction")]
-    public async Task<HttpResponseData> IsUserApproved([HttpTrigger(AuthorizationLevel.Function, "get", Route = "data/approved/user/{id}")] HttpRequestData req,
-        string id, FunctionContext executionContext)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(id);
-        _logger.LogInformation("Getting ApprovedUser from firestore.");
-
-        var storeObjectResponse = await _fireStoreUserApprovedService.QueryDocumentsAsync("UserId", id);
-
-        if (storeObjectResponse == null)
-        {
-            return req.CreateResponse(HttpStatusCode.NotFound);
-        }
-
-        var first = storeObjectResponse.Single();
-        var response = req.CreateResponse(HttpStatusCode.OK);
-
-        await response.WriteAsJsonAsync(first.Data);
-
-        return response;
-    }
-
     [Function("FireStorePigeonsDisease")]
     public async Task<HttpResponseData> AddPigeonsDiseaseAndCure([HttpTrigger(AuthorizationLevel.Function, "post", Route = "data/pigeonsdisease/add")] HttpRequestData req,
         FunctionContext executionContext)
@@ -492,15 +398,15 @@ public class FireStoreFunction
     {
         record.BirdRecords ??= [];
 
-        var landedBirds = record.BirdRecords.Count(c => c.EndTime.HasValue);
+        var landedBirds = record.BirdRecords.Count(c => c.EndTime.HasValue && !c.IsCrossed);
         var birdsTotalTicks = record.BirdRecords
-            .Where(w => w.TotalBirdFlyingTime.HasValue)
+            .Where(w => !w.IsCrossed && w.TotalBirdFlyingTime.HasValue)
             .Select(s => s.TotalBirdFlyingTime!.Value.Ticks)
             .DefaultIfEmpty(0)
             .Sum();
 
-        var babyTicks = hasBabyPigeon
-            ? record.BabyBird?.TotalBirdFlyingTime?.Ticks ?? 0
+        var babyTicks = hasBabyPigeon && record.BabyBird is not null && !record.BabyBird.IsCrossed
+            ? record.BabyBird.TotalBirdFlyingTime?.Ticks ?? 0
             : 0;
 
         record.TotalLanded = landedBirds;
@@ -508,6 +414,74 @@ public class FireStoreFunction
         record.BabyPigeonSum = TimeSpan.FromTicks(Math.Max(0, babyTicks));
         record.TotalHours = TimeSpan.FromTicks(Math.Max(0, birdsTotalTicks + babyTicks));
         record.UpdatedAt = DateTime.Now;
+    }
+
+    private static void ApplyPublicBirdRules(PublicTournamentLoftDayRecord record, TimeSpan flyingStartTime, TimeSpan flyingEndTime, int expectedBirdCount, bool hasBabyPigeon)
+    {
+        record.BirdRecords ??= [];
+        var normalizedRecords = record.BirdRecords
+            .OrderBy(o => o.BirdIndex)
+            .Take(expectedBirdCount)
+            .ToList();
+
+        for (var i = 0; i < normalizedRecords.Count; i++)
+        {
+            var bird = normalizedRecords[i];
+            if (bird.BirdIndex <= 0)
+            {
+                bird.BirdIndex = i + 1;
+            }
+
+            ApplySingleBirdRule(record.StartTime, flyingStartTime, flyingEndTime, bird);
+        }
+
+        record.BirdRecords = normalizedRecords;
+
+        if (!hasBabyPigeon)
+        {
+            record.BabyBird = null;
+            return;
+        }
+
+        if (record.BabyBird is not null)
+        {
+            if (record.BabyBird.BirdIndex <= 0)
+            {
+                record.BabyBird.BirdIndex = 1;
+            }
+
+            ApplySingleBirdRule(record.StartTime, flyingStartTime, flyingEndTime, record.BabyBird);
+        }
+    }
+
+    private static void ApplySingleBirdRule(DateTime loftStartDateTime, TimeSpan tournamentStartTime, TimeSpan tournamentEndTime, PublicTournamentBirdRecord bird)
+    {
+        if (!bird.EndTime.HasValue)
+        {
+            bird.IsOvertime = false;
+            bird.IsCrossed = false;
+            bird.TotalBirdFlyingTime = null;
+            return;
+        }
+
+        var start = loftStartDateTime.Date + tournamentStartTime;
+        var end = loftStartDateTime.Date + tournamentEndTime;
+        var landedAt = bird.EndTime.Value;
+
+        if (landedAt < start)
+        {
+            throw new InvalidOperationException($"Bird index {bird.BirdIndex} landing time cannot be before start time.");
+        }
+
+        bird.IsOvertime = landedAt > end;
+
+        if (bird.IsCrossed)
+        {
+            bird.TotalBirdFlyingTime = null;
+            return;
+        }
+
+        bird.TotalBirdFlyingTime = landedAt - start;
     }
 
     private async Task<string> GenerateUniqueCodeByFieldAsync(string fieldName)

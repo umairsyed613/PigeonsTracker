@@ -11,6 +11,7 @@ public class FsPublicTournament
     [FirestoreProperty] public DateTime StartsFrom { get; set; }
     [FirestoreProperty] public DateTime EndTo { get; set; }
     [FirestoreProperty] public long FlyingStartTimeTicks { get; set; }
+    [FirestoreProperty] public long FlyingEndTimeTicks { get; set; }
     [FirestoreProperty] public bool CanManageLoftRecords { get; set; }
 
     [FirestoreProperty] public string ManagerCode { get; set; } = string.Empty;
@@ -63,5 +64,7 @@ public class FsPublicTournamentBirdRecord
 {
     [FirestoreProperty] public int BirdIndex { get; set; }
     [FirestoreProperty] public DateTime? EndTime { get; set; }
+    [FirestoreProperty] public bool IsOvertime { get; set; }
+    [FirestoreProperty] public bool IsCrossed { get; set; }
     [FirestoreProperty] public long? TotalBirdFlyingTimeTicks { get; set; }
 }

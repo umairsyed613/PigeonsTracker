@@ -35,6 +35,10 @@
         </div>
     </div>
 
+    <div class="w-100 mt-3 px-0">
+        <WeatherPanel Location="_location"></WeatherPanel>
+    </div>
+
     <div id="discover" class="w-100 mt-4 card-vibrant p-3 animate__animated animate__faster animate__lightSpeedInRight animate__delay-2s">
         <div class="d-flex flex-row align-items-center mb-3">
             <i class="bi bi-search-heart primary-color fs-4 me-2"></i>
@@ -92,11 +96,11 @@
 
     protected override async Task OnAfterRenderAsync(bool first)
     {
-        // if (first)
-        // {
-        //     await base.OnAfterRenderAsync(first);
-        //     await GetLocation();
-        // }
+        if (first)
+        {
+            await base.OnAfterRenderAsync(first);
+            await GetLocation();
+        }
     }
 
 }

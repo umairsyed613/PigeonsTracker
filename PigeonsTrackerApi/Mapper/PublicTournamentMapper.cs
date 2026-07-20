@@ -15,6 +15,7 @@ public static class PublicTournamentMapper
             StartsFrom = DateTime.SpecifyKind(tournament.StartsFrom, DateTimeKind.Local).ToUniversalTime(),
             EndTo = DateTime.SpecifyKind(tournament.EndTo, DateTimeKind.Local).ToUniversalTime(),
             FlyingStartTimeTicks = tournament.FlyingStartTime.Ticks,
+            FlyingEndTimeTicks = tournament.FlyingEndTime.Ticks,
             CanManageLoftRecords = tournament.CanManageLoftRecords,
             ManagerCode = tournament.ManagerCode,
             ManagerRecoveryKey = tournament.ManagerRecoveryKey,
@@ -47,6 +48,8 @@ public static class PublicTournamentMapper
                         EndTime = b.EndTime.HasValue
                             ? DateTime.SpecifyKind(b.EndTime.Value, DateTimeKind.Local).ToUniversalTime()
                             : null,
+                        IsOvertime = b.IsOvertime,
+                        IsCrossed = b.IsCrossed,
                         TotalBirdFlyingTimeTicks = b.TotalBirdFlyingTime?.Ticks
                     }).ToList(),
                     BabyBird = lr.BabyBird is null
@@ -57,6 +60,8 @@ public static class PublicTournamentMapper
                             EndTime = lr.BabyBird.EndTime.HasValue
                                 ? DateTime.SpecifyKind(lr.BabyBird.EndTime.Value, DateTimeKind.Local).ToUniversalTime()
                                 : null,
+                            IsOvertime = lr.BabyBird.IsOvertime,
+                            IsCrossed = lr.BabyBird.IsCrossed,
                             TotalBirdFlyingTimeTicks = lr.BabyBird.TotalBirdFlyingTime?.Ticks
                         },
                     TotalHoursTicks = lr.TotalHours?.Ticks,
@@ -82,6 +87,9 @@ public static class PublicTournamentMapper
             StartsFrom = DateTime.SpecifyKind(tournament.StartsFrom, DateTimeKind.Utc).ToLocalTime(),
             EndTo = DateTime.SpecifyKind(tournament.EndTo, DateTimeKind.Utc).ToLocalTime(),
             FlyingStartTime = TimeSpan.FromTicks(tournament.FlyingStartTimeTicks),
+            FlyingEndTime = tournament.FlyingEndTimeTicks > 0
+                ? TimeSpan.FromTicks(tournament.FlyingEndTimeTicks)
+                : TimeSpan.FromTicks(tournament.FlyingStartTimeTicks).Add(TimeSpan.FromHours(12)),
             CanManageLoftRecords = tournament.CanManageLoftRecords,
             ManagerCode = tournament.ManagerCode,
             ManagerRecoveryKey = tournament.ManagerRecoveryKey,
@@ -114,6 +122,8 @@ public static class PublicTournamentMapper
                         EndTime = b.EndTime.HasValue
                             ? DateTime.SpecifyKind(b.EndTime.Value, DateTimeKind.Utc).ToLocalTime()
                             : null,
+                        IsOvertime = b.IsOvertime,
+                        IsCrossed = b.IsCrossed,
                         TotalBirdFlyingTime = b.TotalBirdFlyingTimeTicks.HasValue
                             ? TimeSpan.FromTicks(b.TotalBirdFlyingTimeTicks.Value)
                             : null
@@ -126,6 +136,8 @@ public static class PublicTournamentMapper
                             EndTime = lr.BabyBird.EndTime.HasValue
                                 ? DateTime.SpecifyKind(lr.BabyBird.EndTime.Value, DateTimeKind.Utc).ToLocalTime()
                                 : null,
+                            IsOvertime = lr.BabyBird.IsOvertime,
+                            IsCrossed = lr.BabyBird.IsCrossed,
                             TotalBirdFlyingTime = lr.BabyBird.TotalBirdFlyingTimeTicks.HasValue
                                 ? TimeSpan.FromTicks(lr.BabyBird.TotalBirdFlyingTimeTicks.Value)
                                 : null
