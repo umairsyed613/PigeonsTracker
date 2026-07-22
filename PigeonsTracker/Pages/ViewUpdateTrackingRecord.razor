@@ -142,18 +142,35 @@
                         @{ var i = 1; }
                         @foreach (var rec in _record.Records)
                         {
-                            <div class="row mb-2">
+                            var index = i - 1;
+                            <div class="row mb-3">
                                 <div class="col-2 my-1">
                                     @* <label for="@i _1" class="form-label w-100 fs-1 text-center">@Localizer["Nr"]</label> *@
                                     <input type="text" disabled readonly class="form-control text-center" id="@i _1" value="@i">
                                 </div>
-                                <div class="col-5 px-0 my-1">
+                                <div class="col-4 px-0 my-1">
                                     @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
                                     <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@rec.BirdName">
                                 </div>
-                                <div class="col-5 ps-1 my-1">
+                                <div class="col-3 ps-1 my-1">
                                     @* <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
-                                    <input type="time" class="form-control" id="@i _3" step="1" placeholder="@Localizer["LandingTime"]" @bind="@rec.EndTime">
+                                    @if (index < _birdCrossedFlags.Count && !_birdCrossedFlags[index])
+                                    {
+                                        <input type="time" class="form-control" id="@i _3" step="1" placeholder="@Localizer["LandingTime"]" @bind="@rec.EndTime">
+                                    }
+                                    else
+                                    {
+                                        <input type="time" class="form-control" id="@i _3" step="1" placeholder="@Localizer["LandingTime"]" @bind="@rec.EndTime" disabled>
+                                    }
+                                </div>
+                                <div class="col-3 ps-2 my-1 d-flex align-items-center">
+                                    @if (index < _birdCrossedFlags.Count)
+                                    {
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input" @bind="_birdCrossedFlags[index]">
+                                            <span class="ms-2">Crossed</span>
+                                        </label>
+                                    }
                                 </div>
                             </div>
                             i++;
@@ -161,14 +178,27 @@
 
                         @if (_record.BabyBird is not null)
                         {
-                            <div class="row mb-2">
-                                <div class="col-6 ps-3 my-1">
-                                    @* <label for="@i _2" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
-                                    <input type="text" class="form-control" id="@i _2" maxlength="25" @bind="@_record.BabyBird.BirdName">
+                            <div class="row mb-3">
+                                <div class="col-4 ps-3 my-1">
+                                    @* <label for="baby_name" class="form-label w-100 fs-1">@Localizer["BirdsName"]</label> *@
+                                    <input type="text" class="form-control" id="baby_name" maxlength="25" @bind="@_record.BabyBird.BirdName">
                                 </div>
-                                <div class="col-6 ps-1 my-1">
-                                    @* <label for="@i _3" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
-                                    <input type="time" class="form-control" id="@i _3" step="1" placeholder="@Localizer["LandingTime"]" @bind="@_record.BabyBird.EndTime">
+                                <div class="col-3 ps-1 my-1">
+                                    @* <label for="baby_time" class="form-label w-100 fs-1">@Localizer["LandingTime"]</label> *@
+                                    @if (!_babyBirdIsCrossed)
+                                    {
+                                        <input type="time" class="form-control" id="baby_time" step="1" placeholder="@Localizer["LandingTime"]" @bind="@_record.BabyBird.EndTime">
+                                    }
+                                    else
+                                    {
+                                        <input type="time" class="form-control" id="baby_time" step="1" placeholder="@Localizer["LandingTime"]" @bind="@_record.BabyBird.EndTime" disabled>
+                                    }
+                                </div>
+                                <div class="col-3 ps-2 my-1 d-flex align-items-center">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" @bind="_babyBirdIsCrossed">
+                                        <span class="ms-2">Crossed</span>
+                                    </label>
                                 </div>
                             </div>
                         }
@@ -204,6 +234,9 @@
     private bool _isViewMode = true;
     private bool _isShareMode = false;
     private string _errorMessage = null;
+    
+    private List<bool> _birdCrossedFlags = [];
+    private bool _babyBirdIsCrossed = false;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -212,22 +245,35 @@
         {
             _isTrackingOnly = true;
             _record = await TrackingService.GetTracking(TrackingId);
-            return;
-        }
-
-        _tournament = await TrackingService.GetTournament(TournId);
-        if (_tournament == null)
-        {
-            NavigationManager.NavigateTo("/ViewTournament/" + TournId);
         }
         else
         {
-            _record = _tournament.TrackingRecords.FirstOrDefault(f => f.Id == TrackingId);
-
-            if (_record == null)
+            _tournament = await TrackingService.GetTournament(TournId);
+            if (_tournament == null)
             {
                 NavigationManager.NavigateTo("/ViewTournament/" + TournId);
             }
+            else
+            {
+                _record = _tournament.TrackingRecords.FirstOrDefault(f => f.Id == TrackingId);
+
+                if (_record == null)
+                {
+                    NavigationManager.NavigateTo("/ViewTournament/" + TournId);
+                }
+            }
+        }
+        
+        // Initialize crossed flags
+        if (_record != null)
+        {
+            _birdCrossedFlags.Clear();
+            foreach (var bird in _record.Records)
+            {
+                _birdCrossedFlags.Add(bird.IsCrossed);
+            }
+            
+            _babyBirdIsCrossed = _record.BabyBird?.IsCrossed ?? false;
         }
     }
 
@@ -235,38 +281,49 @@
     {
         try
         {
+            // Sync crossed flags back to records
+            for (var i = 0; i < _record.Records.Count && i < _birdCrossedFlags.Count; i++)
+            {
+                _record.Records[i].IsCrossed = _birdCrossedFlags[i];
+            }
+            
+            if (_record.BabyBird != null)
+            {
+                _record.BabyBird.IsCrossed = _babyBirdIsCrossed;
+            }
+            
             if (_isTrackingOnly)
             {
-                foreach (var d in _record.Records.Where(w => w.EndTime != null))
+                foreach (var d in _record.Records.Where(w => w.EndTime != null && !w.IsCrossed))
                 {
-                    var (year, month, day) = _record.StartTime.GetSeparatedDate();
-
-                    if (d.EndTime.Value.Day == day && d.EndTime.Value.Month == month)
-                    {
-                        continue;
-                    }
-
-                    if (d.EndTime == null)
-                    {
-                        continue;
-                    }
-
                     var (hour, minute, second) = d.EndTime.Value.GetSeparatedTime();
+                    var endDate = _record.StartTime.Date;
+                    
+                    // Reconstruct DateTime with the time and start date
+                    var reconstructed = new DateTime(endDate.Year, endDate.Month, endDate.Day, hour, minute, second);
+                    
+                    // If reconstructed time is before start time, the bird likely landed the next day
+                    while (reconstructed <= _record.StartTime)
+                    {
+                        reconstructed = reconstructed.AddDays(1);
+                    }
 
-                    //Console.WriteLine($"Old Datetime : {d.EndTime}");
-
-                    d.EndTime = new DateTime(year, month, day, hour, minute, second);
-
-                    //Console.WriteLine($"New Datetime : {d.EndTime}");
+                    d.EndTime = reconstructed;
                 }
 
                 if (_record.BabyBird?.EndTime != null)
                 {
-                    var (year, month, day) = _record.StartTime.GetSeparatedDate();
-
                     var (hour, minute, second) = _record.BabyBird.EndTime.Value.GetSeparatedTime();
 
-                    _record.BabyBird.EndTime = new DateTime(year, month, day, hour, minute, second);
+                    var endDate = _record.StartTime.Date;
+                    var reconstructed = new DateTime(endDate.Year, endDate.Month, endDate.Day, hour, minute, second);
+                    
+                    while (reconstructed <= _record.StartTime)
+                    {
+                        reconstructed = reconstructed.AddDays(1);
+                    }
+
+                    _record.BabyBird.EndTime = reconstructed;
                 }
 
                 _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);
@@ -282,36 +339,36 @@
             {
                 _tournament.TrackingRecords.Remove(temp);
 
-                foreach (var d in _record.Records.Where(w => w.EndTime != null))
+                foreach (var d in _record.Records.Where(w => w.EndTime != null && !w.IsCrossed))
                 {
-                    var (year, month, day) = _record.StartTime.GetSeparatedDate();
-
-                    if (d.EndTime.Value.Day == day && d.EndTime.Value.Month == month)
-                    {
-                        continue;
-                    }
-
-                    if (d.EndTime == null)
-                    {
-                        continue;
-                    }
-
                     var (hour, minute, second) = d.EndTime.Value.GetSeparatedTime();
+                    var endDate = _record.StartTime.Date;
+                    
+                    // Reconstruct DateTime with the time and start date
+                    var reconstructed = new DateTime(endDate.Year, endDate.Month, endDate.Day, hour, minute, second);
+                    
+                    // If reconstructed time is before start time, the bird likely landed the next day
+                    while (reconstructed <= _record.StartTime)
+                    {
+                        reconstructed = reconstructed.AddDays(1);
+                    }
 
-                    //Console.WriteLine($"Old Datetime : {d.EndTime}");
-
-                    d.EndTime = new DateTime(year, month, day, hour, minute, second);
-
-                    //Console.WriteLine($"New Datetime : {d.EndTime}");
+                    d.EndTime = reconstructed;
                 }
 
                 if (_record.BabyBird?.EndTime != null)
                 {
-                    var (year, month, day) = _record.StartTime.GetSeparatedDate();
-
                     var (hour, minute, second) = _record.BabyBird.EndTime.Value.GetSeparatedTime();
+                    var endDate = _record.StartTime.Date;
+                    
+                    var reconstructed = new DateTime(endDate.Year, endDate.Month, endDate.Day, hour, minute, second);
+                    
+                    while (reconstructed <= _record.StartTime)
+                    {
+                        reconstructed = reconstructed.AddDays(1);
+                    }
 
-                    _record.BabyBird.EndTime = new DateTime(year, month, day, hour, minute, second);
+                    _record.BabyBird.EndTime = reconstructed;
                 }
 
                 _record = PigeonsTrackingRecordTimeCalculator.CalculateHours(_record);

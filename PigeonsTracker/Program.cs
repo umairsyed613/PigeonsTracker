@@ -20,14 +20,25 @@ public class Program
 
             //Console.WriteLine(@"IsProduction : " + builder.HostEnvironment.IsProduction());
             
-            // Configure HttpClient with performance optimizations
-            builder.Services.AddScoped(sp => 
+            // Configure HttpClient with environment-aware API base:
+            // - Local/loopback frontend => use local Functions host (:7071)
+            // - Deployed frontend (Azure/static host) => keep same-origin base
+            builder.Services.AddScoped(sp =>
             {
-                var httpClient = new HttpClient 
-                { 
-                    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
+                var appBaseUri = new Uri(builder.HostEnvironment.BaseAddress);
+                var isLocalHost = appBaseUri.IsLoopback ||
+                                  appBaseUri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase);
+
+                var apiBaseUri = isLocalHost
+                    ? new Uri("http://localhost:7071")
+                    : appBaseUri;
+
+                var httpClient = new HttpClient
+                {
+                    BaseAddress = apiBaseUri,
                     Timeout = TimeSpan.FromSeconds(30)
                 };
+
                 httpClient.DefaultRequestHeaders.ConnectionClose = false;
                 return httpClient;
             });

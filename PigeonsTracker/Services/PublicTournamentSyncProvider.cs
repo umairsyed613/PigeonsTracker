@@ -10,6 +10,7 @@ public class PublicTournamentSyncProvider : ISyncProvider
     private readonly ICacheService _cacheService;
 
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+    private static readonly TimeSpan FullSyncInterval = TimeSpan.FromHours(6);
 
     public string CacheKey => CacheKeys.PublicTournaments;
 
@@ -21,8 +22,13 @@ public class PublicTournamentSyncProvider : ISyncProvider
 
     public async Task<bool> SyncAsync(DateTime? lastSyncAt, CancellationToken ct = default)
     {
-        // Step 1: Cheap check — does anything need updating? (1 Firestore read via Limit(1))
-        if (lastSyncAt.HasValue)
+        var cached = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
+        var previous = cached?.Data ?? [];
+
+        var isFullSyncDue = cached == null || DateTime.UtcNow - cached.CachedAt >= FullSyncInterval;
+
+        // Step 1: Cheap check — skip full fetch when no changes and full sync is not due
+        if (lastSyncAt.HasValue && !isFullSyncDue)
         {
             var sinceParam = lastSyncAt.Value.ToUniversalTime().ToString("O");
             try
@@ -33,48 +39,83 @@ public class PublicTournamentSyncProvider : ISyncProvider
                 if (checkResponse.IsSuccessStatusCode)
                 {
                     var result = await checkResponse.Content.ReadFromJsonAsync<HasChangesResponse>(JsonOptions, ct);
-                    if (result?.HasChanges == false) return false;
+                    if (result?.HasChanges == false)
+                    {
+                        return false;
+                    }
                 }
             }
             catch
             {
-                // If the check fails, skip sync rather than cascade errors
                 return false;
             }
         }
 
-        // Step 2: Fetch delta (or full list if no lastSyncAt)
-        var since = lastSyncAt?.ToUniversalTime().ToString("O");
-        var url = since != null
-            ? $"/api/publictournament/updates?since={Uri.EscapeDataString(since)}"
-            : "/api/publictournament/getall";
-
-        List<PublicTournament>? updates;
+        // Step 2: Fetch authoritative latest list
+        // NOTE: We intentionally use getall here to ensure deleted tournaments are removed from cache.
+        List<PublicTournament> latest;
         try
         {
-            updates = await _httpClient.GetFromJsonAsync<List<PublicTournament>>(url, JsonOptions, ct);
+            latest = await _httpClient.GetFromJsonAsync<List<PublicTournament>>("/api/publictournament/getall", JsonOptions, ct) ?? [];
         }
         catch
         {
             return false;
         }
 
-        if (updates is null or { Count: 0 }) return false;
+        // Step 3: Reconcile against cached list and remove stale per-tournament caches for deleted items
 
-        // Step 3: Merge into cache (upsert by Id)
-        var cached = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
-        var list = cached?.Data ?? [];
+        var latestIds = latest.Select(s => s.Id).ToHashSet(StringComparer.Ordinal);
+        var removedIds = previous
+            .Where(w => !string.IsNullOrWhiteSpace(w.Id) && !latestIds.Contains(w.Id))
+            .Select(s => s.Id)
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
 
-        foreach (var updated in updates)
+        foreach (var removedId in removedIds)
         {
-            var idx = list.FindIndex(t => t.Id == updated.Id);
-            if (idx >= 0)
-                list[idx] = updated;
-            else
-                list.Add(updated);
+            await _cacheService.InvalidateAsync(CacheKeys.TournamentById(removedId));
+            await _cacheService.InvalidateAsync(CacheKeys.BirdIndexSummary(removedId));
+            await _cacheService.InvalidateAsync(CacheKeys.TotalsSummary(removedId));
         }
 
-        await _cacheService.SetAsync(CacheKeys.PublicTournaments, list, DateTime.UtcNow);
+        var hasChanges = !HaveSameCacheFingerprint(previous, latest);
+
+        await _cacheService.SetAsync(CacheKeys.PublicTournaments, latest, DateTime.UtcNow);
+        return hasChanges;
+    }
+
+    private static bool HaveSameCacheFingerprint(IReadOnlyCollection<PublicTournament> left, IReadOnlyCollection<PublicTournament> right)
+    {
+        if (left.Count != right.Count)
+        {
+            return false;
+        }
+
+        var rightById = right
+            .Where(w => !string.IsNullOrWhiteSpace(w.Id))
+            .ToDictionary(k => k.Id, v => v, StringComparer.Ordinal);
+
+        foreach (var leftItem in left)
+        {
+            if (string.IsNullOrWhiteSpace(leftItem.Id))
+            {
+                return false;
+            }
+
+            if (!rightById.TryGetValue(leftItem.Id, out var rightItem))
+            {
+                return false;
+            }
+
+            if (leftItem.UpdatedAt != rightItem.UpdatedAt ||
+                leftItem.CreatedAt != rightItem.CreatedAt ||
+                leftItem.CodeVersion != rightItem.CodeVersion)
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 

@@ -81,7 +81,7 @@
                     <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.Lofts.Count</MudText></MudItem>
                 </MudGrid>
 
-                <MudDivider Class="my-3"></MudDivider>
+                @* <MudDivider Class="my-3"></MudDivider>
                 <MudText Typo="Typo.h6">Lofts</MudText>
                 <MudTable Items="@_tournament.Lofts" Dense="true" Hover="true" Striped="true" Elevation="1">
                     <HeaderContent>
@@ -94,7 +94,7 @@
                         <MudTd DataLabel="@Localizer["TotalBirdsCount"]">@context.BirdCount</MudTd>
                         <MudTd DataLabel="@Localizer["BabyBird"]">@(context.HasBabyPigeon ? "Yes" : "No")</MudTd>
                     </RowTemplate>
-                </MudTable>
+                </MudTable> *@
 
                 <MudDivider Class="my-3"></MudDivider>
                 <MudText Typo="Typo.h6">Day Records</MudText>
@@ -175,7 +175,7 @@
                                 </MudSelect>
                             </MudItem>
                             <MudItem xs="12" md="6">
-                                <MudDatePicker Label="Date of flying" Editable="true" @bind-Date="_selectedFlyingDate" DateFormat="dd.MM.yyyy" />
+                                <MudDatePicker Label="Date of flying" Editable="true" Date="_selectedFlyingDate" DateChanged="OnFlyingDateChanged" DateFormat="dd.MM.yyyy" />
                             </MudItem>
                         </MudGrid>
 
@@ -342,7 +342,7 @@
                             </MudSelect>
                         </MudItem>
                         <MudItem xs="12" md="4">
-                            <MudDatePicker Label="Date of flying" Editable="true" @bind-Date="_selectedFlyingDate" DateFormat="dd.MM.yyyy" />
+                            <MudDatePicker Label="Date of flying" Editable="true" Date="_selectedFlyingDate" DateChanged="OnFlyingDateChanged" DateFormat="dd.MM.yyyy" />
                         </MudItem>
                     </MudGrid>
 
@@ -486,6 +486,9 @@
                 }
             }
 
+            if (_managerAuthenticated || _loftAuthenticated)
+                LoadExistingDayRecordIntoInputs();
+
             StateHasChanged();
         }
     }
@@ -512,6 +515,7 @@
         _managerAuthenticated = true;
         _managerRegenerateCode = _codeRevealAccess;
         _accessCode = _codeRevealAccess;
+        LoadExistingDayRecordIntoInputs();
         Snackbar.Add("Manager access granted", Severity.Success);
     }
 
@@ -533,6 +537,7 @@
         _selectedLoftId = matchingLoft.LoftId;
         RebuildBirdInputRows();
         _loftAuthenticated = true;
+        LoadExistingDayRecordIntoInputs();
         Snackbar.Add("Loft access granted", Severity.Success);
     }
 
@@ -553,6 +558,8 @@
                 _selectedLoftId = _tournament.Lofts.First().LoftId;
                 RebuildBirdInputRows();
             }
+
+            LoadExistingDayRecordIntoInputs();
         }
         catch (Exception ex)
         {
@@ -587,7 +594,47 @@
     {
         _selectedLoftId = loftId;
         RebuildBirdInputRows();
+        LoadExistingDayRecordIntoInputs();
         return Task.CompletedTask;
+    }
+
+    private Task OnFlyingDateChanged(DateTime? date)
+    {
+        _selectedFlyingDate = date;
+        RebuildBirdInputRows();
+        LoadExistingDayRecordIntoInputs();
+        return Task.CompletedTask;
+    }
+
+    private void LoadExistingDayRecordIntoInputs()
+    {
+        if (!_selectedFlyingDate.HasValue || _selectedLoft is null || _tournament is null)
+            return;
+
+        var existingDay = _tournament.DayRecords
+            .FirstOrDefault(d => d.Date.Date == _selectedFlyingDate.Value.Date);
+        if (existingDay is null) return;
+
+        var existingLoft = existingDay.LoftRecords
+            .FirstOrDefault(l => l.LoftId == _selectedLoftId);
+        if (existingLoft is null) return;
+
+        foreach (var bird in existingLoft.BirdRecords)
+        {
+            var i = bird.BirdIndex - 1;
+            if (i >= 0 && i < _birdEndTimes.Count)
+            {
+                _birdEndTimes[i] = bird.EndTime;
+                if (i < _birdCrossedFlags.Count)
+                    _birdCrossedFlags[i] = bird.IsCrossed;
+            }
+        }
+
+        if (_selectedLoft.HasBabyPigeon && existingLoft.BabyBird is not null)
+        {
+            _babyBirdEndTime = existingLoft.BabyBird.EndTime;
+            _babyBirdIsCrossed = existingLoft.BabyBird.IsCrossed;
+        }
     }
 
     private async Task SaveLoftDayRecord()
@@ -625,17 +672,32 @@
             var end = _birdEndTimes[i];
             var isCrossed = _birdCrossedFlags.Count > i && _birdCrossedFlags[i];
 
+            // Skip birds with no data (allows partial updates)
+            if (!end.HasValue && !isCrossed)
+            {
+                continue;
+            }
+
             if (end.HasValue && end.Value < start)
             {
                 Snackbar.Add($"Bird{i + 1} time cannot be before start time", Severity.Warning);
                 return;
             }
 
-            if (isCrossed && !end.HasValue)
+            // If bird is crossed, landing time should NOT be provided
+            if (isCrossed && end.HasValue)
             {
-                Snackbar.Add($"Bird{i + 1} must have landing time if marked crossed", Severity.Warning);
+                Snackbar.Add($"Bird{i + 1} marked as crossed - do not provide landing time", Severity.Warning);
                 return;
             }
+
+            // If bird is NOT crossed but has a landing time provided, validate it
+            if (!isCrossed && end.HasValue)
+            {
+                // Valid: has landing time and not crossed
+            }
+            // If bird IS crossed, it's valid even without landing time
+            // If bird has NO data and is NOT crossed, it's skipped (partial update)
 
             var isOvertime = end.HasValue && end.Value > dayEnd;
 
@@ -656,7 +718,7 @@
         }
 
         PublicTournamentBirdRecord babyBird = null;
-        if (_selectedLoft.HasBabyPigeon)
+        if (_selectedLoft.HasBabyPigeon && (_babyBirdEndTime.HasValue || _babyBirdIsCrossed))
         {
             if (_babyBirdEndTime.HasValue && _babyBirdEndTime.Value < start)
             {
@@ -664,10 +726,17 @@
                 return;
             }
 
-            if (_babyBirdIsCrossed && !_babyBirdEndTime.HasValue)
+            // If baby bird is crossed, landing time should NOT be provided
+            if (_babyBirdIsCrossed && _babyBirdEndTime.HasValue)
             {
-                Snackbar.Add("Baby pigeon must have landing time if marked crossed", Severity.Warning);
+                Snackbar.Add("Baby pigeon marked as crossed - do not provide landing time", Severity.Warning);
                 return;
+            }
+
+            // If baby bird is NOT crossed but has a landing time provided, validate it
+            if (!_babyBirdIsCrossed && _babyBirdEndTime.HasValue)
+            {
+                // Valid: has landing time and not crossed
             }
 
             var babyIsOvertime = _babyBirdEndTime.HasValue && _babyBirdEndTime.Value > dayEnd;

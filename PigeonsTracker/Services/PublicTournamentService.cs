@@ -60,27 +60,45 @@ public class PublicTournamentService : IPublicTournamentService
 
     public async Task<PublicTournament> GetPublicTournament(string id)
     {
-        // Try to find in cached list first
+        // 1. Try the list cache (populated by AllTournaments)
         if (await _cacheService.HasCacheAsync(CacheKeys.PublicTournaments))
         {
-            var cached = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
-            var found = cached?.Data?.FirstOrDefault(t => t.Id == id);
+            var list = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
+            var found = list?.Data?.FirstOrDefault(t => t.Id == id);
             if (found != null) return found;
         }
 
-        return await GetJsonWithFallback<PublicTournament>($"/api/publictournament/get/{id}");
+        // 2. Try the per-tournament cache (populated on direct load)
+        var perTournamentKey = CacheKeys.TournamentById(id);
+        if (await _cacheService.HasCacheAsync(perTournamentKey))
+        {
+            var cached = await _cacheService.GetAsync<PublicTournament>(perTournamentKey);
+            if (cached?.Data != null) return cached.Data;
+        }
+
+        // 3. Fetch from API and cache individually
+        var data = await GetJsonWithFallback<PublicTournament>($"/api/publictournament/get/{id}");
+        if (data != null)
+            await _cacheService.SetAsync(perTournamentKey, data);
+        return data;
     }
 
     public async Task<PublicTournament> CreatePublicTournament(PublicTournament tournament)
     {
         var result = await PostJsonWithFallback<PublicTournament, PublicTournament>("/api/publictournament/create", tournament);
-        // Add new tournament to cache
-        if (result != null && await _cacheService.HasCacheAsync(CacheKeys.PublicTournaments))
+        if (result != null)
         {
-            var cached = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
-            var list = cached?.Data ?? [];
-            list.Add(result);
-            await _cacheService.SetAsync(CacheKeys.PublicTournaments, list);
+            // Cache the new tournament individually
+            await _cacheService.SetAsync(CacheKeys.TournamentById(result.Id), result);
+
+            // Also add to the list cache if it exists
+            if (await _cacheService.HasCacheAsync(CacheKeys.PublicTournaments))
+            {
+                var cached = await _cacheService.GetAsync<List<PublicTournament>>(CacheKeys.PublicTournaments);
+                var list = cached?.Data ?? [];
+                list.Add(result);
+                await _cacheService.SetAsync(CacheKeys.PublicTournaments, list);
+            }
         }
         return result;
     }
@@ -88,8 +106,8 @@ public class PublicTournamentService : IPublicTournamentService
     public async Task<PublicTournamentDayRecord> UpsertDayRecord(PublicTournamentUpsertDayRecordRequest request)
     {
         var result = await PostJsonWithFallback<PublicTournamentUpsertDayRecordRequest, PublicTournamentDayRecord>("/api/publictournament/dayrecord/upsert", request);
-        // Invalidate tournament cache and related summary caches
         await _cacheService.InvalidateAsync(CacheKeys.PublicTournaments);
+        await _cacheService.InvalidateAsync(CacheKeys.TournamentById(request.TournamentId));
         await _cacheService.InvalidateAsync(CacheKeys.BirdIndexSummary(request.TournamentId));
         await _cacheService.InvalidateAsync(CacheKeys.TotalsSummary(request.TournamentId));
         return result;
@@ -99,6 +117,7 @@ public class PublicTournamentService : IPublicTournamentService
     {
         var result = await PostJsonWithFallback<PublicTournamentRegenerateCodesRequest, PublicTournamentRegenerateCodesResponse>("/api/publictournament/codes/regenerate", request);
         await _cacheService.InvalidateAsync(CacheKeys.PublicTournaments);
+        await _cacheService.InvalidateAsync(CacheKeys.TournamentById(request.TournamentId));
         return result;
     }
 
