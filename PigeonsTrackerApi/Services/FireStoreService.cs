@@ -60,6 +60,16 @@ public class FireStoreService<T> : IFireStoreService<T>
         return querySnapshot.Documents.Select(snapshot => snapshot.ToDictionary()).ToList();
     }
 
+    public async Task<List<FireStoreObjectResponse<T>>> GetDocumentObjectsAsync()
+    {
+        var querySnapshot = await _collection.GetSnapshotAsync();
+        return querySnapshot.Documents.Select(doc => new FireStoreObjectResponse<T>
+        {
+            Id = doc.Id,
+            Data = doc.ConvertTo<T>()
+        }).ToList();
+    }
+
     public async Task<List<FireStoreObjectResponse<T>>> QueryDocumentsAsync(string fieldName, object fieldValue)
     {
         var query = _collection.WhereEqualTo(fieldName, fieldValue);
@@ -72,6 +82,26 @@ public class FireStoreService<T> : IFireStoreService<T>
                 Id = doc.Id,
                 Data = dd
             };
+        }).ToList();
+    }
+
+    public async Task<bool> HasDocumentsUpdatedSinceAsync(string fieldName, DateTime since)
+    {
+        var utcSince = DateTime.SpecifyKind(since, DateTimeKind.Utc);
+        var query = _collection.WhereGreaterThanOrEqualTo(fieldName, utcSince).Limit(1);
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Count > 0;
+    }
+
+    public async Task<List<FireStoreObjectResponse<T>>> QueryDocumentsSinceAsync(string fieldName, DateTime since)
+    {
+        var utcSince = DateTime.SpecifyKind(since, DateTimeKind.Utc);
+        var query = _collection.WhereGreaterThanOrEqualTo(fieldName, utcSince);
+        var querySnapshot = await query.GetSnapshotAsync();
+        return querySnapshot.Documents.Select(doc => new FireStoreObjectResponse<T>
+        {
+            Id = doc.Id,
+            Data = doc.ConvertTo<T>()
         }).ToList();
     }
 }

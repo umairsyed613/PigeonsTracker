@@ -28,8 +28,8 @@ var host = new HostBuilder()
         }.Build();
 
         services.AddSingleton(fdb);
-        AddFirestoreService<FsTournament>(services, "Tournaments");
-        AddFirestoreService<FsUserApproved>(services, "ApprovedUsers");
+        AddFirestoreService<FsPublicTournament>(services, "PublicTournaments");
+        AddFirestoreService<FsPigeonDiseaseAndCure>(services, "PigeonsDiseaseAndCure");
         services.AddHttpClient();
     })
     .Build();

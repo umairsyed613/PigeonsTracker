@@ -9,16 +9,25 @@ public static class PigeonsTrackingRecordTimeCalculator
     {
         foreach (var rec in trackingRecord.Records)
         {
-            if (rec.EndTime.HasValue)
+            // Only calculate flying time if bird landed and is not crossed
+            if (rec.EndTime.HasValue && !rec.IsCrossed)
             {
                 rec.TotalBirdFlyingTime = rec.EndTime.Value.Subtract(trackingRecord.StartTime);
                 //Console.WriteLine($"Total Bird Hours:Minutes : {rec.TotalBirdFlyingTime.Value.ToString(@"hh\:mm\:ss")}");
             }
+            else
+            {
+                rec.TotalBirdFlyingTime = null;
+            }
         }
 
-        if (trackingRecord.BabyBird?.EndTime != null)
+        if (trackingRecord.BabyBird?.EndTime != null && !trackingRecord.BabyBird.IsCrossed)
         {
             trackingRecord.BabyBird.TotalBirdFlyingTime = trackingRecord.BabyBird.EndTime.Value.Subtract(trackingRecord.StartTime);
+        }
+        else if (trackingRecord.BabyBird != null)
+        {
+            trackingRecord.BabyBird.TotalBirdFlyingTime = null;
         }
 
         var temp = trackingRecord.Records.Where(w => w.TotalBirdFlyingTime != null).Select(s => s.TotalBirdFlyingTime.Value).ToList();

@@ -1,204 +1,459 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
+    <!--
+    Microsoft ResX Schema
 
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+    <xsd:schema id="root"
+        xmlns=""
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
         </xsd:element>
     </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
     <resheader name="version">
-        <value>1.3</value>
+        <value>2.0</value>
     </resheader>
     <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="MainPageTitle" xml:space="preserve">
         <value>اپنے کبوتر کو فالو کریں</value>
+        <comment/>
     </data>
     <data name="MainPageContent" xml:space="preserve">
         <value>ہماری نئی ایپ میں خوش آمدید۔ زبان بدلنے کے لیے اوپری دائیں بٹن کا استعمال کریں۔</value>
+        <comment/>
     </data>
     <data name="TournamentName" xml:space="preserve">
         <value>ٹورنامنٹ کا نام</value>
+        <comment/>
     </data>
     <data name="TournamentType1" xml:space="preserve">
         <value>ٹورنامنٹ</value>
+        <comment/>
     </data>
     <data name="TournamentType2" xml:space="preserve">
         <value>پریکٹس میچ</value>
+        <comment/>
     </data>
     <data name="TournamentType" xml:space="preserve">
         <value>ٹورنامنٹ کی قسم منتخب کریں</value>
+        <comment/>
     </data>
     <data name="CreateTournament" xml:space="preserve">
         <value>ٹورنامنٹ بنائیں</value>
+        <comment/>
     </data>
     <data name="HelpTournamentName" xml:space="preserve">
         <value>براہ کرم ٹورنامنٹ کا نام فراہم کریں</value>
+        <comment/>
     </data>
     <data name="TrackingTileText" xml:space="preserve">
         <value>ٹریکنگ</value>
+        <comment/>
     </data>
     <data name="InfoText" xml:space="preserve">
         <value>معلومات</value>
+        <comment/>
     </data>
     <data name="Contact" xml:space="preserve">
         <value>رابطہ کریں</value>
+        <comment/>
     </data>
     <data name="HomePage" xml:space="preserve">
         <value>ہوم پیج</value>
+        <comment/>
     </data>
     <data name="AllTournaments" xml:space="preserve">
         <value>تمام ٹورنامنٹ یا مشقین</value>
+        <comment/>
     </data>
     <data name="TournamentStartDate" xml:space="preserve">
         <value>شروع</value>
+        <comment/>
     </data>
     <data name="TournamentEndDate" xml:space="preserve">
         <value>اختتام</value>
+        <comment/>
     </data>
     <data name="Submit" xml:space="preserve">
         <value>اسٹور کرائیں</value>
+        <comment/>
     </data>
     <data name="InfoPageContextP1" xml:space="preserve">
         <value>کبوتر ٹریکر کی ایپلی کیشن آپ کو ٹورنامنٹ کو اسٹور کرنے یا میچ اسکور کی مشق کرنے میں مدد دیتی ہے اور آپ کو اپنے دوستوں اور گروپس میں مواد کو شیئر کرنے کی اہلیت فراہم کرتی ہے۔</value>
+        <comment/>
     </data>
     <data name="ContactUsTitle" xml:space="preserve">
         <value>ہم سے رابطہ کریں</value>
+        <comment/>
     </data>
     <data name="InstallThisApplication" xml:space="preserve">
         <value>یہ ایپ انسٹال کریں؟</value>
+        <comment/>
     </data>
     <data name="Start" xml:space="preserve">
         <value>شروع</value>
+        <comment/>
     </data>
     <data name="End" xml:space="preserve">
         <value>ختم</value>
+        <comment/>
     </data>
     <data name="PigeonsDiseasesAndCure" xml:space="preserve">
         <value>بیماریوں اور علاج</value>
+        <comment/>
     </data>
     <data name="ChangeLanguage" xml:space="preserve">
         <value>زبان تبدیل کریں</value>
+        <comment/>
     </data>
     <data name="CreateTrackingRecord" xml:space="preserve">
         <value>ٹریکنگ ریکارڈ بنائیں</value>
+        <comment/>
     </data>
     <data name="TotalBirdsCount" xml:space="preserve">
         <value>کل پرندے</value>
+        <comment/>
     </data>
     <data name="FlyingStartTime" xml:space="preserve">
         <value>فلائنگ اسٹارٹ ٹائم</value>
+        <comment/>
+    </data>
+    <data name="FlyingEndTime" xml:space="preserve">
+        <value>فلائنگ اینڈ ٹائم</value>
+        <comment/>
     </data>
     <data name="FlyingDayRecord" xml:space="preserve">
         <value>فلائنگ ڈے ریکارڈ</value>
+        <comment/>
     </data>
     <data name="Update" xml:space="preserve">
         <value>اپ ڈیٹ</value>
+        <comment/>
     </data>
     <data name="UpdateTrackingRecord" xml:space="preserve">
         <value>ٹریکنگ ریکارڈ اپ ڈیٹ</value>
+        <comment/>
     </data>
     <data name="BirdsName" xml:space="preserve">
         <value>پرندے کا نام</value>
+        <comment/>
     </data>
     <data name="LandingTime" xml:space="preserve">
         <value>لینڈنگ ٹائم</value>
+        <comment/>
     </data>
     <data name="TotalTime" xml:space="preserve">
         <value>کل وقت</value>
+        <comment/>
     </data>
     <data name="Nr" xml:space="preserve">
         <value>نمبر</value>
+        <comment/>
     </data>
     <data name="TotalHours" xml:space="preserve">
         <value>کل گھنٹے</value>
+        <comment/>
     </data>
     <data name="RoofName" xml:space="preserve">
         <value>چھت کا نام</value>
+        <comment/>
     </data>
     <data name="Copy" xml:space="preserve">
         <value>کاپی</value>
+        <comment/>
     </data>
     <data name="FlyingStartDate" xml:space="preserve">
         <value>فلائنگ ڈے</value>
+        <comment/>
     </data>
     <data name="BirdsInformation" xml:space="preserve">
         <value>پرندوں کی معلومات</value>
+        <comment/>
     </data>
     <data name="ShareFormatText" xml:space="preserve">
         <value>جب آپ اسے استعمال کریں گے تو نقل شدہ متن کی شکل درست ہوگی۔</value>
+        <comment/>
     </data>
     <data name="TotalAverage" xml:space="preserve">
         <value>کل ایوریج</value>
+        <comment/>
     </data>
     <data name="Type" xml:space="preserve">
         <value>قسم</value>
+        <comment/>
     </data>
     <data name="Landed" xml:space="preserve">
         <value>اترا</value>
+        <comment/>
     </data>
     <data name="Average" xml:space="preserve">
         <value>ایوریج</value>
+        <comment/>
     </data>
     <data name="ComingSoon" xml:space="preserve">
         <value>جلد آرہا ہے۔</value>
+        <comment/>
     </data>
     <data name="NoRecords" xml:space="preserve">
         <value>کوئی ریکارڈ نہیں ملا، براہ کرم نیچے + بٹن دبا کر نئے ریکارڈ بنائیں</value>
+        <comment/>
     </data>
     <data name="TrackingRecord" xml:space="preserve">
         <value>ٹریکنگ ریکارڈ</value>
+        <comment/>
     </data>
     <data name="MyTournaments" xml:space="preserve">
         <value>میرے ٹورنامنٹس</value>
+        <comment/>
     </data>
     <data name="Settings" xml:space="preserve">
         <value>سیٹنگ</value>
+        <comment/>
     </data>
     <data name="HowToUse" xml:space="preserve">
         <value>استعمال کرنے کا طریقہ</value>
+        <comment/>
     </data>
     <data name="Private" xml:space="preserve">
         <value>پراویٹ</value>
+        <comment/>
     </data>
     <data name="BabyBird" xml:space="preserve">
         <value>بچه</value>
+        <comment/>
     </data>
     <data name="BabyBirdName" xml:space="preserve">
         <value>بچے کا نام</value>
+        <comment/>
     </data>
     <data name="Summary" xml:space="preserve">
         <value>خلاصہ</value>
+        <comment/>
     </data>
     <data name="ViewSummary" xml:space="preserve">
         <value>خلاصہ دیکھیں</value>
+        <comment/>
     </data>
     <data name="BackToTournament" xml:space="preserve">
         <value>ٹورنامنٹ پر واپس جائیں</value>
+        <comment/>
     </data>
     <data name="DateOfRecord" xml:space="preserve">
         <value>ریکارڈ کی تاریخ</value>
+        <comment/>
     </data>
     <data name="TotalLanded" xml:space="preserve">
         <value>کل اترے</value>
+        <comment/>
     </data>
     <data name="NotLanded" xml:space="preserve">
         <value>نہ اترے</value>
+        <comment/>
     </data>
     <data name="BabyBirdTime" xml:space="preserve">
         <value>بچے کا وقت</value>
+        <comment/>
     </data>
     <data name="TotalDayTime" xml:space="preserve">
         <value>دن کا کل مجموعہ</value>
+        <comment/>
     </data>
     <data name="Total" xml:space="preserve">
         <value>کل</value>
+        <comment/>
+    </data>
+    <data name="BabyPigeon" xml:space="preserve">
+        <value>بچہ</value>
+        <comment/>
+    </data>
+    <data name="AllowLoftOwnersToUpdateRecordsWithCode" xml:space="preserve">
+        <value>چھت مالکان کو کوڈ سے ریکارڈ اپ ڈیٹ کرنے کی اجازت دیں</value>
+        <comment/>
+    </data>
+    <data name="TournamentInfoSection" xml:space="preserve">
+        <value>ٹورنامنٹ کی معلومات</value>
+        <comment/>
+    </data>
+    <data name="BirdConfigurationSection" xml:space="preserve">
+        <value>پرندوں کی ترتیب</value>
+        <comment/>
+    </data>
+    <data name="AppliesToAllLofts" xml:space="preserve">
+        <value>(تمام چھتیں پر لاگو)</value>
+        <comment/>
+    </data>
+    <data name="LoftsSection" xml:space="preserve">
+        <value>چھتیں</value>
+        <comment/>
+    </data>
+    <data name="LoftName" xml:space="preserve">
+        <value>چھت کا نام</value>
+        <comment/>
+    </data>
+    <data name="Add" xml:space="preserve">
+        <value>شامل کریں</value>
+        <comment/>
+    </data>
+    <data name="NoLoftsAddedYet" xml:space="preserve">
+        <value>ابھی تک کوئی چھت شامل نہیں کی گئی</value>
+        <comment/>
+    </data>
+    <data name="Creating" xml:space="preserve">
+        <value>بن رہا ہے...</value>
+        <comment/>
+    </data>
+    <data name="CreatePublicTournament" xml:space="preserve">
+        <value>عوامی ٹورنامنٹ بنائیں</value>
+        <comment/>
+    </data>
+    <data name="ManagerCode" xml:space="preserve">
+        <value>مینیجر کوڈ:</value>
+        <comment/>
+    </data>
+    <data name="RecoveryKey" xml:space="preserve">
+        <value>ریکوری کی:</value>
+        <comment/>
+    </data>
+    <data name="SavedOnDeviceAsManagerCredentials" xml:space="preserve">
+        <value>اس ڈیوائس پر مینیجر اسناد کے طور پر محفوظ ہوگیا</value>
+        <comment/>
+    </data>
+    <data name="LoftNameIsRequired" xml:space="preserve">
+        <value>چھت کا نام ضروری ہے</value>
+        <comment/>
+    </data>
+    <data name="LoftNameAlreadyExists" xml:space="preserve">
+        <value>چھت کا نام پہلے سے موجود ہے</value>
+        <comment/>
+    </data>
+    <data name="AddAtLeastOneLoft" xml:space="preserve">
+        <value>کم از کم ایک لفٹ شامل کریں</value>
+        <comment/>
+    </data>
+    <data name="SelectStartAndEndDates" xml:space="preserve">
+        <value>شروع اور اختتام کی تاریخ منتخب کریں</value>
+        <comment/>
+    </data>
+    <data name="EndDateMustBeAfterStartDate" xml:space="preserve">
+        <value>اختتام کی تاریخ شروع کی تاریخ کے بعد ہونی چاہیے</value>
+        <comment/>
+    </data>
+    <data name="FlyingEndTimeMustBeAfterStartTime" xml:space="preserve">
+        <value>فلائنگ اختتامی وقت، ابتدائی وقت کے بعد ہونا چاہیے</value>
+        <comment/>
+    </data>
+    <data name="PublicTournamentCreated" xml:space="preserve">
+        <value>عوامی ٹورنامنٹ بنایا گیا</value>
+        <comment/>
+    </data>
+    <data name="CreateFailed" xml:space="preserve">
+        <value>بنانا ناکام ہوا</value>
+        <comment/>
     </data>
 </root>

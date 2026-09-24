@@ -6,7 +6,7 @@
 @inject AppState AppState
 
 <PagesBase>
-    <div class="d-flex flex-column py-2 @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+    <div class="d-flex flex-column py-2">
         @if (_tournament != null)
         {
             <div class="d-flex flex-row align-items-center justify-content-between gap-2 flex-wrap">

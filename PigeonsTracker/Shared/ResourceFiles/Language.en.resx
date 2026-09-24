@@ -86,6 +86,9 @@
     <data name="FlyingStartTime" xml:space="preserve">
         <value>Flying Start Time</value>
     </data>
+    <data name="FlyingEndTime" xml:space="preserve">
+        <value>Flying End Time</value>
+    </data>
     <data name="FlyingDayRecord" xml:space="preserve">
         <value>Flying Day Record</value>
     </data>
@@ -193,5 +196,71 @@
     </data>
     <data name="Total" xml:space="preserve">
         <value>Total</value>
+    </data>
+    <data name="BabyPigeon" xml:space="preserve">
+        <value>Baby Pigeon</value>
+    </data>
+    <data name="AllowLoftOwnersToUpdateRecordsWithCode" xml:space="preserve">
+        <value>Allow loft owners to update records with a code</value>
+    </data>
+    <data name="TournamentInfoSection" xml:space="preserve">
+        <value>Tournament info</value>
+    </data>
+    <data name="BirdConfigurationSection" xml:space="preserve">
+        <value>Bird configuration</value>
+    </data>
+    <data name="AppliesToAllLofts" xml:space="preserve">
+        <value>(applies to all lofts)</value>
+    </data>
+    <data name="LoftsSection" xml:space="preserve">
+        <value>Lofts</value>
+    </data>
+    <data name="LoftName" xml:space="preserve">
+        <value>Loft name</value>
+    </data>
+    <data name="Add" xml:space="preserve">
+        <value>Add</value>
+    </data>
+    <data name="NoLoftsAddedYet" xml:space="preserve">
+        <value>No lofts added yet.</value>
+    </data>
+    <data name="Creating" xml:space="preserve">
+        <value>Creating...</value>
+    </data>
+    <data name="CreatePublicTournament" xml:space="preserve">
+        <value>Create Public Tournament</value>
+    </data>
+    <data name="ManagerCode" xml:space="preserve">
+        <value>Manager code:</value>
+    </data>
+    <data name="RecoveryKey" xml:space="preserve">
+        <value>Recovery key:</value>
+    </data>
+    <data name="SavedOnDeviceAsManagerCredentials" xml:space="preserve">
+        <value>Saved on this device as manager credentials.</value>
+    </data>
+    <data name="LoftNameIsRequired" xml:space="preserve">
+        <value>Loft name is required</value>
+    </data>
+    <data name="LoftNameAlreadyExists" xml:space="preserve">
+        <value>Loft name already exists</value>
+    </data>
+    <data name="AddAtLeastOneLoft" xml:space="preserve">
+        <value>Add at least one loft</value>
+    </data>
+    <data name="SelectStartAndEndDates" xml:space="preserve">
+        <value>Select start and end dates</value>
+    </data>
+    <data name="EndDateMustBeAfterStartDate" xml:space="preserve">
+        <value>End date must be after start date</value>
+    </data>
+    <data name="FlyingEndTimeMustBeAfterStartTime" xml:space="preserve">
+        <value>Flying end time must be after flying start time</value>
+    </data>
+    <data name="PublicTournamentCreated" xml:space="preserve">
+        <value>Public tournament created</value>
+    </data>
+    <data name="CreateFailed" xml:space="preserve">
+        <value>Create failed</value>
     </data>
 </root>

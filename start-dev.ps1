@@ -4,32 +4,46 @@ param()
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSCommandPath
+$setupScript = Join-Path $repoRoot "setup-functions-tools.ps1"
 $frontendProject = Join-Path $repoRoot "PigeonsTracker\PigeonsTracker.csproj"
-$apiProject = Join-Path $repoRoot "PigeonsTrackerApi\PigeonsTrackerApi.csproj"
+$apiDir = Join-Path $repoRoot "PigeonsTrackerApi"
 
 if (-not (Test-Path $frontendProject)) {
     throw "Frontend project not found: $frontendProject"
 }
 
-if (-not (Test-Path $apiProject)) {
-    throw "API project not found: $apiProject"
+if (-not (Test-Path $apiDir)) {
+    throw "API directory not found: $apiDir"
 }
 
-function Ensure-FunctionsCoreTools {
+if (-not (Test-Path $setupScript)) {
+    throw "Setup script not found: $setupScript"
+}
+
+function Ensure-FunctionsTools {
     $funcCommand = Get-Command func -ErrorAction SilentlyContinue
     if ($null -ne $funcCommand) {
         return
     }
 
-    Write-Host "Azure Functions Core Tools not found. Installing with npm..." -ForegroundColor Yellow
-    & npm install -g azure-functions-core-tools@4 --unsafe-perm true
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to install Azure Functions Core Tools. Install manually with: npm install -g azure-functions-core-tools@4 --unsafe-perm true"
-    }
-
+    Write-Host "Azure Functions Core Tools not found. Running setup..." -ForegroundColor Yellow
+    & $setupScript
+    
     $funcCommand = Get-Command func -ErrorAction SilentlyContinue
     if ($null -eq $funcCommand) {
-        throw "Azure Functions Core Tools installation completed but 'func' is still unavailable. Restart your terminal and run start-dev.ps1 again."
+        throw "Failed to set up Azure Functions Core Tools. Run setup-functions-tools.ps1 manually."
+    }
+}
+
+function Load-LocalSettings {
+    $localSettingsPath = Join-Path $apiDir "local.settings.json"
+    if (Test-Path $localSettingsPath) {
+        Write-Host "Loading local settings..." -ForegroundColor Gray
+        $settings = Get-Content $localSettingsPath -Raw | ConvertFrom-Json
+        foreach ($key in $settings.Values.PSObject.Properties.Name) {
+            $value = $settings.Values.$key
+            [Environment]::SetEnvironmentVariable($key, $value, "Process")
+        }
     }
 }
 
@@ -47,25 +61,29 @@ function Stop-Watchers {
 }
 
 function Start-Watchers {
-    Write-Host "`nStarting frontend with dotnet watch and API with dotnet run..." -ForegroundColor Cyan
+    Write-Host "`nStarting frontend with dotnet watch and API with func start..." -ForegroundColor Cyan
 
     $script:frontendJob = Start-Job `
         -Name "frontend-watch" `
         -ScriptBlock {
             param($projectPath, $rootPath)
+            [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+            $OutputEncoding = [System.Text.Encoding]::UTF8
             Set-Location $rootPath
             & dotnet watch --project $projectPath run 2>&1 | ForEach-Object { "[frontend] $_" }
         } `
         -ArgumentList @($frontendProject, $repoRoot)
 
     $script:apiJob = Start-Job `
-        -Name "api-watch" `
+        -Name "api-func" `
         -ScriptBlock {
-            param($projectPath, $rootPath)
-            Set-Location (Split-Path -Parent $projectPath)
-            & dotnet run --project $projectPath 2>&1 | ForEach-Object { "[api] $_" }
+            param($apiPath)
+            [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+            $OutputEncoding = [System.Text.Encoding]::UTF8
+            Set-Location $apiPath
+            & dotnet run 2>&1 | ForEach-Object { "[api] $_" }
         } `
-        -ArgumentList @($apiProject, $repoRoot)
+        -ArgumentList @($apiDir)
 
     $script:reportedExitedJobs = @{}
 
@@ -73,9 +91,10 @@ function Start-Watchers {
 }
 
 try {
-    Ensure-FunctionsCoreTools
+    Ensure-FunctionsTools
+    Load-LocalSettings
     Write-Host "Dev launcher ready." -ForegroundColor Green
-    Write-Host "Press Ctrl+R to restart frontend watch and API run. Press Ctrl+C to stop." -ForegroundColor Yellow
+    Write-Host "Press Ctrl+R to restart frontend and API. Press Ctrl+C to stop." -ForegroundColor Yellow
 
     Start-Watchers
 
