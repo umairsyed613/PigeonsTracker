@@ -21,6 +21,8 @@ public class FsPublicTournament
     [FirestoreProperty] public DateTime? LastCodeRegeneratedAt { get; set; }
     [FirestoreProperty] public DateTime? UpdatedAt { get; set; }
 
+    [FirestoreProperty] public string? PosterImage { get; set; }
+
     [FirestoreProperty] public List<FsPublicTournamentLoft> Lofts { get; set; } = [];
     [FirestoreProperty] public List<FsPublicTournamentDayRecord> DayRecords { get; set; } = [];
 }

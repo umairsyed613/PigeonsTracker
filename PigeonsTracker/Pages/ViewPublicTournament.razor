@@ -17,16 +17,12 @@
     }
     else
     {
-        <div class="d-flex flex-column py-2 @(AppState.IsLanguageUrdu() ? "rtl" : "")">
+        <div class="d-flex flex-column py-2">
 
             @* ── Page Header ──────────────────────────────────────────────── *@
             <div class="d-flex flex-row align-items-center gap-2 mb-2 flex-wrap">
-                <MudMenu Icon="@Icons.Material.Filled.Menu"
-                         IconSize="Size.Medium"
-                         AnchorOrigin="Origin.BottomLeft"
-                         TransformOrigin="Origin.TopLeft"
-                         Dense="true"
-                         title="Switch view">
+                <MudMenu Icon="@Icons.Material.Filled.Menu" IconSize="Size.Medium" AnchorOrigin="Origin.BottomLeft"
+                         TransformOrigin="Origin.TopLeft" Dense="true" title="Switch view">
                     <MudMenuItem Icon="@Icons.Material.Filled.Visibility"
                                  IconColor="@(_currentMode == ViewMode.SimpleView ? Color.Primary : Color.Default)"
                                  OnClick='() => SetMode(ViewMode.SimpleView)'>
@@ -48,19 +44,18 @@
 
                 @if (_currentMode != ViewMode.SimpleView)
                 {
-                    <MudChip T="string"
-                             Color="@(_currentMode == ViewMode.ManagerView ? Color.Error : Color.Info)"
-                             Variant="Variant.Filled"
-                             Size="Size.Small"
-                             Class="ms-auto">
+                    <MudChip T="string" Color="@(_currentMode == ViewMode.ManagerView ? Color.Error : Color.Info)"
+                             Variant="Variant.Filled" Size="Size.Small" Class="ms-auto">
                         @(_currentMode == ViewMode.ManagerView ? "Manager" : "Loft User")
                     </MudChip>
                 }
                 else
                 {
                     <div class="ms-auto d-flex gap-1">
-                        <MudButton Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.TableView" OnClick="NavigateToBirdSummary">Bird Index @Localizer["Summary"]</MudButton>
-                        <MudButton Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.TableRows" OnClick="NavigateToTotalsSummary">@Localizer["Summary"] (@Localizer["Total"])</MudButton>
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.TableView"
+                                   OnClick="NavigateToBirdSummary">Bird Index @Localizer["Summary"]</MudButton>
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.TableRows"
+                                   OnClick="NavigateToTotalsSummary">@Localizer["Summary"] (@Localizer["Total"])</MudButton>
                     </div>
                 }
             </div>
@@ -68,17 +63,38 @@
             @* ── Simple Viewer ────────────────────────────────────────────── *@
             @if (_currentMode == ViewMode.SimpleView)
             {
-                <MudGrid Spacing="1">
-                    <MudItem xs="4"><MudText Typo="Typo.subtitle2">@Localizer["Start"] :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.StartsFrom.ToString("dd MMM yyyy")</MudText></MudItem>
-                    <MudItem xs="4"><MudText Typo="Typo.subtitle2">@Localizer["End"] :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.EndTo.ToString("dd MMM yyyy")</MudText></MudItem>
-                    <MudItem xs="4"><MudText Typo="Typo.subtitle2">@Localizer["FlyingStartTime"] :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@DateTime.Today.Add(_tournament.FlyingStartTime).ToString("hh:mm tt")</MudText></MudItem>
-                    <MudItem xs="4"><MudText Typo="Typo.subtitle2">Flying end time :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@DateTime.Today.Add(_tournament.FlyingEndTime).ToString("hh:mm tt")</MudText></MudItem>
-                    <MudItem xs="4"><MudText Typo="Typo.subtitle2">Lofts :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.Lofts.Count</MudText></MudItem>
+                <MudGrid Spacing="1" Class="mx-2">
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.subtitle2">@Localizer["Start"] :</MudText>
+                    </MudItem>
+                    <MudItem xs="8">
+                        <MudText Typo="Typo.body2">@_tournament.StartsFrom.ToString("dd MMM yyyy")</MudText>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.subtitle2">@Localizer["End"] :</MudText>
+                    </MudItem>
+                    <MudItem xs="8">
+                        <MudText Typo="Typo.body2">@_tournament.EndTo.ToString("dd MMM yyyy")</MudText>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.subtitle2">@Localizer["FlyingStartTime"] :</MudText>
+                    </MudItem>
+                    <MudItem xs="8">
+                        <MudText Typo="Typo.body2">@DateTime.Today.Add(_tournament.FlyingStartTime).ToString("hh:mm tt")
+                        </MudText>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.subtitle2">@Localizer["FlyingEndTime"] :</MudText>
+                    </MudItem>
+                    <MudItem xs="8">
+                        <MudText Typo="Typo.body2">@DateTime.Today.Add(_tournament.FlyingEndTime).ToString("hh:mm tt")</MudText>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.subtitle2">@Localizer["LoftsSection"] :</MudText>
+                    </MudItem>
+                    <MudItem xs="8">
+                        <MudText Typo="Typo.body2">@_tournament.Lofts.Count</MudText>
+                    </MudItem>
                 </MudGrid>
 
                 @* <MudDivider Class="my-3"></MudDivider>
@@ -108,7 +124,8 @@
                     {
                         <MudPaper Class="p-2 mb-2">
                             <MudText Typo="Typo.subtitle1">@day.Date.ToString("dd MMM yyyy")</MudText>
-                            <MudTable Items="@day.LoftRecords.OrderBy(o => o.LoftName)" Dense="true" Hover="true" Striped="true" Elevation="0">
+                            <MudTable Items="@day.LoftRecords.OrderBy(o => o.LoftName)" Dense="true" Hover="true" Striped="true"
+                                      Elevation="0">
                                 <HeaderContent>
                                     <MudTh>Loft</MudTh>
                                     <MudTh>Landed</MudTh>
@@ -136,20 +153,16 @@
                 {
                     <MudPaper Class="pa-4 mt-2" Elevation="2">
                         <MudText Typo="Typo.h6" Class="mb-1">Update My Loft</MudText>
-                        <MudText Typo="Typo.body2" Class="mb-3 mud-text-secondary">Enter your loft access code to continue.</MudText>
+                        <MudText Typo="Typo.body2" Class="mb-3 mud-text-secondary">Enter your loft access code to continue.
+                        </MudText>
                         <MudGrid>
                             <MudItem xs="12" md="6">
-                                <MudTextField Label="Loft access code"
-                                              @bind-Value="_accessCode"
-                                              InputType="InputType.Password"
-                                              Variant="Variant.Outlined"
-                                              Immediate="true"
+                                <MudTextField Label="Loft access code" @bind-Value="_accessCode" InputType="InputType.Password"
+                                              Variant="Variant.Outlined" Immediate="true"
                                               OnKeyDown="@(async e => { if (e.Key == "Enter") UnlockLoftView(); })" />
                             </MudItem>
                             <MudItem xs="12" md="6" Class="d-flex align-center">
-                                <MudButton Variant="Variant.Filled"
-                                           Color="Color.Info"
-                                           StartIcon="@Icons.Material.Filled.LockOpen"
+                                <MudButton Variant="Variant.Filled" Color="Color.Info" StartIcon="@Icons.Material.Filled.LockOpen"
                                            OnClick="UnlockLoftView">
                                     Unlock
                                 </MudButton>
@@ -163,10 +176,7 @@
                         <MudText Typo="Typo.h6" Class="mb-3">Update My Loft Record</MudText>
                         <MudGrid>
                             <MudItem xs="12" md="6">
-                                <MudSelect T="string"
-                                           Label="Select your loft"
-                                           Value="@_selectedLoftId"
-                                           ValueChanged="OnLoftChanged"
+                                <MudSelect T="string" Label="Select your loft" Value="@_selectedLoftId" ValueChanged="OnLoftChanged"
                                            Variant="Variant.Outlined">
                                     @foreach (var loft in _tournament.Lofts)
                                     {
@@ -175,7 +185,8 @@
                                 </MudSelect>
                             </MudItem>
                             <MudItem xs="12" md="6">
-                                <MudDatePicker Label="Date of flying" Editable="true" Date="_selectedFlyingDate" DateChanged="OnFlyingDateChanged" DateFormat="dd.MM.yyyy" />
+                                <MudDatePicker Label="Date of flying" Editable="true" Date="_selectedFlyingDate"
+                                               DateChanged="OnFlyingDateChanged" DateFormat="dd.MM.yyyy" />
                             </MudItem>
                         </MudGrid>
 
@@ -187,16 +198,14 @@
                                 {
                                     var index = i;
                                     <MudItem xs="12" sm="6" md="4">
-                                        <MudTextField InputType="InputType.Time"
-                                                      Label="@($"Bird {index + 1}")"
-                                                      @bind-Value="_birdEndTimes[index]"
-                                                      Format="HH:mm:ss"
-                                                      Variant="Variant.Outlined" />
+                                        <MudTextField InputType="InputType.Time" Label="@($"Bird {index + 1}")"
+                                                      @bind-Value="_birdEndTimes[index]" Format="HH:mm:ss" Variant="Variant.Outlined" />
                                         <div class="d-flex align-center justify-content-between">
                                             <MudSwitch @bind-Value="_birdCrossedFlags[index]" Color="Color.Warning" Label="Crossed" />
                                             @if (IsBirdOvertime(index))
                                             {
-                                                <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime</MudChip>
+                                                <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime
+                                                </MudChip>
                                             }
                                         </div>
                                     </MudItem>
@@ -204,26 +213,21 @@
                                 @if (_selectedLoft.HasBabyPigeon)
                                 {
                                     <MudItem xs="12" sm="6" md="4">
-                                        <MudTextField InputType="InputType.Time"
-                                                      Label="Baby pigeon"
-                                                      @bind-Value="_babyBirdEndTime"
-                                                      Format="HH:mm:ss"
-                                                      Variant="Variant.Outlined" />
+                                        <MudTextField InputType="InputType.Time" Label="Baby pigeon" @bind-Value="_babyBirdEndTime"
+                                                      Format="HH:mm:ss" Variant="Variant.Outlined" />
                                         <div class="d-flex align-center justify-content-between">
                                             <MudSwitch @bind-Value="_babyBirdIsCrossed" Color="Color.Warning" Label="Crossed" />
                                             @if (IsBabyBirdOvertime())
                                             {
-                                                <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime</MudChip>
+                                                <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime
+                                                </MudChip>
                                             }
                                         </div>
                                     </MudItem>
                                 }
                             </MudGrid>
-                            <MudButton Variant="Variant.Filled"
-                                       Color="Color.Primary"
-                                       Class="mt-3"
-                                       StartIcon="@Icons.Material.Filled.Save"
-                                       OnClick="SaveLoftDayRecord">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3"
+                                       StartIcon="@Icons.Material.Filled.Save" OnClick="SaveLoftDayRecord">
                                 Save day record
                             </MudButton>
                         }
@@ -238,188 +242,221 @@
                 {
                     <MudPaper Class="pa-4 mt-2" Elevation="2">
                         <MudText Typo="Typo.h6" Class="mb-1">Manager Access</MudText>
-                        <MudText Typo="Typo.body2" Class="mb-3 mud-text-secondary">Enter your manager code or recovery key to continue.</MudText>
-                        <MudGrid>
-                            <MudItem xs="12" md="6">
-                                <MudTextField Label="Manager code or recovery key"
-                                              @bind-Value="_codeRevealAccess"
-                                              Variant="Variant.Outlined"
-                                              Immediate="true"
-                                              OnKeyDown="@(async e => { if (e.Key == "Enter") UnlockManagerView(); })" />
-                            </MudItem>
-                            <MudItem xs="12" md="6" Class="d-flex align-center">
-                                <MudButton Variant="Variant.Filled"
-                                           Color="Color.Error"
-                                           StartIcon="@Icons.Material.Filled.LockOpen"
-                                           OnClick="UnlockManagerView">
-                                    Unlock
-                                </MudButton>
-                            </MudItem>
-                        </MudGrid>
-                    </MudPaper>
-                }
-                else
-                {
-                @* Tournament details *@
-                <MudGrid Spacing="1">
-                    <MudItem xs="4"><MudText Typo="Typo.body2">@Localizer["Start"] :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.StartsFrom.ToString("dd MMM yyyy")</MudText></MudItem>
-                    <MudItem xs="4"><MudText Typo="Typo.body2">@Localizer["End"] :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.EndTo.ToString("dd MMM yyyy")</MudText></MudItem>
-                    <MudItem xs="4"><MudText Typo="Typo.body2">@Localizer["FlyingStartTime"] :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@DateTime.Today.Add(_tournament.FlyingStartTime).ToString("hh:mm tt")</MudText></MudItem>
-                    <MudItem xs="4"><MudText Typo="Typo.body2">Flying end time :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@DateTime.Today.Add(_tournament.FlyingEndTime).ToString("hh:mm tt")</MudText></MudItem>
-                    <MudItem xs="4"><MudText Typo="Typo.body2">Lofts :</MudText></MudItem>
-                    <MudItem xs="8"><MudText Typo="Typo.body2">@_tournament.Lofts.Count</MudText></MudItem>
-                </MudGrid>
-
-                <MudDivider Class="my-3"></MudDivider>
-
-                @* Manager credentials & loft code visibility *@
-                <MudText Typo="Typo.h6">Manager credentials</MudText>
-                <MudGrid>
-                    <MudItem xs="12" md="5">
-                        <MudTextField Label="Manager code or recovery key" @bind-Value="_codeRevealAccess" Variant="Variant.Outlined"></MudTextField>
-                    </MudItem>
-                    <MudItem xs="12" md="7" Class="d-flex align-center gap-2 flex-wrap">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.LockOpen" OnClick="UnlockLoftCodes">Reveal loft codes</MudButton>
-                        @if (_codesUnlocked)
-                        {
-                            <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Lock" OnClick="HideLoftCodes">Hide loft codes</MudButton>
-                        }
-                    </MudItem>
-                </MudGrid>
-
-
-                <MudDivider Class="my-3"></MudDivider>
-
-                @* Regenerate codes *@
-                <MudText Typo="Typo.h6">Regenerate Codes</MudText>
-                <MudGrid>
-                    <MudItem xs="12" md="5">
-                        <MudTextField Label="Manager code or recovery key" @bind-Value="_managerRegenerateCode" Variant="Variant.Outlined"></MudTextField>
-                    </MudItem>
-                    <MudItem xs="12" md="3" Class="d-flex align-center">
-                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Refresh" OnClick="RegenerateCodes">Regenerate codes</MudButton>
-                    </MudItem>
-                </MudGrid>
-
-                <MudDivider Class="my-3"></MudDivider>
-
-                @* Lofts with codes *@
-                <MudText Typo="Typo.h6">Lofts</MudText>
-                <MudTable Items="@_tournament.Lofts" Dense="true" Hover="true" Striped="true" Elevation="1">
-                    <HeaderContent>
-                        <MudTh>Loft</MudTh>
-                        <MudTh>@Localizer["TotalBirdsCount"]</MudTh>
-                        <MudTh>@Localizer["BabyBird"]</MudTh>
-                        <MudTh>Loft Code</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd DataLabel="Loft">@context.LoftName</MudTd>
-                        <MudTd DataLabel="@Localizer["TotalBirdsCount"]">@context.BirdCount</MudTd>
-                        <MudTd DataLabel="@Localizer["BabyBird"]">@(context.HasBabyPigeon ? "Yes" : "No")</MudTd>
-                        <MudTd DataLabel="Loft Code">@(_codesUnlocked ? context.LoftCode : "***-***-***")</MudTd>
-                    </RowTemplate>
-                </MudTable>
-
-                <MudDivider Class="my-3"></MudDivider>
-
-                @* Manage loft records *@
-                <MudText Typo="Typo.h6">Manage Loft Records</MudText>
-                <MudPaper Class="pa-3 mt-2" Elevation="1">
-                    <MudGrid>
-                        <MudItem xs="12" md="4">
-                            <MudTextField Label="Access code (manager/loft)" @bind-Value="_accessCode" Variant="Variant.Outlined"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="4">
-                            <MudSelect T="string" Label="Loft" Value="@_selectedLoftId" ValueChanged="OnLoftChanged" Variant="Variant.Outlined">
-                                @foreach (var loft in _tournament.Lofts)
-                                {
-                                    <MudSelectItem Value="@loft.LoftId">@loft.LoftName</MudSelectItem>
-                                }
-                            </MudSelect>
-                        </MudItem>
-                        <MudItem xs="12" md="4">
-                            <MudDatePicker Label="Date of flying" Editable="true" Date="_selectedFlyingDate" DateChanged="OnFlyingDateChanged" DateFormat="dd.MM.yyyy" />
-                        </MudItem>
-                    </MudGrid>
-
-                    @if (_selectedLoft is not null)
-                    {
-                        <MudText Typo="Typo.subtitle1" Class="mt-2 mb-2">Bird landing times (@_selectedLoft.LoftName)</MudText>
-                        <MudGrid>
-                            @for (var i = 0; i < _birdEndTimes.Count; i++)
-                            {
-                                var index = i;
-                                <MudItem xs="12" md="6" Class="d-flex flex-row align-center justify-content-between">
-                                    <MudTextField InputType="InputType.Time" Label="@($"Bird{index + 1}")" @bind-Value="_birdEndTimes[index]" Format="HH:mm:ss"></MudTextField>
-                                    <div class="d-flex align-center justify-content-between mx-2">
-                                        <MudSwitch @bind-Value="_birdCrossedFlags[index]" Color="Color.Warning" Label="Crossed"></MudSwitch>
-                                        @if (IsBirdOvertime(index))
-                                        {
-                                            <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime</MudChip>
-                                        }
-                                    </div>
+                        <MudText Typo="Typo.body2" Class="mb-3 mud-text-secondary">Enter your manager code or recovery key to
+                            continue.</MudText>
+                            <MudGrid>
+                                <MudItem xs="12" md="6">
+                                    <MudTextField Label="Manager code or recovery key" @bind-Value="_codeRevealAccess"
+                                                  Variant="Variant.Outlined" Immediate="true"
+                                                  OnKeyDown="@(async e => { if (e.Key == "Enter") UnlockManagerView(); })" />
                                 </MudItem>
-                            }
-                            @if (_selectedLoft.HasBabyPigeon)
-                            {
-                                <MudItem xs="12" md="6" Class="d-flex flex-row align-center justify-content-between">
-                                    <MudTextField InputType="InputType.Time" Label="Baby pigeon" @bind-Value="_babyBirdEndTime" Format="HH:mm:ss"></MudTextField>
-                                    <div class="d-flex align-center justify-content-between mx-2">
-                                        <MudSwitch @bind-Value="_babyBirdIsCrossed" Color="Color.Warning" Label="Crossed"></MudSwitch>
-                                        @if (IsBabyBirdOvertime())
-                                        {
-                                            <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime</MudChip>
-                                        }
-                                    </div>
+                                <MudItem xs="12" md="6" Class="d-flex align-center">
+                                    <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.LockOpen"
+                                               OnClick="UnlockManagerView">
+                                        Unlock
+                                    </MudButton>
                                 </MudItem>
-                            }
-                        </MudGrid>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3" StartIcon="@Icons.Material.Filled.Save" OnClick="SaveLoftDayRecord">Save day record</MudButton>
-                    }
-                </MudPaper>
-
-
-                <MudDivider Class="my-3"></MudDivider>
-                <MudText Typo="Typo.h6">Day Records</MudText>
-                @if (_tournament.DayRecords.Count == 0)
-                {
-                    <p>No day records yet.</p>
-                }
-                else
-                {
-                    @foreach (var day in _tournament.DayRecords.OrderBy(o => o.Date))
-                    {
-                        <MudPaper Class="p-2 mb-2">
-                            <MudText Typo="Typo.subtitle1">@day.Date.ToString("dd MMM yyyy")</MudText>
-                            <MudTable Items="@day.LoftRecords.OrderBy(o => o.LoftName)" Dense="true" Hover="true" Striped="true" Elevation="0">
-                                <HeaderContent>
-                                    <MudTh>Loft</MudTh>
-                                    <MudTh>Landed</MudTh>
-                                    <MudTh>Not Landed</MudTh>
-                                    <MudTh>Baby Sum</MudTh>
-                                    <MudTh>Total Hours</MudTh>
-                                </HeaderContent>
-                                <RowTemplate>
-                                    <MudTd DataLabel="Loft">@context.LoftName</MudTd>
-                                    <MudTd DataLabel="Landed">@context.TotalLanded</MudTd>
-                                    <MudTd DataLabel="Not Landed">@context.TotalNotLanded</MudTd>
-                                    <MudTd DataLabel="Baby Sum">@(context.BabyPigeonSum?.ToCustomFormat() ?? "00:00:00")</MudTd>
-                                    <MudTd DataLabel="Total Hours">@(context.TotalHours?.ToCustomFormat() ?? "00:00:00")</MudTd>
-                                </RowTemplate>
-                            </MudTable>
+                            </MudGrid>
                         </MudPaper>
                     }
-                }
-                } @* end else (manager authenticated) *@
-            }
+                else
+                    {
+                        @* Tournament details *@
+                        <MudGrid Spacing="1">
+                            <MudItem xs="4">
+                                <MudText Typo="Typo.body2">@Localizer["Start"] :</MudText>
+                            </MudItem>
+                            <MudItem xs="8">
+                                <MudText Typo="Typo.body2">@_tournament.StartsFrom.ToString("dd MMM yyyy")</MudText>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudText Typo="Typo.body2">@Localizer["End"] :</MudText>
+                            </MudItem>
+                            <MudItem xs="8">
+                                <MudText Typo="Typo.body2">@_tournament.EndTo.ToString("dd MMM yyyy")</MudText>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudText Typo="Typo.body2">@Localizer["FlyingStartTime"] :</MudText>
+                            </MudItem>
+                            <MudItem xs="8">
+                                <MudText Typo="Typo.body2">@DateTime.Today.Add(_tournament.FlyingStartTime).ToString("hh:mm tt")
+                                </MudText>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudText Typo="Typo.body2">Flying end time :</MudText>
+                            </MudItem>
+                            <MudItem xs="8">
+                                <MudText Typo="Typo.body2">@DateTime.Today.Add(_tournament.FlyingEndTime).ToString("hh:mm tt")</MudText>
+                            </MudItem>
+                            <MudItem xs="4">
+                                <MudText Typo="Typo.body2">Lofts :</MudText>
+                            </MudItem>
+                            <MudItem xs="8">
+                                <MudText Typo="Typo.body2">@_tournament.Lofts.Count</MudText>
+                            </MudItem>
+                        </MudGrid>
 
-        </div>
-    }
-</PagesBase>
+                        <MudDivider Class="my-3"></MudDivider>
+
+                        @* Manager credentials & loft code visibility *@
+                        <MudText Typo="Typo.h6">Manager credentials</MudText>
+                        <MudGrid>
+                            <MudItem xs="12" md="5">
+                                <MudTextField Label="Manager code or recovery key" @bind-Value="_codeRevealAccess"
+                                              Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem xs="12" md="7" Class="d-flex align-center gap-2 flex-wrap">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.LockOpen"
+                                           OnClick="UnlockLoftCodes">Reveal loft codes</MudButton>
+                                @if (_codesUnlocked)
+                                {
+                                    <MudButton Variant="Variant.Text" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Lock"
+                                               OnClick="HideLoftCodes">Hide loft codes</MudButton>
+                                }
+                            </MudItem>
+                        </MudGrid>
+
+
+                        <MudDivider Class="my-3"></MudDivider>
+
+                        @* Regenerate codes *@
+                        <MudText Typo="Typo.h6">Regenerate Codes</MudText>
+                        <MudGrid>
+                            <MudItem xs="12" md="5">
+                                <MudTextField Label="Manager code or recovery key" @bind-Value="_managerRegenerateCode"
+                                              Variant="Variant.Outlined"></MudTextField>
+                            </MudItem>
+                            <MudItem xs="12" md="3" Class="d-flex align-center">
+                                <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Refresh"
+                                           OnClick="RegenerateCodes">Regenerate codes</MudButton>
+                            </MudItem>
+                        </MudGrid>
+
+                        <MudDivider Class="my-3"></MudDivider>
+
+                        @* Lofts with codes *@
+                        <MudText Typo="Typo.h6">Lofts</MudText>
+                        <MudTable Items="@_tournament.Lofts" Dense="true" Hover="true" Striped="true" Elevation="1">
+                            <HeaderContent>
+                                <MudTh>Loft</MudTh>
+                                <MudTh>@Localizer["TotalBirdsCount"]</MudTh>
+                                <MudTh>@Localizer["BabyBird"]</MudTh>
+                                <MudTh>Loft Code</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Loft">@context.LoftName</MudTd>
+                                <MudTd DataLabel="@Localizer["TotalBirdsCount"]">@context.BirdCount</MudTd>
+                                <MudTd DataLabel="@Localizer["BabyBird"]">@(context.HasBabyPigeon ? "Yes" : "No")</MudTd>
+                                <MudTd DataLabel="Loft Code">@(_codesUnlocked ? context.LoftCode : "***-***-***")</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+
+                        <MudDivider Class="my-3"></MudDivider>
+
+                        @* Manage loft records *@
+                        <MudText Typo="Typo.h6">Manage Loft Records</MudText>
+                        <MudPaper Class="pa-3 mt-2" Elevation="1">
+                            <MudGrid>
+                                <MudItem xs="12" md="4">
+                                    <MudTextField Label="Access code (manager/loft)" @bind-Value="_accessCode"
+                                                  Variant="Variant.Outlined"></MudTextField>
+                                </MudItem>
+                                <MudItem xs="12" md="4">
+                                    <MudSelect T="string" Label="Loft" Value="@_selectedLoftId" ValueChanged="OnLoftChanged"
+                                               Variant="Variant.Outlined">
+                                        @foreach (var loft in _tournament.Lofts)
+                                        {
+                                            <MudSelectItem Value="@loft.LoftId">@loft.LoftName</MudSelectItem>
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+                                <MudItem xs="12" md="4">
+                                    <MudDatePicker Label="Date of flying" Editable="true" Date="_selectedFlyingDate"
+                                                   DateChanged="OnFlyingDateChanged" DateFormat="dd.MM.yyyy" />
+                                </MudItem>
+                            </MudGrid>
+
+                            @if (_selectedLoft is not null)
+                            {
+                                <MudText Typo="Typo.subtitle1" Class="mt-2 mb-2">Bird landing times (@_selectedLoft.LoftName)</MudText>
+                                <MudGrid>
+                                    @for (var i = 0; i < _birdEndTimes.Count; i++)
+                                    {
+                                        var index = i;
+                                        <MudItem xs="12" md="6" Class="d-flex flex-row align-center justify-content-between">
+                                            <MudTextField InputType="InputType.Time" Label="@($"Bird{index + 1}")"
+                                                          @bind-Value="_birdEndTimes[index]" Format="HH:mm:ss"></MudTextField>
+                                            <div class="d-flex align-center justify-content-between mx-2">
+                                                <MudSwitch @bind-Value="_birdCrossedFlags[index]" Color="Color.Warning" Label="Crossed">
+                                                </MudSwitch>
+                                                @if (IsBirdOvertime(index))
+                                                {
+                                                    <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime
+                                                    </MudChip>
+                                                }
+                                            </div>
+                                        </MudItem>
+                                    }
+                                    @if (_selectedLoft.HasBabyPigeon)
+                                    {
+                                        <MudItem xs="12" md="6" Class="d-flex flex-row align-center justify-content-between">
+                                            <MudTextField InputType="InputType.Time" Label="Baby pigeon" @bind-Value="_babyBirdEndTime"
+                                                          Format="HH:mm:ss"></MudTextField>
+                                            <div class="d-flex align-center justify-content-between mx-2">
+                                                <MudSwitch @bind-Value="_babyBirdIsCrossed" Color="Color.Warning" Label="Crossed"></MudSwitch>
+                                                @if (IsBabyBirdOvertime())
+                                                {
+                                                    <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined" Size="Size.Small">Overtime
+                                                    </MudChip>
+                                                }
+                                            </div>
+                                        </MudItem>
+                                    }
+                                </MudGrid>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-3"
+                                           StartIcon="@Icons.Material.Filled.Save" OnClick="SaveLoftDayRecord">Save day record</MudButton>
+                            }
+                        </MudPaper>
+
+
+                        <MudDivider Class="my-3"></MudDivider>
+                        <MudText Typo="Typo.h6">Day Records</MudText>
+                        @if (_tournament.DayRecords.Count == 0)
+                        {
+                            <p>No day records yet.</p>
+                        }
+                        else
+                        {
+                            @foreach (var day in _tournament.DayRecords.OrderBy(o => o.Date))
+                            {
+                                <MudPaper Class="p-2 mb-2">
+                                    <MudText Typo="Typo.subtitle1">@day.Date.ToString("dd MMM yyyy")</MudText>
+                                    <MudTable Items="@day.LoftRecords.OrderBy(o => o.LoftName)" Dense="true" Hover="true" Striped="true"
+                                              Elevation="0">
+                                        <HeaderContent>
+                                            <MudTh>Loft</MudTh>
+                                            <MudTh>Landed</MudTh>
+                                            <MudTh>Not Landed</MudTh>
+                                            <MudTh>Baby Sum</MudTh>
+                                            <MudTh>Total Hours</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd DataLabel="Loft">@context.LoftName</MudTd>
+                                            <MudTd DataLabel="Landed">@context.TotalLanded</MudTd>
+                                            <MudTd DataLabel="Not Landed">@context.TotalNotLanded</MudTd>
+                                            <MudTd DataLabel="Baby Sum">@(context.BabyPigeonSum?.ToCustomFormat() ?? "00:00:00")</MudTd>
+                                            <MudTd DataLabel="Total Hours">@(context.TotalHours?.ToCustomFormat() ?? "00:00:00")</MudTd>
+                                        </RowTemplate>
+                                    </MudTable>
+                                </MudPaper>
+                            }
+                        }
+                    } @* end else (manager authenticated) *@
+                }
+
+            </div>
+        }
+    </PagesBase>
 
 @code {
     private enum ViewMode { SimpleView, LoftUserView, ManagerView }
@@ -657,7 +694,8 @@
             return;
         }
 
-        if (_selectedFlyingDate.Value.Date < _tournament.StartsFrom.Date || _selectedFlyingDate.Value.Date > _tournament.EndTo.Date)
+        if (_selectedFlyingDate.Value.Date < _tournament.StartsFrom.Date || _selectedFlyingDate.Value.Date >
+_tournament.EndTo.Date)
         {
             Snackbar.Add("Date of flying must be inside tournament date range", Severity.Warning);
             return;
@@ -822,7 +860,8 @@
             _managerRegenerateCode = response.ManagerCode;
             _codeRevealAccess = response.ManagerCode;
             _codesUnlocked = true;
-            await PublicTournamentService.StoreManagerCredentials(_tournament.Id, response.ManagerCode, response.ManagerRecoveryKey);
+            await PublicTournamentService.StoreManagerCredentials(_tournament.Id, response.ManagerCode,
+response.ManagerRecoveryKey);
             Snackbar.Add("Codes regenerated", Severity.Success);
             await LoadData();
         }

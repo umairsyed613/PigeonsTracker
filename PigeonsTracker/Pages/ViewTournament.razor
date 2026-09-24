@@ -5,7 +5,7 @@
 @inject AppState AppSate
 
 <PagesBase>
-    <div class="d-flex flex-column py-2 @(AppSate.IsLanguageUrdu() ? "rtl" : "")">
+    <div class="d-flex flex-column py-2">
 
         @if (_tournament != null)
         {
@@ -38,7 +38,7 @@
                 </MudItem>
             </MudGrid>
 
-            <div class="d-flex flex-column border-top mt-3 @(AppSate.IsLanguageUrdu() ? "rtl" : "")">
+            <div class="d-flex flex-column border-top mt-3">
                 @if (_tournament.TrackingRecords is not { Count: > 0 })
                 {
                     <p class="text-wrap p-2 mt-2">@Localizer["NoRecords"]</p>

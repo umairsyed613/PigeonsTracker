@@ -67,6 +67,8 @@ function Start-Watchers {
         -Name "frontend-watch" `
         -ScriptBlock {
             param($projectPath, $rootPath)
+            [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+            $OutputEncoding = [System.Text.Encoding]::UTF8
             Set-Location $rootPath
             & dotnet watch --project $projectPath run 2>&1 | ForEach-Object { "[frontend] $_" }
         } `
@@ -76,6 +78,8 @@ function Start-Watchers {
         -Name "api-func" `
         -ScriptBlock {
             param($apiPath)
+            [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+            $OutputEncoding = [System.Text.Encoding]::UTF8
             Set-Location $apiPath
             & dotnet run 2>&1 | ForEach-Object { "[api] $_" }
         } `

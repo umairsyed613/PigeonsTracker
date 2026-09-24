@@ -52,7 +52,7 @@ public class Program
             builder.Services.AddScoped<IPublicTournamentService, PublicTournamentService>();
             builder.Services.AddScoped<IDiseaseAndCureService, DiseaseAndCureService>();
 
-            builder.Services.AddScoped<ICacheService, LocalStorageCacheService>();
+            builder.Services.AddScoped<ICacheService, IndexedDbCacheService>();
             builder.Services.AddSingleton<ISyncNotificationService, SyncNotificationService>();
             builder.Services.AddSingleton<IBackgroundSyncService, BackgroundSyncService>();
             builder.Services.AddScoped<ISyncProvider, PublicTournamentSyncProvider>();

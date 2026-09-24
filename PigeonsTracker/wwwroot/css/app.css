@@ -137,7 +137,7 @@ html, body {
     font-size: 1rem !important;
 }
 
-h1, h2, h3, h4, h5, h6, p, span, label, input, select, option {
+h1, h2, h3, h4, h5, h6, p, span, input, select, option {
     unicode-bidi: plaintext !important;
     text-align: start !important;
 }

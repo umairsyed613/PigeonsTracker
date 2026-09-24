@@ -20,6 +20,7 @@ public static class PublicTournamentMapper
             ManagerCode = tournament.ManagerCode,
             ManagerRecoveryKey = tournament.ManagerRecoveryKey,
             CodeVersion = tournament.CodeVersion,
+            PosterImage = tournament.PosterImage,
             LastCodeRegeneratedAt = tournament.LastCodeRegeneratedAt.HasValue
                 ? DateTime.SpecifyKind(tournament.LastCodeRegeneratedAt.Value, DateTimeKind.Local).ToUniversalTime()
                 : null,
@@ -97,6 +98,7 @@ public static class PublicTournamentMapper
             ManagerCode = tournament.ManagerCode,
             ManagerRecoveryKey = tournament.ManagerRecoveryKey,
             CodeVersion = tournament.CodeVersion,
+            PosterImage = tournament.PosterImage,
             LastCodeRegeneratedAt = tournament.LastCodeRegeneratedAt.HasValue
                 ? DateTime.SpecifyKind(tournament.LastCodeRegeneratedAt.Value, DateTimeKind.Utc).ToLocalTime()
                 : null,

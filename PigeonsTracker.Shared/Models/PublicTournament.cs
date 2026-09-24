@@ -22,6 +22,8 @@ public class PublicTournament
     public DateTime? LastCodeRegeneratedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
+    public string? PosterImage { get; set; }
+
     public List<PublicTournamentLoft> Lofts { get; set; } = [];
     public List<PublicTournamentDayRecord> DayRecords { get; set; } = [];
 }
