@@ -8,5 +8,19 @@
       "/_framework/*",
       "/css/*"
     ]
-  }
+  },
+  "routes": [
+    {
+      "route": "/service-worker.js",
+      "headers": { "cache-control": "no-cache" }
+    },
+    {
+      "route": "/service-worker.published.js",
+      "headers": { "cache-control": "no-cache" }
+    },
+    {
+      "route": "/service-worker-assets.js",
+      "headers": { "cache-control": "no-cache" }
+    }
+  ]
 }

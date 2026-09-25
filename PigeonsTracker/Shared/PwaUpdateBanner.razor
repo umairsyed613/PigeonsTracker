@@ -1,0 +1,53 @@
+@implements IDisposable
+@inject IJSRuntime JSRuntime
+
+@if (updateAvailable)
+{
+    <div class="row justify-content-center">
+        <MudAlert Severity="Severity.Info"
+                  Dense="true"
+                  Class="mb-2"
+                  ShowCloseIcon="true"
+                  CloseIconClicked="Dismiss">
+            A new version is available —
+            <MudLink OnClick="ActivateUpdate" Style="cursor:pointer;">Update Now</MudLink>
+        </MudAlert>
+    </div>
+}
+
+@code {
+    private bool updateAvailable;
+    private static Action onUpdateAvailable = () => { };
+
+    protected override async Task OnInitializedAsync()
+    {
+        onUpdateAvailable = () => InvokeAsync(() =>
+        {
+            updateAvailable = true;
+            StateHasChanged();
+        });
+
+        updateAvailable = await JSRuntime.InvokeAsync<bool>("blazorPwa.checkForUpdate");
+    }
+
+    [JSInvokable]
+    public static void PwaUpdateAvailable()
+    {
+        onUpdateAvailable.Invoke();
+    }
+
+    private async Task ActivateUpdate()
+    {
+        await JSRuntime.InvokeVoidAsync("blazorPwa.activateUpdate");
+    }
+
+    private void Dismiss()
+    {
+        updateAvailable = false;
+    }
+
+    public void Dispose()
+    {
+        onUpdateAvailable = () => { };
+    }
+}
