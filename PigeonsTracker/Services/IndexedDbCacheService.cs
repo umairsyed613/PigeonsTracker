@@ -6,13 +6,15 @@ namespace PigeonsTracker.Services;
 
 internal sealed class IndexedDbCacheService(IJSRuntime js) : ICacheService
 {
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+
     public async Task<CacheEntry<T>?> GetAsync<T>(string key)
     {
         var entry = await js.InvokeAsync<JsonElement?>("idbCache.get", key);
         if (entry is null || entry.Value.ValueKind == JsonValueKind.Null)
             return null;
 
-        var data = entry.Value.GetProperty("data").Deserialize<T>();
+        var data = entry.Value.GetProperty("data").Deserialize<T>(JsonOptions);
         if (data is null)
             return null;
 
